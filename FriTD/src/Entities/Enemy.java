@@ -2,6 +2,7 @@ package Entities;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.LinkedList;
 
 import Enums.EnemyState;
 import Helpers.MathHelper;
@@ -17,10 +18,23 @@ public class Enemy implements IDisplayableObject {
 	private int HPCost;
 	private EnemyState state;
 	private PathSquare squareWayPoint;
+	private LinkedList<Effect> effects;
 	
 	
 	
 	
+
+	public int getX() {
+		return x;
+	}
+
+
+	
+	public int getY() {
+		return y;
+	}
+
+
 
 	public Enemy(int id, int x, int y, int hp, int speed, int goldValue, int hPCost, PathSquare squareWayPoint) {
 		super();
@@ -126,6 +140,12 @@ public class Enemy implements IDisplayableObject {
 		if (id != other.id)
 			return false;
 		return true;
+	}
+
+
+
+	public void applyEffect(Effect effect) {
+		this.effects.addLast(effect);
 	}
 
 	

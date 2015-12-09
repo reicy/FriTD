@@ -12,6 +12,7 @@ import Entities.MapSquare;
 import Entities.PathSquare;
 import Entities.Projectile;
 import Entities.Tower;
+import Enums.TowerType;
 import UI.IDisplayableObject;
 
 public class Application implements ActionListener {
@@ -109,16 +110,34 @@ public class Application implements ActionListener {
 	};
 
 	public int getMoney(){
-		return 0;
+		return gold;
 	};
 	public int getHP(){
-		return 0;
+		return hp;
 	};
-	public void buildTower(String position, String type){
+	
+	
+	public void buildTower(int towerPlaceId, int type){
+		TowerType tt = TowerType.values()[type];
+		EmptyTowerSquare towerPlace = null;
+		for (EmptyTowerSquare emptyTowerSquare : emptyTowerSquares) {
+			if(emptyTowerSquare.getId()==towerPlaceId){
+				towerPlace = emptyTowerSquare;
+			}
+		}
+		
+		if(tt.getCost() <= gold && towerPlace!=null){
+			emptyTowerSquares.remove(towerPlace);
+			towers.add(TowerBuilder.buildTower(towerPlaceId,towerPlace.getX(),towerPlace.getY(), towerPlace.getId(),type));
+			
+			
+		}
 		
 	}
 
-
+	public LinkedList<String> possibleBuildOrders(){
+		return null;
+	}
 
 
 	@Override
