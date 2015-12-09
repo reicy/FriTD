@@ -13,6 +13,7 @@ public class Enemy implements IDisplayableObject {
 	private int id;
 	private int x,y;
 	private int hp;
+	private int maxHp;
 	private int speed;
 	private int goldValue;
 	private int HPCost;
@@ -42,6 +43,7 @@ public class Enemy implements IDisplayableObject {
 		this.x = x;
 		this.y = y;
 		this.hp = hp;
+		maxHp = hp;
 		this.speed = speed;
 		this.goldValue = goldValue;
 		HPCost = hPCost;
@@ -57,6 +59,8 @@ public class Enemy implements IDisplayableObject {
 		Color c = g2d.getColor();
 		g2d.setColor(Color.black);
 		g2d.fillOval(x-7, y-7, 15, 15);
+		g2d.setColor(Color.red);
+		g2d.fillRect(x-6, y-1, (int) (14*(hp*1.0/maxHp*1.0)), 2);
 		g2d.setColor(c);
 		
 	}
