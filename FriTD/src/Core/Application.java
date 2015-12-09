@@ -8,6 +8,7 @@ import javax.swing.Timer;
 
 import Entities.EmptyTowerSquare;
 import Entities.Enemy;
+import Entities.MapSquare;
 import Entities.PathSquare;
 import Entities.Projectile;
 import Entities.Tower;
@@ -15,7 +16,7 @@ import UI.IDisplayableObject;
 
 public class Application implements ActionListener {
 	
-	private IDisplayableObject [][] map;
+	private MapSquare [][] map;
 	private PathSquare firstPathSquare;
 	private boolean isRoundRunning;
 	private Timer timer;
@@ -31,6 +32,7 @@ public class Application implements ActionListener {
 	private LinkedList<Enemy> fallenOnes;
 	private LinkedList<Projectile> emptyOnes;
 	private Spawner spawner;
+	private final int MAP_SQUARE_SIZE;
 	
 
 	
@@ -52,7 +54,7 @@ public class Application implements ActionListener {
 		fallenOnes = new LinkedList<>();
 		emptyOnes = new LinkedList<>();
 		spawner = new Spawner();
-		
+		MAP_SQUARE_SIZE=map[0][0].getSize();
 	}
 	
 	
@@ -63,7 +65,9 @@ public class Application implements ActionListener {
 		
 	}
 
-
+	public int getMapSquareSize(){
+		return MAP_SQUARE_SIZE;
+	}
 
 
 	
