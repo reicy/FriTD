@@ -18,20 +18,20 @@ public class MapBuilder {
 		map = new IDisplayableObject[10][10];
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[0].length; j++) {
-				map[i][j] = new MapSquare(MapSquareType.grassSquare, MAP_SQUARE_SIZE);
+				map[i][j] = new MapSquare(MapSquareType.grassSquare, MAP_SQUARE_SIZE,i,j);
 			}
 		}
 		
 		for (int j = 0; j < map[0].length; j++) {
-			map[5][j] = new MapSquare(MapSquareType.pathSquare, MAP_SQUARE_SIZE);
+			map[5][j] = new MapSquare(MapSquareType.pathSquare, MAP_SQUARE_SIZE,5,j);
 		}
 		
 		for (int j = 0; j < map[0].length; j++) {
-			map[3][j] = new MapSquare(MapSquareType.towerPlaceSquare, MAP_SQUARE_SIZE);
+			map[3][j] = new MapSquare(MapSquareType.towerPlaceSquare, MAP_SQUARE_SIZE,3,j);
 		}
 		
 		for (int j = 0; j < map[0].length; j++) {
-			map[4][j] = new MapSquare(MapSquareType.towerPlaceSquare, MAP_SQUARE_SIZE);
+			map[4][j] = new MapSquare(MapSquareType.towerPlaceSquare, MAP_SQUARE_SIZE,4,j);
 		}
 		
 		

@@ -8,15 +8,18 @@ import UI.IDisplayableObject;
 public class MapSquare implements IDisplayableObject{
 	
 	private MapSquareType type;
-	private int size;
+	private int size,row,col;
 	
 	
 
-	public MapSquare(MapSquareType type, int size) {
+	public MapSquare(MapSquareType type, int size, int row, int col) {
 		super();
 		this.type = type;
 		this.size = size;
+		this.row = row;
+		this.col = col;
 	}
+
 
 
 
