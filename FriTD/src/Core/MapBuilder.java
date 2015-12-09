@@ -13,8 +13,14 @@ public class MapBuilder {
 	private final int MAP_SQUARE_SIZE = 30;
 	
 	private IDisplayableObject[][] map;
+	private PathSquare firstPathSquare;
+	private LinkedList<EmptyTowerSquare> towerSquares;
+	
 
-	public void buildMap(String string) {
+	//TODO generate from file
+	public void buildMap(String mapFile) {
+		
+		towerSquares = new LinkedList<>();
 		map = new IDisplayableObject[10][10];
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[0].length; j++) {
@@ -26,25 +32,39 @@ public class MapBuilder {
 			map[5][j] = new MapSquare(MapSquareType.pathSquare, MAP_SQUARE_SIZE,5,j);
 		}
 		
-		for (int j = 0; j < map[0].length; j++) {
-			map[3][j] = new MapSquare(MapSquareType.towerPlaceSquare, MAP_SQUARE_SIZE,3,j);
+		PathSquare pathSquare;
+		firstPathSquare = new PathSquare(0, 5*MAP_SQUARE_SIZE);
+		pathSquare = firstPathSquare;
+		
+		for (int i = 1; i < map[5].length; i++) {
+			pathSquare.addNext(new PathSquare(i*MAP_SQUARE_SIZE+MAP_SQUARE_SIZE/2, 5*MAP_SQUARE_SIZE+MAP_SQUARE_SIZE/2));
+			pathSquare = pathSquare.getNext();
 		}
+		
 		
 		for (int j = 0; j < map[0].length; j++) {
 			map[4][j] = new MapSquare(MapSquareType.towerPlaceSquare, MAP_SQUARE_SIZE,4,j);
+			towerSquares.addLast(new EmptyTowerSquare(j*MAP_SQUARE_SIZE, 4*MAP_SQUARE_SIZE, 4*100+j));
 		}
+		
+		
+		
+		for (int j = 0; j < map[0].length; j++) {
+			map[6][j] = new MapSquare(MapSquareType.towerPlaceSquare, MAP_SQUARE_SIZE,6,j);
+			towerSquares.addLast(new EmptyTowerSquare(j*MAP_SQUARE_SIZE, 6*MAP_SQUARE_SIZE, 6*100+j));
+		}
+		
+		
 		
 		
 	}
 
 	public PathSquare getFirstPathSquare() {
-		// TODO Auto-generated method stub
-		return null;
+		return firstPathSquare;
 	}
 
 	public LinkedList<EmptyTowerSquare> getEmptyTowerSquares() {
-		// TODO Auto-generated method stub
-		return null;
+		return towerSquares;
 	}
 
 	public IDisplayableObject[][] getMap() {

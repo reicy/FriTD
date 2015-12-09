@@ -29,6 +29,7 @@ public class Application implements ActionListener {
 	private int hp;
 	private MapBuilder mapBuilder;
 	private LinkedList<Enemy> fallenOnes;
+	private LinkedList<Enemy> victoriousOnes;
 	private LinkedList<Projectile> emptyOnes;
 	private Spawner spawner;
 	
@@ -42,6 +43,7 @@ public class Application implements ActionListener {
 		projectiles = new LinkedList<>();
 		enemies = new LinkedList<>();
 		towers = new LinkedList<>();
+		victoriousOnes = new LinkedList<>();
 		timer = new Timer(100, this);
 		isRoundRunning = false;
 		mapBuilder = new MapBuilder();
@@ -58,16 +60,9 @@ public class Application implements ActionListener {
 	
 	
 	
-	private void startRount() {
-		isRoundRunning = true;
-		
-	}
-
-
-
-
 	
-	
+
+
 	
 	public LinkedList<IDisplayableObject> getEnemies(){
 		LinkedList<IDisplayableObject> items = new LinkedList<>();
@@ -135,7 +130,7 @@ public class Application implements ActionListener {
 		
 		//spawning pool
 		if(spawner.isTimeToSpawn()){
-			enemies.addLast(spawner.spawnCreature());
+			enemies.addLast(spawner.spawnCreature(firstPathSquare));
 		}
 
 		//give them fire
@@ -153,6 +148,7 @@ public class Application implements ActionListener {
 		for (Enemy enemy : enemies) {
 			enemy.move();
 			if(enemy.isDead())fallenOnes.add(enemy);
+			if(enemy.isVictorious())victoriousOnes.add(enemy);
 		}
 		
 		
@@ -164,29 +160,40 @@ public class Application implements ActionListener {
 		
 		//dispose empty
 		for (Projectile projectile : emptyOnes) {
-			projectiles.remove(emptyOnes);
+			projectiles.remove(projectile);
 		}
 		
-		
+		//dispose victorious enemies
+		for (Enemy enemy : victoriousOnes) {
+			enemies.remove(enemy);
+			hp-=enemy.getHPCost();
+		}
 		
 		
 	}
 
 
-
+	private void startRount() {
+		isRoundRunning = true;
+		spawner.startSpawning();
+		timer.start();
+	}
 
 	private void stopRound() {
-		// TODO Auto-generated method stub
-		
+		isRoundRunning = false;
+		timer.stop();
 	}
 
 
 
 
 	private boolean isRoundOver() {
-		// TODO Auto-generated method stub
-		return false;
+		
+		return enemies.size()==0;
+		
 	};
 	
-	
+	public boolean isGameOver(){
+		return false;
+	}
 }

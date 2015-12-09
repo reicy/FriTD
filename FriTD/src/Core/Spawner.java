@@ -1,17 +1,40 @@
 package Core;
 
 import Entities.Enemy;
+import Entities.PathSquare;
 
 public class Spawner {
+	
+	
+	private int counter;
+	//TODO replace with automatic eval
+	private int creatureDelay;
+	private int nextCreatureId = 0;
+	private int toSpawn;
+	private CreatureBuilder cbuilder;
 
-	public Enemy spawnCreature() {
-		// TODO Auto-generated method stub
-		return null;
+	//TODO from file
+	public Enemy spawnCreature(PathSquare firstPathSquare) {
+		
+		return cbuilder.getEnemy(firstPathSquare, nextCreatureId++);
+		
+		
 	}
 
 	public boolean isTimeToSpawn() {
-		// TODO Auto-generated method stub
+		if(toSpawn<=0)return false;
+		counter--;
+		if(counter <= 0){
+			counter = creatureDelay;
+			toSpawn--;
+			return true;
+		}
 		return false;
+	}
+	
+	public void startSpawning(){
+		toSpawn = 20;
+		cbuilder.changeToNextTemplate();
 	}
 
 	
