@@ -6,9 +6,16 @@ import Entities.PathSquare;
 public class Spawner {
 	
 	
+	
+	
+	public Spawner() {
+		super();
+		cbuilder = new CreatureBuilder();
+	}
+
 	private int counter;
 	//TODO replace with automatic eval
-	private int creatureDelay;
+	private int creatureDelay = 6;
 	private int nextCreatureId = 0;
 	private int toSpawn;
 	private CreatureBuilder cbuilder;

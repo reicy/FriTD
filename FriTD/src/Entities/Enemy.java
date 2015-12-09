@@ -40,8 +40,9 @@ public class Enemy implements IDisplayableObject {
 	public void display(Graphics2D g2d) {
 		Color c = g2d.getColor();
 		g2d.setColor(Color.black);
-		g2d.drawOval(x, y, 5, 5);
+		g2d.fillOval(x-7, y-7, 15, 15);
 		g2d.setColor(c);
+		
 	}
 
 	public void move() {
@@ -81,6 +82,9 @@ public class Enemy implements IDisplayableObject {
 			squareWayPoint = squareWayPoint.getNext();
 			
 		};
+		
+		x = nextX;
+		y = nextY;
 		
 	}
 

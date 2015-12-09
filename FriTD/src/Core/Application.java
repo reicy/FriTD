@@ -34,6 +34,7 @@ public class Application implements ActionListener {
 	private LinkedList<Projectile> emptyOnes;
 	private Spawner spawner;
 	private final int MAP_SQUARE_SIZE;
+	private boolean enemySpawned;
 	
 
 	
@@ -74,8 +75,11 @@ public class Application implements ActionListener {
 		for (Enemy enemy : enemies) {
 			items.addLast(enemy);
 		}
+		
 		return items;
 	};
+	
+	
 	public LinkedList<IDisplayableObject> getProjectiles(){
 		LinkedList<IDisplayableObject> items = new LinkedList<>();
 		for (Projectile projectile : projectiles) {
@@ -119,7 +123,7 @@ public class Application implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
+		//System.out.println("tic");
 		if(isRoundOver()){
 			stopRound();
 		}else{
@@ -135,7 +139,10 @@ public class Application implements ActionListener {
 		
 		//spawning pool
 		if(spawner.isTimeToSpawn()){
+			
 			enemies.addLast(spawner.spawnCreature(firstPathSquare));
+			//System.out.println(enemies.size());
+			enemySpawned = true;
 		}
 
 		//give them fire
@@ -179,9 +186,11 @@ public class Application implements ActionListener {
 
 
 	private void startRount() {
+		enemySpawned = false;
 		isRoundRunning = true;
 		spawner.startSpawning();
 		timer.start();
+		
 	}
 
 	private void stopRound() {
@@ -194,7 +203,7 @@ public class Application implements ActionListener {
 
 	private boolean isRoundOver() {
 		
-		return enemies.size()==0;
+		return enemies.size()==0 && enemySpawned;
 		
 	};
 	
