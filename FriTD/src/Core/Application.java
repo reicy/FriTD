@@ -36,10 +36,13 @@ public class Application implements ActionListener {
 	private Spawner spawner;
 	private final int MAP_SQUARE_SIZE;
 	private boolean enemySpawned;
-	
-
+	private int delay = 100;
 	
 	public Application() {
+		this(1);
+	}
+	
+	public Application(double speedModifier) {
 		
 		super();
 		gold = 200;
@@ -48,7 +51,7 @@ public class Application implements ActionListener {
 		enemies = new LinkedList<>();
 		towers = new LinkedList<>();
 		victoriousOnes = new LinkedList<>();
-		timer = new Timer(100, this);
+		timer = new Timer((int) (delay*speedModifier), this);
 		isRoundRunning = false;
 		mapBuilder = new MapBuilder();
 		mapBuilder.buildMap("simpleMap.txt");
@@ -61,15 +64,14 @@ public class Application implements ActionListener {
 		MAP_SQUARE_SIZE=map[0][0].getSize();
 	}
 	
-	
+	public void setSpeed(double speedModifier) {
+		timer.setDelay((int) (delay*speedModifier));
+	}
 
 
 	public int getMapSquareSize(){
 		return MAP_SQUARE_SIZE;
 	}
-
-
-
 	
 	public LinkedList<IDisplayableObject> getEnemies(){
 		LinkedList<IDisplayableObject> items = new LinkedList<>();
