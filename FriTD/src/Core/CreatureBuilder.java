@@ -7,7 +7,7 @@ public class CreatureBuilder {
 
 	public Enemy getEnemy(PathSquare firstPathSquare, int nextCreatureId) {
 		// TODO Auto-generated method stub
-		return new Enemy(nextCreatureId, firstPathSquare.getX(), firstPathSquare.getY(), 10, 5, 10, 5, firstPathSquare.getNext());
+		return new Enemy(nextCreatureId, firstPathSquare.getX(), firstPathSquare.getY(), 100, 5, 10, 5, firstPathSquare.getNext());
 		
 	}
 

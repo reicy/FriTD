@@ -118,6 +118,7 @@ public class Application implements ActionListener {
 	
 	
 	public void buildTower(int towerPlaceId, int type){
+		//TODO lock during round
 		TowerType tt = TowerType.values()[type];
 		EmptyTowerSquare towerPlace = null;
 		for (EmptyTowerSquare emptyTowerSquare : emptyTowerSquares) {
@@ -128,7 +129,7 @@ public class Application implements ActionListener {
 		
 		if(tt.getCost() <= gold && towerPlace!=null){
 			emptyTowerSquares.remove(towerPlace);
-			towers.add(TowerBuilder.buildTower(towerPlaceId,towerPlace.getX(),towerPlace.getY(), towerPlace.getId(),type));
+			towers.add(TowerBuilder.buildTower(towerPlace.getX(),towerPlace.getY(), towerPlace.getId(),tt));
 			
 			
 		}
@@ -155,6 +156,7 @@ public class Application implements ActionListener {
 
 
 	private void executeRoundIteration() {
+		Projectile proj;
 		
 		//spawning pool
 		if(spawner.isTimeToSpawn()){
@@ -166,7 +168,8 @@ public class Application implements ActionListener {
 
 		//give them fire
 		for (Tower tower : towers) {
-			tower.tryToFireAtFirstEnemyInSight(enemies);
+			proj = tower.tryToFireAtFirstEnemyInSight(enemies);
+			if(proj!=null)projectiles.addLast(proj);
 		}
 		
 		//faster bastards

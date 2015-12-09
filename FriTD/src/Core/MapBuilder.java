@@ -52,14 +52,14 @@ public class MapBuilder {
 		for (int j = 0; j < map[0].length; j++) {
 
 			map[4][j] = new MapSquare(MapSquareType.towerPlaceSquare, MAP_SQUARE_SIZE,4,j);
-			towerSquares.addLast(new EmptyTowerSquare(j*MAP_SQUARE_SIZE, 4*MAP_SQUARE_SIZE, 4*100+j));
+			towerSquares.addLast(new EmptyTowerSquare(j*MAP_SQUARE_SIZE+MAP_SQUARE_SIZE/2, 4*MAP_SQUARE_SIZE+MAP_SQUARE_SIZE/2, 4*100+j));
 		}
 		
 		
 		
 		for (int j = 0; j < map[0].length; j++) {
 			map[6][j] = new MapSquare(MapSquareType.towerPlaceSquare, MAP_SQUARE_SIZE,6,j);
-			towerSquares.addLast(new EmptyTowerSquare(j*MAP_SQUARE_SIZE, 6*MAP_SQUARE_SIZE, 6*100+j));
+			towerSquares.addLast(new EmptyTowerSquare(j*MAP_SQUARE_SIZE+MAP_SQUARE_SIZE/2, 6*MAP_SQUARE_SIZE+MAP_SQUARE_SIZE/2, 6*100+j));
 
 			//map[4][j] = new MapSquare(MapSquareType.towerPlaceSquare, MAP_SQUARE_SIZE,3,j);
 

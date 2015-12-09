@@ -19,7 +19,7 @@ public class Enemy implements IDisplayableObject {
 	private EnemyState state;
 	private PathSquare squareWayPoint;
 	private LinkedList<Effect> effects;
-	
+	private int maxSpeed;
 	
 	
 	
@@ -47,6 +47,8 @@ public class Enemy implements IDisplayableObject {
 		HPCost = hPCost;
 		this.squareWayPoint = squareWayPoint;
 		this.state = EnemyState.alive;
+		this.effects = new LinkedList<>();
+		this.maxSpeed = speed;
 	}
 	
 
@@ -60,8 +62,25 @@ public class Enemy implements IDisplayableObject {
 	}
 
 	public void move() {
-		
+		LinkedList<Effect> expiredEffects = new LinkedList<>();;
+		speed = maxSpeed;
 		//add here projectile effect application
+		for (Effect effect : effects) {
+			speed = (int) ((int) speed*effect.getSlow());
+			hp-=effect.getDmg();
+			effect.reduceTTL();
+			if(effect.getRemainingTurns()<=0)expiredEffects.addLast(effect);
+		}
+		if(hp<=0){
+			this.state = EnemyState.dead;
+			
+		}
+		for (Effect effect : expiredEffects) {
+			effects.remove(effect);
+		}
+		
+		if(state == EnemyState.dead)return;
+		
 		
 		if(squareWayPoint == null){
 			this.state = EnemyState.victorious;
@@ -70,7 +89,6 @@ public class Enemy implements IDisplayableObject {
 		
 		
 		int nextX, nextY;
-		boolean tooClose = false;
 		
 		if(squareWayPoint.getX()!=x){
 			if(squareWayPoint.getX() < x){

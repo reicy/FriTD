@@ -30,8 +30,8 @@ public class Projectile  implements IDisplayableObject{
 	@Override
 	public void display(Graphics2D g2d) {
 		Color c = g2d.getColor();
-		g2d.setColor(Color.orange);
-		g2d.fillOval(x-7, y-7, 15, 15);
+		g2d.setColor(Color.red);
+		g2d.fillOval(x-2, y-2, 5, 5);
 		g2d.setColor(c);
 		
 	}

@@ -58,9 +58,13 @@ public class GamePanel extends JPanel implements ActionListener{
 			en.display(g2d);
 		}
 		
-		/*for(IDisplayableObject p : app.getProjectiles()){
+		for(IDisplayableObject en : app.getTowers()){
+			en.display(g2d);
+		}
+		
+		for(IDisplayableObject p : app.getProjectiles()){
 			p.display(g2d);
-		}*/
+		}
 		
 		g2d.drawString("TOWER DEFENCE",(int)gameBoardSize.getWidth(), (int)gameBoardSize.getHeight());
 		
@@ -84,6 +88,9 @@ public class GamePanel extends JPanel implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		app.buildTower(400, 1);
+		app.buildTower(603, 0);
+		app.buildTower(408, 2);
 		this.repaint();
 		
 	}
