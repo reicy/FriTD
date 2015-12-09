@@ -28,7 +28,7 @@ public class MainFrame extends javax.swing.JFrame {
     	
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainFrame(new GamePanel(new Application(Double.parseDouble(JOptionPane.showInputDialog(null, "Speed modifier (double value - smaller is faster)"))))).setVisible(true);
+                new MainFrame(new GamePanel(new Application(Double.parseDouble(JOptionPane.showInputDialog(null, "Speed modifier (double value - smaller is faster)", "1.0"))))).setVisible(true);
             }
         });
     }

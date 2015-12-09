@@ -66,7 +66,7 @@ public class GamePanel extends JPanel implements ActionListener{
 			p.display(g2d);
 		}
 		
-		g2d.drawString("TOWER DEFENCE",(int)gameBoardSize.getWidth(), (int)gameBoardSize.getHeight());
+		g2d.drawString("TOWER DEFENSE",(int)gameBoardSize.getWidth(), (int)gameBoardSize.getHeight());
 		
     }
 
