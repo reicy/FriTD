@@ -6,9 +6,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.LinkedList;
+
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import Core.Application;
+import Enums.MapSquareType;
 
 public class GamePanel extends JPanel{
 
@@ -17,17 +20,42 @@ public class GamePanel extends JPanel{
 	IDisplayableObject[][] map;*/
 	private Application app;
 	private Dimension size = new Dimension(500,500);
-	
+	private Dimension gameBoardSize;
+	private IDisplayableObject[][] map;
+	private JButton addTowerButton;
 	
     public GamePanel(Application app) {
 		super();
 		setSize(size);
+		this.app=app;
+		map=app.getMap();
+		gameBoardSize = new Dimension(map.length*app.getMapSquareSize(),map.length*app.getMapSquareSize());
+		//addTowerButton = new JButton("Add tower!");
+		//addTowerButton.addActionListener(new MyAction());
+		//this.add(addTowerButton);
 	}
 
 	@Override
     public void paint(Graphics g) {
-		Graphics2D gr = (Graphics2D) g;
-        gr.fillRect(0, 100, 200, 300);  
+		Graphics2D g2d = (Graphics2D) g;
+        //gr.fillRect(0, 100, 200, 300);  
+		//System.out.println(app.getMap());
+		for(IDisplayableObject[] row : app.getMap()){
+			for(IDisplayableObject elem : row){			
+				elem.display(g2d);
+			}
+		}
+		
+		for(IDisplayableObject en : app.getEnemies()){
+			en.display(g2d);
+		}
+		
+		/*for(IDisplayableObject p : app.getProjectiles()){
+			p.display(g2d);
+		}*/
+		
+		g2d.drawString("TOWER DEFENCE",(int)gameBoardSize.getWidth(), (int)gameBoardSize.getHeight());
+		
     }
 
 	public Application getApp() {
