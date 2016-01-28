@@ -43,6 +43,7 @@
     <Compile Include="Class1.cs" />
     <Compile Include="Core\DisplayableObject.cs" />
     <Compile Include="Core\EnemyBuilder.cs" />
+    <Compile Include="Core\ProjectileEffectFactory.cs" />
     <Compile Include="Core\TowerBuilder.cs" />
     <Compile Include="Core\TowerFactory.cs" />
     <Compile Include="Core\EnemyFactory.cs" />
@@ -50,11 +51,13 @@
     <Compile Include="Entities\Effect.cs" />
     <Compile Include="Entities\Enemy.cs" />
     <Compile Include="Entities\PathSquare.cs" />
+    <Compile Include="Entities\Projectile.cs" />
     <Compile Include="Entities\Tower.cs" />
     <Compile Include="Entities\TowerPlace.cs" />
     <Compile Include="Enums\DmgType.cs" />
     <Compile Include="Enums\EnemyCategory.cs" />
     <Compile Include="Enums\EnemyState.cs" />
+    <Compile Include="Enums\ProjectileState.cs" />
     <Compile Include="Helpers\MathHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

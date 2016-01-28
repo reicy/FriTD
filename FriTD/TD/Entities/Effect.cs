@@ -11,9 +11,12 @@ namespace TD.Entities
         public double SecondaryDmg { get; set; }
         public double Slow { get; set; }
         public bool PrimaryDmgUsed { get; set; }
+        public int Splash { get; set; }
+        public int SplashRadius { get; set; }
 
         public double Dmg(int armor, int magicResist)
         {
+            //TODO splash here
             var dmg = PrimaryDmgUsed ? SecondaryDmg : PrimaryDmg;
             PrimaryDmgUsed = true;
             var decrease = DmgType == DmgType.Magical ? magicResist : armor;
