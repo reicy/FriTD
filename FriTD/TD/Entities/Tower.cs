@@ -22,7 +22,7 @@ namespace TD.Entities
 
        
 
-        public Projectile TryToFireAtFirstEnemyInSight(LinkedList<Enemy> enemies)
+        public Projectile TryToFireAtFirstEnemyInSight(List<Enemy> enemies)
         {
             
 
@@ -33,8 +33,8 @@ namespace TD.Entities
                 {
                     var effect = _effectFactory.Create();
                     if (effect == null) return null;
-                    projectile = new Projectile(_projSpeed, enemy, effect);
-                    
+                    projectile = new Projectile(_projSpeed, enemy, effect) {X = X, Y = Y, Id = Id};
+                   
                     break;
                 };
             }

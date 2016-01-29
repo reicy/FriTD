@@ -10,6 +10,7 @@ namespace TD.Entities
         public string Name { get; set; }
         public EnemyCategory Category { get; set; }
         public double Hp { get; set; }
+        public double MaxHp { get; set; }
         public int Speed { get; set; }
         public int MaxSpeed { get; set; }
         public int Gold { get; set; }

@@ -8,6 +8,7 @@ namespace TD.Core
         public string Template { get; }
         public PathSquare WayPoint { get; set; }
         public PathSquare Spawn { get; set; }
+        public int HpCost { get; set; }
 
         private int _cd;
         private int _remainingCd;
@@ -32,10 +33,12 @@ namespace TD.Core
             var temp =Template.Split(',');
             _cd = int.Parse(temp[8]);
             _remainingCd = _cd;
+            HpCost = int.Parse(temp[5]);
 
             return new Enemy()
             {
                 Hp = int.Parse(temp[2]),
+                MaxHp = int.Parse(temp[2]),
                 Speed = int.Parse(temp[3]),
                 Gold = int.Parse(temp[4]),
                 HpCost = int.Parse(temp[5]),
@@ -49,5 +52,7 @@ namespace TD.Core
 
 
         }
+
+      
     }
 }

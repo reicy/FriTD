@@ -31,10 +31,16 @@ namespace TD.Core
 
         public Enemy CreateEnemy(int id)
         {
-            return _builders[id].Build();
+
+            var enemy = _builders[id].Build();
+            enemy.Id = id;
+            return enemy;
         }
 
 
-        
+        public int HpCost(int id)
+        {
+            return _builders[id].HpCost;
+        }
     }
 }

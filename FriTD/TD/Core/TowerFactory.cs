@@ -16,7 +16,7 @@ namespace TD.Core
         }
 
 
-        public void InitBuilders(string towerFile, PathSquare wayPoing, PathSquare spawn)
+        public void InitBuilders(string towerFile)
         {
             using (var reader = new StreamReader(towerFile))
             {
@@ -29,12 +29,22 @@ namespace TD.Core
             }
         }
 
-        public Enemy CreateEnemy(int id)
+        public Tower CreateTower(int id)
         {
-            return _builders[id].Build();
+            var tower = _builders[id].Build();
+            tower.Id = id;
+            return tower;
         }
 
+        public int RefundCost(int id)
+        {
+            return _builders[id].Refund;
+        }
 
-        
+        public int Cost(int id)
+        {
+            return _builders[id].Cost;
+        }
+
     }
 }
