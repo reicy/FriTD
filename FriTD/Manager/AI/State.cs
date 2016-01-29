@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AI
+namespace Manager.AI
 {
     class State
     {
@@ -17,9 +17,9 @@ namespace AI
 
         public string toString()
         {
-            string result="";
+            string result = "";
             string converted = Convert.ToString(IntState, 2);
-            for(int i = 0; i < 15-converted.Length; i++)
+            for (int i = 0; i < 15 - converted.Length; i++)
             {
                 result += "0";
             }
