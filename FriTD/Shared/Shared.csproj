@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{54197270-DAD9-4C71-975D-BD99D9309553}</ProjectGuid>
+    <ProjectGuid>{9251222E-41BC-4D4C-8075-A3D49D1824AD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Manager</RootNamespace>
-    <AssemblyName>Manager</AssemblyName>
+    <RootNamespace>Shared</RootNamespace>
+    <AssemblyName>Shared</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -41,27 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
-    <Compile Include="Core\DataStore.cs" />
-    <Compile Include="Delayers\Delayer.cs" />
-    <Compile Include="Delayers\LearningDelayer.cs" />
-    <Compile Include="Delayers\SimpleDelayer.cs" />
-    <Compile Include="Core\Manager.cs" />
-    <Compile Include="Core\ManagerBuilder.cs" />
+    <Compile Include="DisplayableObject.cs" />
+    <Compile Include="GameStateImage.cs" />
+    <Compile Include="GameVisualImage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AI\AI.csproj">
-      <Project>{776d1028-589d-43fc-8787-087f68d840a9}</Project>
-      <Name>AI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Shared\Shared.csproj">
-      <Project>{9251222e-41bc-4d4c-8075-a3d49d1824ad}</Project>
-      <Name>Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TD\TD.csproj">
-      <Project>{90591ac3-6908-43ed-b2f3-ae8f6240ff58}</Project>
-      <Name>TD</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
