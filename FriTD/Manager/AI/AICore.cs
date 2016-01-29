@@ -1,18 +1,12 @@
-﻿using System.Collections.Generic;
-using Manager.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace AI
+namespace Manager.AI
 {
     class AICore
     {
-        Dictionary<State, Dictionary<State, double>> q_values = new Dictionary<State, Dictionary<State, double>>();
-
-        public AICore(/*GameStateManager GSM*/)
-        {
-
-        }
-
-
-
     }
 }

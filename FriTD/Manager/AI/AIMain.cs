@@ -1,20 +1,12 @@
 ﻿using System;
-using AI;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace AIMain
+namespace Manager.AI
 {
     class AIMain
     {
-        static void Main()
-        {
-            Console.Write("zadaj cislo :");
-            Int16 x = Int16.Parse(Console.ReadLine());
-            State s = new State(x);
-
-
-
-            Console.WriteLine("In binary : "+s.toString());
-            Console.ReadKey();
-        }
     }
 }
