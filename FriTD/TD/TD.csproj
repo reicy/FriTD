@@ -41,7 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Core\DisplayableObject.cs" />
     <Compile Include="Core\EnemyBuilder.cs" />
+    <Compile Include="Core\GameStateImage.cs" />
+    <Compile Include="Core\GameVisualImage.cs" />
     <Compile Include="Core\MapBuilder.cs" />
     <Compile Include="Core\ProjectileEffectFactory.cs" />
     <Compile Include="Core\Spawner.cs" />
@@ -62,16 +65,6 @@
     <Compile Include="Enums\ProjectileState.cs" />
     <Compile Include="Helpers\MathHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AI\AI.csproj">
-      <Project>{776d1028-589d-43fc-8787-087f68d840a9}</Project>
-      <Name>AI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Shared\Shared.csproj">
-      <Project>{9251222e-41bc-4d4c-8075-a3d49d1824ad}</Project>
-      <Name>Shared</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

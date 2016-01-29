@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TD", "TD\TD.csproj", "{9059
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manager", "Manager\Manager.csproj", "{54197270-DAD9-4C71-975D-BD99D9309553}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AI", "AI\AI.csproj", "{776D1028-589D-43FC-8787-087F68D840A9}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Settings", "Settings", "{1D6BD43A-1A33-4F3F-965D-AADF99F32F67}"
 	ProjectSection(SolutionItems) = preProject
 		Enemies.txt = Enemies.txt
@@ -18,8 +16,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Settings", "Settings", "{1D
 		Map.txt = Map.txt
 		Towers.txt = Towers.txt
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{9251222E-41BC-4D4C-8075-A3D49D1824AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,14 +35,6 @@ Global
 		{54197270-DAD9-4C71-975D-BD99D9309553}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54197270-DAD9-4C71-975D-BD99D9309553}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54197270-DAD9-4C71-975D-BD99D9309553}.Release|Any CPU.Build.0 = Release|Any CPU
-		{776D1028-589D-43FC-8787-087F68D840A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{776D1028-589D-43FC-8787-087F68D840A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{776D1028-589D-43FC-8787-087F68D840A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{776D1028-589D-43FC-8787-087F68D840A9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9251222E-41BC-4D4C-8075-A3D49D1824AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9251222E-41BC-4D4C-8075-A3D49D1824AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9251222E-41BC-4D4C-8075-A3D49D1824AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9251222E-41BC-4D4C-8075-A3D49D1824AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AI;
 using Manager.Core.Delayers;
 using TD.Core;
 using TD.Enums;
@@ -28,11 +27,11 @@ namespace Manager.Core
             
         }
 
-        public void StartTurn(AiAction action)
+      /*  public void StartTurn(AiAction action)
         {
             _game.StartLevel();
             ExecuteLevel();
-        }
+        }*/
 
         private void ExecuteLevel()
         {

@@ -79,17 +79,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AI\AI.csproj">
-      <Project>{776d1028-589d-43fc-8787-087f68d840a9}</Project>
-      <Name>AI</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Manager\Manager.csproj">
       <Project>{54197270-dad9-4c71-975d-bd99d9309553}</Project>
       <Name>Manager</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Shared\Shared.csproj">
-      <Project>{9251222e-41bc-4d4c-8075-a3d49d1824ad}</Project>
-      <Name>Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

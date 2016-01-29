@@ -50,18 +50,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AI\AI.csproj">
-      <Project>{776d1028-589d-43fc-8787-087f68d840a9}</Project>
-      <Name>AI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Shared\Shared.csproj">
-      <Project>{9251222e-41bc-4d4c-8075-a3d49d1824ad}</Project>
-      <Name>Shared</Name>
-    </ProjectReference>
     <ProjectReference Include="..\TD\TD.csproj">
       <Project>{90591ac3-6908-43ed-b2f3-ae8f6240ff58}</Project>
       <Name>TD</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="AI\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
