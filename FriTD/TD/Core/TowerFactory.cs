@@ -18,7 +18,7 @@ namespace TD.Core
 
         public void InitBuilders(string towerFile)
         {
-            using (var reader = new StreamReader(towerFile))
+            using (var reader = new StringReader(towerFile))
             {
                 string line;
                 while ((line = reader.ReadLine())!=null)

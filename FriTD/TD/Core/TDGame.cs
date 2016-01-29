@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using TD.Entities;
 using TD.Enums;
@@ -45,12 +47,19 @@ namespace TD.Core
             _spawner = new Spawner(levels,_enemyFactory);
             _life = 10000;
             Money = 20;
+            Enemies = new List<Enemy>();
+            Projectiles = new List<Projectile>();
+            State = GameState.Waiting;
         }
 
         public void StartLevel()
         {
-            State = GameState.InProgress;
-            _spawner.LoadNextWave();
+            if (State == GameState.Waiting)
+            {
+                State = GameState.InProgress;
+                _spawner.LoadNextWave();
+            }
+            
         }
 
         public void Tic()
@@ -89,8 +98,8 @@ namespace TD.Core
             foreach (Enemy foe in _enemies)
             {
                 foe.Move();
-                if (foe.IsDead()) fallenOnes.Add(enemy);
-                if (foe.IsVictorious()) victoriousOnes.Add(enemy);
+                if (foe.IsDead()) fallenOnes.Add(foe);
+                if (foe.IsVictorious()) victoriousOnes.Add(foe);
             }
 
 
@@ -109,12 +118,12 @@ namespace TD.Core
 
             foreach (Enemy foe in victoriousOnes)
             {
-                _enemies.Remove(foe);
-                int moneyDmgBonus = (int)(1.0 - foe.Hp / foe.MaxHp) * foe.Gold;
-                int lifeReduction = (int)(foe.Hp / foe.MaxHp) * foe.HpCost;
+                
+                int moneyDmgBonus = (int)Math.Round((1.0 - foe.Hp / foe.MaxHp) * foe.Gold);
+                int lifeReduction = (int)Math.Round((foe.Hp / foe.MaxHp) * foe.HpCost);
                 Money += moneyDmgBonus;
                 _life -= lifeReduction;
-
+                _enemies.Remove(foe);
             }
 
 
@@ -150,7 +159,7 @@ namespace TD.Core
             if (!TowerPlaces[placeId].HasTower())
             {
                 var cost = _towerFactory.Cost(towerId);
-                if (Money > cost)
+                if (Money >= cost)
                 {
                     Money -= cost;
                     TowerPlaces[placeId].BuildTower(_towerFactory.CreateTower(towerId));

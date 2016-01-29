@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,14 +18,25 @@ namespace Manager.Core
         private DataStore _store;
         private IDelayer _delayer;
 
+        public Manager()
+        {
+            _store = new DataStore();
+            _delayer = new LearningDelayer();
+        }
+
         public void PrepareGame()
         {
             _game = new TDGame();
+            _game.InitGame(Properties.Resources.Towers, Properties.Resources.Map, Properties.Resources.Enemies, Properties.Resources.Levels);
+            
+           
         }
 
         public void StartTurn()
         {
-            
+            _game.StartLevel();
+            ExecuteLevel();
+
         }
 
       /*  public void StartTurn(AiAction action)
@@ -40,6 +52,14 @@ namespace Manager.Core
                 _game.Tic();
                 _store.ExchangeData(_game.GameVisualImage());
                 _delayer.Delay();
+
+                var tmp = _game.GameVisualImage();
+                Debug.WriteLine(tmp.Hp);
+                Debug.WriteLine(tmp.Enemies.Count);
+                if (tmp.Enemies.Count > 0)
+                {
+                    Debug.WriteLine(tmp.Enemies[0].X +" "+ tmp.Enemies[0].Y );
+                }
             }
         }
 

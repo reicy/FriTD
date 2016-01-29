@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using TD.Core;
 using TD.Enums;
 using TD.Helpers;
@@ -34,6 +35,8 @@ namespace TD.Entities
 
         public void Move()
         {
+            Debug.WriteLine("Enemy hp: "+Hp+" type "+Id+ " moved from "+Y+" "+X+" "+Speed);
+            
             var expiredEffects = new LinkedList<Effect>();
             Speed = MaxSpeed;
 
@@ -97,7 +100,8 @@ namespace TD.Entities
             {
                 nextY = Y;
             }
-
+            Debug.WriteLine("Enemy hp: " + Hp + " type " + Id + " moved to " + Y + " " + X);
+            Debug.WriteLine("Way point "+SquareWayPoint.X +" "+SquareWayPoint.Y);
             //MCH
             if (MathHelper.DistanceBetweenPoints(nextX, nextY, SquareWayPoint.X, SquareWayPoint.Y) < 2 * Speed)
             {

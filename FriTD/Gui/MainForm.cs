@@ -44,6 +44,8 @@ namespace Gui
                     break;
                 default:
                     _manager = ManagerBuilder.BuildSimplePlayerManager();
+                    Debug.WriteLine("Started");
+                    _manager.PrepareGame();
                     break;
 
             }

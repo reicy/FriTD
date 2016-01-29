@@ -40,6 +40,7 @@ namespace TD.Core
                 Hp = int.Parse(temp[2]),
                 MaxHp = int.Parse(temp[2]),
                 Speed = int.Parse(temp[3]),
+                MaxSpeed = int.Parse(temp[3]),
                 Gold = int.Parse(temp[4]),
                 HpCost = int.Parse(temp[5]),
                 Armor = int.Parse(temp[6]),

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -21,7 +22,7 @@ namespace TD.Core
         {
             _towerPlaces = new List<TowerPlace>();
             int rows;
-            using (StreamReader reader = new StreamReader(mapFile))
+            using (var reader = new StringReader(mapFile))
             {
                 rows = int.Parse(reader.ReadLine());
                 string line;
@@ -40,7 +41,7 @@ namespace TD.Core
             {
                 if (_map[i / rows, i % rows] == 'S')
                 {
-                    _spawn = AdjustSize(new PathSquare() { X = i % rows, Y = i / rows });
+                    _spawn = (new PathSquare() { X = i % rows, Y = i / rows });
 
 
                 }
@@ -50,16 +51,27 @@ namespace TD.Core
                 }
 
             }
-
+           
             BuildPath();
 
+            AdjustSize(_spawn);
+            var tmp = _spawn;
+            do
+            {
+                tmp = tmp.Next;
+                AdjustSize(tmp);
+                Debug.WriteLine(tmp.X + " " + tmp.Y);
+                
+            } while (tmp.Next != null);
+
+           // Debug.WriteLine(_spawn.Next.X+" "+_spawn.Next.Y );
 
         }
 
         private PathSquare AdjustSize(PathSquare pathSquare)
         {
             pathSquare.X = pathSquare.X * SQUARE_SIZE + SQUARE_SIZE / 2;
-            pathSquare.Y = pathSquare.X * SQUARE_SIZE + SQUARE_SIZE / 2;
+            pathSquare.Y = pathSquare.Y * SQUARE_SIZE + SQUARE_SIZE / 2;
             return pathSquare;
         }
 
@@ -81,7 +93,7 @@ namespace TD.Core
                     if (current.Previous == null ||
                         (current.Previous.X != current.X || current.Previous.Y != current.Y - 1))
                     {
-                        next = AdjustSize(new PathSquare() { Y = current.Y - 1, X = current.X, Previous = current });
+                        next = (new PathSquare() { Y = current.Y - 1, X = current.X, Previous = current });
                         current.Next = next;
                         queue.AddLast(next);
                     }
@@ -94,7 +106,7 @@ namespace TD.Core
                     if (current.Previous == null ||
                         (current.Previous.X != current.X || current.Previous.Y != current.Y + 1))
                     {
-                        next = AdjustSize(new PathSquare() { Y = current.Y + 1, X = current.X, Previous = current });
+                        next = (new PathSquare() { Y = current.Y + 1, X = current.X, Previous = current });
                         current.Next = next;
                         queue.AddLast(next);
                     }
@@ -107,7 +119,7 @@ namespace TD.Core
                     if (current.Previous == null ||
                         (current.Previous.X != current.X - 1 || current.Previous.Y != current.Y))
                     {
-                        next = AdjustSize(new PathSquare() { Y = current.Y, X = current.X - 1, Previous = current });
+                        next = (new PathSquare() { Y = current.Y, X = current.X - 1, Previous = current });
                         current.Next = next;
                         queue.AddLast(next);
                     }
@@ -121,7 +133,7 @@ namespace TD.Core
                     if (current.Previous == null ||
                         (current.Previous.X != current.X + 1 || current.Previous.Y != current.Y))
                     {
-                        next = AdjustSize(new PathSquare() { Y = current.Y, X = current.X + 1, Previous = current });
+                        next = (new PathSquare() { Y = current.Y, X = current.X + 1, Previous = current });
                         current.Next = next;
                         queue.AddLast(next);
                     }

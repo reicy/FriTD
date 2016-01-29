@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using TD.Entities;
 
@@ -10,7 +11,7 @@ namespace TD.Core
 
         private readonly List<EnemyBuilder> _builders;
 
-        public EnemyFactory( )
+        public EnemyFactory()
         {
             _builders = new List<EnemyBuilder>();
         }
@@ -18,14 +19,15 @@ namespace TD.Core
 
         public void InitBuilders(string enemiesFile, PathSquare wayPoing, PathSquare spawn)
         {
-            using (var reader = new StreamReader(enemiesFile))
+            using (var reader = new StringReader(enemiesFile))
             {
                 string line;
-                while ((line = reader.ReadLine())!=null)
+                while ((line = reader.ReadLine()) != null)
                 {
+                    //Debug.WriteLine(line);
                     _builders.Add(new EnemyBuilder(line, wayPoing, spawn));
                 }
-                
+
             }
         }
 
@@ -33,13 +35,14 @@ namespace TD.Core
         {
 
             var enemy = _builders[id].Build();
-            enemy.Id = id;
+            if (enemy != null) enemy.Id = id;
             return enemy;
         }
 
 
         public int HpCost(int id)
         {
+            Debug.WriteLine(id);
             return _builders[id].HpCost;
         }
     }

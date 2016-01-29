@@ -18,7 +18,7 @@ namespace TD.Core
             _levelTemplates = new LinkedList<string>();
             _type = 0;
             _remaining = 0;
-            using (StreamReader reader = new StreamReader(levels))
+            using (var reader = new StringReader(levels))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)

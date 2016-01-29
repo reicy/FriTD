@@ -40,6 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AI\AiAction.cs" />
+    <Compile Include="AI\AICore.cs" />
+    <Compile Include="AI\AIMain.cs" />
+    <Compile Include="AI\Class1.cs" />
+    <Compile Include="AI\State.cs" />
+    <Compile Include="AI\StateConverter.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="Core\DataStore.cs" />
     <Compile Include="Delayers\Delayer.cs" />
@@ -48,6 +54,11 @@
     <Compile Include="Core\Manager.cs" />
     <Compile Include="Core\ManagerBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TD\TD.csproj">
@@ -56,9 +67,28 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="AI\" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Enemies.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Levels.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Map.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Towers.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
