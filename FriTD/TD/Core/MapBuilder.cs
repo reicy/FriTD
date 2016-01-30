@@ -16,7 +16,7 @@ namespace TD.Core
         private char[,] _map;
         private PathSquare _spawn;
         private List<TowerPlace> _towerPlaces;
-        private const int SQUARE_SIZE = 30;
+        private const int SQUARE_SIZE = 100;
 
         public void Build(string mapFile)
         {

@@ -26,6 +26,13 @@ namespace TD.Entities
         public int X { get; set; }
         public int Y { get; set; }
         public int Id { get; set; }
+        public int SeqId { get; set; }
+
+        public double Perc
+        {
+            get {return Hp/MaxHp;}
+            set { Perc = value; }
+        }
 
         public Enemy()
         {

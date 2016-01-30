@@ -10,10 +10,13 @@ namespace TD.Core
     {
 
         private readonly List<EnemyBuilder> _builders;
+        private int _nextSeqId;
+
 
         public EnemyFactory()
         {
             _builders = new List<EnemyBuilder>();
+            _nextSeqId = 0;
         }
 
 
@@ -35,7 +38,11 @@ namespace TD.Core
         {
 
             var enemy = _builders[id].Build();
-            if (enemy != null) enemy.Id = id;
+            if (enemy != null)
+            {
+                enemy.Id = id;
+                enemy.SeqId = _nextSeqId++;
+            }
             return enemy;
         }
 

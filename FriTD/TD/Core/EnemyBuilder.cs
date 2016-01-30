@@ -12,7 +12,7 @@ namespace TD.Core
 
         private int _cd;
         private int _remainingCd;
-
+       
         public EnemyBuilder(string template, PathSquare wayPoint, PathSquare spawn)
         {
             Spawn = spawn;
@@ -20,6 +20,7 @@ namespace TD.Core
             Template = template;
             _cd = 0;
             _remainingCd = 0;
+            
         }
 
         public Enemy Build()
