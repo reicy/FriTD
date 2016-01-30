@@ -10,6 +10,7 @@ namespace TD.Entities
         public int X { get; set; }
         public int Y { get; set; }
         public int Id { get; set; }
+        public double Perc { get; set; }
         public ProjectileState State { get; private set; }
         private readonly int _speed;
         private readonly Enemy _target;
