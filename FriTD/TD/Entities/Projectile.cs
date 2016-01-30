@@ -7,9 +7,12 @@ namespace TD.Entities
     public class Projectile:IDisplayableObject
     {
 
+        private static int _nextSeqId = 0;
+
         public int X { get; set; }
         public int Y { get; set; }
         public int Id { get; set; }
+        public int SeqId { get; set; }
         public double Perc { get; set; }
         public ProjectileState State { get; private set; }
         private readonly int _speed;
@@ -22,6 +25,7 @@ namespace TD.Entities
             _speed = speed;
             _target = target;
             _effect = effect;
+            SeqId = _nextSeqId++;
         }
 
         public bool IsEmpty()

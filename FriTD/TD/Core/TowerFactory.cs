@@ -9,10 +9,13 @@ namespace TD.Core
     {
 
         private readonly List<TowerBuilder> _builders;
+        private int _nextSeqId;
+
 
         public TowerFactory( )
         {
             _builders = new List<TowerBuilder>();
+            _nextSeqId = 0;
         }
 
 
@@ -33,6 +36,7 @@ namespace TD.Core
         {
             var tower = _builders[id].Build();
             tower.Id = id;
+            tower.SeqId = _nextSeqId++;
             return tower;
         }
 

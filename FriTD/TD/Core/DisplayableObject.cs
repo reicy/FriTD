@@ -5,6 +5,7 @@
         int X { get; set; }
         int Y { get; set; }
         int Id { get; set; }
+        int SeqId { get; set; }
         double Perc { get; set; }
          
     }
