@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.Remoting.Contexts;
 using TD.Core;
 
 namespace Manager.Core
 {
     [Synchronization]
-    class DataStore
+    public class DataStore
     {
 
         private GameVisualImage _img;

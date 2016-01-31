@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Manager.Core.Delayers;
 using TD.Core;
 using TD.Enums;
@@ -15,7 +9,8 @@ namespace Manager.Core
     public class Manager
     {
         private TDGame _game;
-        private DataStore _store;
+        //private DataStore _store;
+        public DataStore _store { get; set; }
         private IDelayer _delayer;
 
         public Manager()
