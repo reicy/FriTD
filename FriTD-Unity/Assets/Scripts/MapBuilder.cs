@@ -65,10 +65,12 @@ public class MapBuilder : MonoBehaviour
                 Instantiate(toBuild, new Vector3(j, 0, -i), Quaternion.identity);
             }
         }
+        /*
         Instantiate(mage, new Vector3(2, 1, -2), Quaternion.identity);
         Instantiate(grenade, new Vector3(1, 1, -2), Quaternion.identity);
         Instantiate(sniper, new Vector3(2, 1, -3), Quaternion.identity);
         Instantiate(vermin, new Vector3(2, 1, -1), Quaternion.identity);
         Instantiate(marauder, new Vector3(3, 1, -1), Quaternion.identity);
+        */
     }
 }

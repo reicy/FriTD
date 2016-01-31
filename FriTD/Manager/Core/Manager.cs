@@ -16,7 +16,8 @@ namespace Manager.Core
         public Manager()
         {
             _store = new DataStore();
-            _delayer = new LearningDelayer();
+            //_delayer = new LearningDelayer();
+            _delayer = new SimpleDelayer();
         }
 
         public void PrepareGame()
@@ -39,6 +40,26 @@ namespace Manager.Core
             _game.StartLevel();
             ExecuteLevel();
         }*/
+
+
+        // ----------- unity test -----------------
+        public void UnityStartLevel()
+        {
+            _game.StartLevel();;
+        }
+
+        public void UnityTic()
+        {
+            _game.Tic();
+            _store.ExchangeData(_game.GameVisualImage());
+        }
+
+        public GameState GetGameState()
+        {
+            return _game.State;
+        }
+        // ----------- unity test end -------------
+        
 
         private void ExecuteLevel()
         {
