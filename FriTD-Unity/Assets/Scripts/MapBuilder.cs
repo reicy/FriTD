@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MapBuilder : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class MapBuilder : MonoBehaviour
     public GameObject vermin;
     public GameObject marauder;
 
+    private List<GameObject> fields = new List<GameObject>(); 
+
     // Use this for initialization
     private void Start()
     {
@@ -26,7 +29,7 @@ public class MapBuilder : MonoBehaviour
             {'G', 'G', 'G', 'G', 'G'}
         };
 
-        buildMap(charMap);
+        BuildMap(charMap);
     }
 
     // Update is called once per frame
@@ -34,8 +37,9 @@ public class MapBuilder : MonoBehaviour
     {
     }
 
-    private void buildMap(char[,] charMap)
+    public void BuildMap(char[,] charMap)
     {
+        DestroyCurrentMap();
         for (int j = 0; j < charMap.GetLength(1); j++)
         {
             for (int i = 0; i < charMap.GetLength(0); i++)
@@ -62,15 +66,16 @@ public class MapBuilder : MonoBehaviour
                         toBuild = grass;
                         break;
                 }
-                Instantiate(toBuild, new Vector3(j, 0, -i), Quaternion.identity);
+                fields.Add((GameObject) Instantiate(toBuild, new Vector3(j+0.5f, 0, -i-0.5f), Quaternion.identity));
             }
         }
-        /*
-        Instantiate(mage, new Vector3(2, 1, -2), Quaternion.identity);
-        Instantiate(grenade, new Vector3(1, 1, -2), Quaternion.identity);
-        Instantiate(sniper, new Vector3(2, 1, -3), Quaternion.identity);
-        Instantiate(vermin, new Vector3(2, 1, -1), Quaternion.identity);
-        Instantiate(marauder, new Vector3(3, 1, -1), Quaternion.identity);
-        */
+    }
+
+    private void DestroyCurrentMap()
+    {
+        foreach (var field in fields)
+        {
+            Destroy(field);
+        }
     }
 }

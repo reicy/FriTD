@@ -42,23 +42,25 @@ namespace Manager.Core
         }*/
 
 
-        // ----------- unity test -----------------
+        // ----------- unity hack begin ------------
         public void UnityStartLevel()
         {
-            _game.StartLevel();;
+            if (_game.State != GameState.InProgress)
+            {
+                _game.StartLevel();
+                _store.ExchangeData(_game.GameVisualImage());
+            }
         }
 
         public void UnityTic()
         {
-            _game.Tic();
-            _store.ExchangeData(_game.GameVisualImage());
+            if (_game.State == GameState.InProgress)
+            {
+                _game.Tic();
+                _store.ExchangeData(_game.GameVisualImage());
+            }
         }
-
-        public GameState GetGameState()
-        {
-            return _game.State;
-        }
-        // ----------- unity test end -------------
+        // ----------- unity hack end -------------
         
 
         private void ExecuteLevel()
