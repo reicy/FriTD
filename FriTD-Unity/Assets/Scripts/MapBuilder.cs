@@ -9,11 +9,6 @@ public class MapBuilder : MonoBehaviour
     public GameObject path;
     public GameObject end;
     public GameObject start;
-    public GameObject mage;
-    public GameObject sniper;
-    public GameObject grenade;
-    public GameObject vermin;
-    public GameObject marauder;
 
     private List<GameObject> fields = new List<GameObject>(); 
 
