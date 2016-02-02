@@ -7,6 +7,8 @@
         int Id { get; set; }
         int SeqId { get; set; }
         double Perc { get; set; }
-         
+        
+        int WX { get; set; }
+        int WY { get; set; }
     }
 }

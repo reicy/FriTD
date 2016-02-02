@@ -6,7 +6,7 @@ using TD.Helpers;
 
 namespace TD.Entities
 {
-    public class Enemy:IDisplayableObject
+    public class Enemy : IDisplayableObject
     {
         public string Name { get; set; }
         public EnemyCategory Category { get; set; }
@@ -30,8 +30,20 @@ namespace TD.Entities
 
         public double Perc
         {
-            get {return Hp/MaxHp;}
+            get { return Hp / MaxHp; }
             set { Perc = value; }
+        }
+
+        public int WX
+        {
+            get { return SquareWayPoint.X; }
+            set { SquareWayPoint.X = value; }
+        }
+
+        public int WY
+        {
+            get { return SquareWayPoint.Y; }
+            set { SquareWayPoint.Y = value; }
         }
 
         public Enemy()
@@ -42,15 +54,15 @@ namespace TD.Entities
 
         public void Move()
         {
-            Debug.WriteLine("Enemy hp: "+Hp+" id "+SeqId+ " moved from "+Y+" "+X+" "+Speed);
-            
+            Debug.WriteLine("Enemy hp: " + Hp + " id " + SeqId + " moved from " + Y + " " + X + " " + Speed);
+
             var expiredEffects = new LinkedList<Effect>();
             Speed = MaxSpeed;
 
             //add here projectile effect application
             foreach (var effect in _effects)
             {
-                Speed = (int)(Speed * ((100-effect.Slow)/100));
+                Speed = (int)(Speed * ((100 - effect.Slow) / 100));
                 Hp -= effect.Dmg(Armor, MagicResist);
                 effect.ReduceTtl();
                 if (effect.RemainingTurns <= 0) expiredEffects.AddLast(effect);
@@ -109,7 +121,7 @@ namespace TD.Entities
                 nextY = Y;
             }
             Debug.WriteLine("Enemy hp: " + Hp + " type " + Id + " moved to " + Y + " " + X);
-            Debug.WriteLine("Way point "+SquareWayPoint.X +" "+SquareWayPoint.Y);
+            Debug.WriteLine("Way point " + SquareWayPoint.X + " " + SquareWayPoint.Y);
             //MCH
             if (MathHelper.DistanceBetweenPoints(nextX, nextY, SquareWayPoint.X, SquareWayPoint.Y) < 2 * Speed)
             {
@@ -127,14 +139,14 @@ namespace TD.Entities
 
             return State == EnemyState.Dead;
         }
-        
+
 
         public bool IsVictorious()
         {
             return State == EnemyState.Victorious;
         }
 
-        
+
 
 
 
@@ -144,6 +156,6 @@ namespace TD.Entities
             _effects.AddLast(effect);
         }
 
-        
+
     }
 }

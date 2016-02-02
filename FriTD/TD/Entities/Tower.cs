@@ -14,6 +14,8 @@ namespace TD.Entities
         public int Id { get; set; }
         public int SeqId { get; set; }
         public double Perc { get; set; }
+        public int WX { get; set; }
+        public int WY { get; set; }
 
         public Tower(int range, ProjectileEffectFactory eFactory, int ProjSpeed)
         {
