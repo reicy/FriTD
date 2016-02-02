@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Assets.Scripts;
 using Manager.Core;
 using TD.Core;
 using TD.Enums;
@@ -142,7 +143,14 @@ namespace Assets
                 }
                 else
                 {
-                    gameObjects[entity.SeqId].transform.position = new Vector3(entity.X*1.0f/100, 1, -entity.Y*1.0f/100);
+                    GameObject go = gameObjects[entity.SeqId];
+                    go.transform.position = new Vector3(entity.X*1.0f/100, 1, -entity.Y*1.0f/100);
+                    go.GetComponentInChildren<Health>().SetPerctHp((float) entity.Perc);
+                    if (entityType == EntityType.Enemy)
+                    {
+                        go.transform.LookAt(new Vector3(entity.WX * 1.0f / 100, 1, -entity.WY * 1.0f / 100));
+                        go.transform.Rotate(new Vector3(0, -90, 0));
+                    }
                 }
                 served.Add(entity.SeqId);
             }
@@ -155,7 +163,7 @@ namespace Assets
                 _manager.UnityStartLevel();
                 GameVisualImage image = _dataStore.ExchangeData(null);
                 _mapBuilder.BuildMap(image.Map);
-                //_manager.ExecuteCmd("b_3_0");
+                _manager.ExecuteCmd("b_3_1");
             }
         }
 
