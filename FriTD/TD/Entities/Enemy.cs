@@ -42,7 +42,7 @@ namespace TD.Entities
 
         public void Move()
         {
-            Debug.WriteLine("Enemy hp: "+Hp+" type "+Id+ " moved from "+Y+" "+X+" "+Speed);
+            Debug.WriteLine("Enemy hp: "+Hp+" id "+SeqId+ " moved from "+Y+" "+X+" "+Speed);
             
             var expiredEffects = new LinkedList<Effect>();
             Speed = MaxSpeed;
@@ -54,6 +54,7 @@ namespace TD.Entities
                 Hp -= effect.Dmg(Armor, MagicResist);
                 effect.ReduceTtl();
                 if (effect.RemainingTurns <= 0) expiredEffects.AddLast(effect);
+
             }
             if (Hp <= 0)
             {

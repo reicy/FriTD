@@ -21,6 +21,8 @@ namespace TD.Core
             _cdCounter = 0;
         }
 
+       
+
         public Effect Create()
         {
 

@@ -50,6 +50,7 @@ namespace TD.Core
             Enemies = new List<Enemy>();
             Projectiles = new List<Projectile>();
             State = GameState.Waiting;
+            GlobalEventHandler.SetManagedGame(this);
         }
 
         public void StartLevel()

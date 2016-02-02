@@ -73,8 +73,13 @@ namespace TD.Entities
             if (MathHelper.DistanceBetweenPoints(X, Y, _target.X, _target.Y) < _speed)
             {
                 _target.ApplyEffect(_effect);
+                if (_effect.IsSplash())
+                {
+                    GlobalEventHandler.AreaOfDmg(_target.X, _target.Y, _effect.PrimaryDmg, _effect.DmgType, _effect.SplashRadius);
+                }
                 _effect = null;
                 State = ProjectileState.NonActive;
+
 
             };
 
