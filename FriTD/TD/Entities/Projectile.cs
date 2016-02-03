@@ -81,7 +81,9 @@ namespace TD.Entities
                 }
                 _effect = null;
                 State = ProjectileState.NonActive;
-
+                X = 0;
+                Y = 0;
+                return;
 
             };
 
