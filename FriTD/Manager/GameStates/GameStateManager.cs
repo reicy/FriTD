@@ -1,4 +1,5 @@
-﻿using Manager.AI;
+﻿using System;
+using Manager.AI;
 using System.Collections;
 using System.Collections.Generic;
 using TD.Core;
@@ -67,7 +68,31 @@ namespace Manager.GameStates
 
         private string TransformStateToCommand(State state)
         {
-            return "";
+            var response = "";
+            var str = state.toString();
+            var towerPlace = "";
+
+            for (int i = 0; i < 6; i++)
+            {
+                towerPlace = str.Substring(i*2, 2);
+                if (towerPlace.Equals("00"))
+                {
+                    response += "s_" + i;
+                }
+                else
+                {
+                    var typId = Convert.ToInt16(towerPlace, 2);
+                    typId--;
+                    response = "b_"+i+"_"+typId;
+                }
+                
+
+
+                response += " ";
+            }
+            
+
+            return response.Trim();
         }
     }
 }

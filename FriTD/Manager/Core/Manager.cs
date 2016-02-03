@@ -52,7 +52,7 @@ namespace Manager.Core
 
         public void InsertAi()
         {
-            _ai = new AICore();
+            _ai = new AICore(1,1,1);
             _aiAdapter = new GameStateManager(_ai);
         }
 
