@@ -27,6 +27,8 @@ namespace Gui
             switch (listBox1.SelectedIndex)
             {
                 case 0:
+                    _manager = ManagerBuilder.BuildAiLearningManager();
+                    _manager.PrepareGame();
                     break;
                 case 1:
                     break;
@@ -34,6 +36,7 @@ namespace Gui
                     break;
                 case 3:
                     _manager = ManagerBuilder.BuildSimplePlayerManager();
+                    _manager.PrepareGame();
                     break;
                 default:
                     _manager = ManagerBuilder.BuildSimplePlayerManager();
@@ -49,7 +52,15 @@ namespace Gui
 
         private void button3_Click(object sender, EventArgs e)
         {
-            _manager.StartTurn();
+            if (_manager.IsAiMode())
+            {
+                _manager.StartAiDrivenTurn();
+            }
+            else
+            {
+                _manager.StartTurn();
+            }
+            
         }
 
         private void button2_Click(object sender, EventArgs e)
