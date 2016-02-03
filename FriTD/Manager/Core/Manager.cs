@@ -45,7 +45,7 @@ namespace Manager.Core
         // ----------- unity hack begin ------------
         public void UnityStartLevel()
         {
-            if (_game.State != GameState.InProgress)
+            if (_game.State != GameStates.InProgress)
             {
                 _game.StartLevel();
                 _store.ExchangeData(_game.GameVisualImage());
@@ -54,7 +54,7 @@ namespace Manager.Core
 
         public void UnityTic()
         {
-            if (_game.State == GameState.InProgress)
+            if (_game.State == GameStates.InProgress)
             {
                 _game.Tic();
                 _store.ExchangeData(_game.GameVisualImage());
@@ -65,7 +65,7 @@ namespace Manager.Core
 
         private void ExecuteLevel()
         {
-            while (_game.State == GameState.InProgress)
+            while (_game.State == GameStates.InProgress)
             {
                 _game.Tic();
                 _store.ExchangeData(_game.GameVisualImage());

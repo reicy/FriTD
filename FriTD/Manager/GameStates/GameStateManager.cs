@@ -1,7 +1,8 @@
 ﻿using Manager.AI;
+using System.Collections.Generic;
 using TD.Core;
 
-namespace Manager.GameState
+namespace Manager.GameStates
 {
     class GameStateManager
     {
@@ -23,7 +24,7 @@ namespace Manager.GameState
 
         public void ExecuteReward(GameStateImage image)
         {
-
+            
         }
     }
 }
