@@ -1,5 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel;
+using System.Diagnostics;
+using System.Net.Configuration;
+using Manager.AI;
 using Manager.Core.Delayers;
+using Manager.GameStates;
 using TD.Core;
 using TD.Enums;
 
@@ -9,15 +13,25 @@ namespace Manager.Core
     public class Manager
     {
         private TDGame _game;
+        private GameStateManager _aiAdapter;
+        private AICore _ai; 
+
         //private DataStore _store;
         public DataStore _store { get; set; }
-        private IDelayer _delayer;
+        private readonly IDelayer _delayer;
 
         public Manager()
         {
             _store = new DataStore();
-            //_delayer = new LearningDelayer();
-            _delayer = new SimpleDelayer();
+            //_delayer = new SimpleDelayer();
+            _delayer = new LearningDelayer();
+
+           
+        }
+
+        public bool IsAiMode()
+        {
+            return _ai != null;
         }
 
         public void PrepareGame()
@@ -35,11 +49,13 @@ namespace Manager.Core
 
         }
 
-      /*  public void StartTurn(AiAction action)
+
+        public void InsertAi()
         {
-            _game.StartLevel();
-            ExecuteLevel();
-        }*/
+            _ai = new AICore();
+            _aiAdapter = new GameStateManager(_ai);
+        }
+
 
 
         // ----------- unity hack begin ------------
@@ -93,6 +109,22 @@ namespace Manager.Core
                 var arr = cmd.Split('_');
                 _game.SellTower(int.Parse(arr[1]));
             }
+        }
+
+        public void StartAiDrivenTurn()
+        {
+            var decisionResult = _aiAdapter.ExecuteDecision(_game.GameStateImage());
+            var arr = decisionResult.Split(' ');
+            foreach (var cmd in arr)
+            {
+                if(cmd.Length > 0)ExecuteCmd(cmd);
+            }
+
+            StartTurn();
+
+            _aiAdapter.ExecuteReward(_game.GameStateImage());
+
+
         }
     }
 }
