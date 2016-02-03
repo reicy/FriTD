@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TD.Enums;
 
 
 namespace TD.Core
@@ -11,6 +12,8 @@ namespace TD.Core
         public int TowerRefundCost { get; set; }
         public int TowerCost { get; set; }
         public int[] Towers { get; set; }
+        public GameState GameState { get; set; }
+        //game over
 
     }
 }
