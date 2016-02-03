@@ -17,7 +17,7 @@ namespace Manager.Core
         {
             _store = new DataStore();
             //_delayer = new LearningDelayer();
-            _delayer = new SimpleDelayer();
+            _delayer = new LearningDelayer();
         }
 
         public void PrepareGame()

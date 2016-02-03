@@ -229,7 +229,8 @@ namespace TD.Core
                 NextWaveHpCost = _spawner.NextWaveHpCost(),
                 Towers = towers,
                 TowerCost = _towerFactory.Cost(0),
-                TowerRefundCost = _towerFactory.RefundCost(0)
+                TowerRefundCost = _towerFactory.RefundCost(0),
+                GameState = State
             };
 
             return img;
