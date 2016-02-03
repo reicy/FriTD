@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using TD.Core;
 using TD.Helpers;
 
@@ -33,8 +34,10 @@ namespace TD.Entities
             Projectile projectile = null;
             foreach (Enemy enemy in enemies)
             {
+               // Debug.WriteLine("Range: "+_range);
                 if (MathHelper.DistanceBetweenPoints(enemy.X, enemy.Y, X, Y) <= _range)
                 {
+                   // Debug.WriteLine("Firing "+SeqId);
                     var effect = _effectFactory.Create();
                     if (effect == null) return null;
                     projectile = new Projectile(_projSpeed, enemy, effect) {X = X, Y = Y, Id = Id};

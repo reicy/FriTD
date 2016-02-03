@@ -1,4 +1,6 @@
-﻿namespace Manager.Core
+﻿using System.Runtime.Remoting.Messaging;
+
+namespace Manager.Core
 {
     public class ManagerBuilder
     {
@@ -10,7 +12,9 @@
 
         public static Manager BuildAiLearningManager()
         {
-            return null;
+            var mng = new Manager();
+            mng.InsertAi();
+            return mng;
         }
 
         public static Manager BuildObservableAiLearningManager()

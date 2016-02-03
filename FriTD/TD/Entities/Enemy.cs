@@ -36,13 +36,13 @@ namespace TD.Entities
 
         public int WX
         {
-            get { return SquareWayPoint.X; }
+            get { return SquareWayPoint != null ? SquareWayPoint.X : 0; }
             set { SquareWayPoint.X = value; }
         }
 
         public int WY
         {
-            get { return SquareWayPoint.Y; }
+            get { return SquareWayPoint != null ? SquareWayPoint.Y : 0; }
             set { SquareWayPoint.Y = value; }
         }
 
@@ -120,8 +120,8 @@ namespace TD.Entities
             {
                 nextY = Y;
             }
-            Debug.WriteLine("Enemy hp: " + Hp + " type " + Id + " moved to " + Y + " " + X);
-            Debug.WriteLine("Way point " + SquareWayPoint.X + " " + SquareWayPoint.Y);
+            //  Debug.WriteLine("Enemy hp: " + Hp + " type " + Id + " moved to " + Y + " " + X);
+            //   Debug.WriteLine("Way point " + SquareWayPoint.X + " " + SquareWayPoint.Y);
             //MCH
             if (MathHelper.DistanceBetweenPoints(nextX, nextY, SquareWayPoint.X, SquareWayPoint.Y) < 2 * Speed)
             {
