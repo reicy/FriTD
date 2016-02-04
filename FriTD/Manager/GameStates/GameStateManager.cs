@@ -2,6 +2,7 @@
 using Manager.AI;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using TD.Core;
 using TD.Enums;
 
@@ -20,6 +21,7 @@ namespace Manager.GameStates
 
         public string ExecuteDecision(GameStateImage image)
         {
+            previousImage = image;
             List<State> stavy = new List<State>();
 
             short x = 0; // stav
@@ -89,8 +91,32 @@ namespace Manager.GameStates
 
         private State EncodeState(GameStateImage img)
         {
-            //TODO
-            return null;
+            string str = "";
+            foreach (var tower in img.Towers)
+            {
+                str += EncodeNumberTo2LengthStr(tower + 1);
+                
+            }
+            str += EncodeNumberTo2LengthStr(img.Gold/img.TowerCost);
+            if (img.Hp <= img.NextWaveHpCost)
+            {
+                str += "1";
+            }
+            else
+            {
+                str += "0";
+            }
+           // Debug.WriteLine(str);
+            return new State(Convert.ToInt16(str,2));
+        }
+
+        private string EncodeNumberTo2LengthStr(int num)
+        {
+            var str = Convert.ToString(num, 2);
+            if (str.Length == 1) str = '0' + str;
+            //TODO length > 2
+
+            return str;
         }
 
         private string TransformStateToCommand(State state)

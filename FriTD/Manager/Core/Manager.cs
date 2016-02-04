@@ -160,7 +160,9 @@ namespace Manager.Core
 
         private GameState SingleAiLongRunIteration()
         {
+
             PrepareGame();
+            _game.BuildTower(3,1);
             while (_game.State == GameState.Waiting)
             {
                 StartAiDrivenTurn();

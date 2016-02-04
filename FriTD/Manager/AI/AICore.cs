@@ -24,19 +24,23 @@ namespace Manager.AI
         {
             double maxNextStateValue = int.MinValue;
             State maxNextState;
-            Dictionary<State, double> StatesFromAState=q_values[nextState];
-
-            foreach (KeyValuePair<State, double> entry in StatesFromAState)
+            createAction(prevState, nextState);
+            Dictionary<State, double> StatesFromAState;
+            if (q_values.TryGetValue(nextState, out StatesFromAState))
             {
-                if (entry.Value >= maxNextStateValue)
+
+                foreach (KeyValuePair<State, double> entry in StatesFromAState)
                 {
-                    maxNextStateValue = entry.Value;
-                    maxNextState = entry.Key;
+                    if (entry.Value >= maxNextStateValue)
+                    {
+                        maxNextStateValue = entry.Value;
+                        maxNextState = entry.Key;
+                    }
                 }
+                double sample = reward + gamma*maxNextStateValue;
+                double prevQ_value = q_values[prevState][nextState];
+                q_values[prevState][nextState] = (1 - alpha)*prevQ_value + alpha*sample;
             }
-            double sample = reward + gamma * maxNextStateValue;
-            double prevQ_value = q_values[prevState][nextState];
-            q_values[prevState][nextState] = (1 - alpha) * prevQ_value + alpha * sample;
 
 
 
