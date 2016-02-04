@@ -114,7 +114,7 @@ namespace Manager.Core
 
         public void StartAiDrivenTurn()
         {
-            var decisionResult = _aiAdapter.ExecuteDecision(_game.GameStateImage());
+            var decisionResult = _aiAdapter.ExecuteDecision1(_game.GameStateImage());
             var arr = decisionResult.Split(' ');
             foreach (var cmd in arr)
             {
@@ -134,7 +134,7 @@ namespace Manager.Core
             int lost = 0;
 
             int innerInterval = 1000;
-            int iterations = 1000;
+            int iterations = 200;
 
             for (int i = 0; i < iterations; i++)
             {
@@ -150,11 +150,12 @@ namespace Manager.Core
                         lost++;
                     }
                 }
+                
                 Console.WriteLine("Iteration: "+i+" won: "+won+" lost: "+lost);
                 won = 0;
                 lost = 0;
             }
-
+            _ai.QValDisp();
 
         }
 
@@ -167,6 +168,7 @@ namespace Manager.Core
             {
                 StartAiDrivenTurn();
             }
+           // _ai.QValDisp();
 
             return _game.State;
         }

@@ -19,14 +19,33 @@ namespace Manager.AI
         }
 
 
+        public void QValDisp()
+        {
+            Console.WriteLine("hej");
+            Console.WriteLine(q_values.Keys.Count);
+            foreach (var key in q_values.Keys)
+            {
+                Console.Write(key.toString()+" - ");
+                foreach (var innerKey in q_values[key].Keys)
+                {
+                    //Console.WriteLine(q_values[key].Keys.Count);
+                   // Console.Write(" {0} v:{1}",innerKey.toString(),(q_values[key])[innerKey]);
+                    Console.WriteLine(innerKey.toString()+"    "+q_values[key][innerKey]);
+                }
+            }
+            Console.WriteLine();
+            Console.WriteLine();
+        }
+
         //update q_Value of a pair state-state(action) after executing and getting the reward
         public void updateQ_values(State prevState,State nextState,double reward)
         {
+
             double maxNextStateValue = int.MinValue;
             State maxNextState;
             createAction(prevState, nextState);
-            Dictionary<State, double> StatesFromAState;
-            if (q_values.TryGetValue(nextState, out StatesFromAState))
+            Dictionary<State, double> StatesFromAState;// = q_values[prevState];
+            if (q_values.TryGetValue(prevState, out StatesFromAState))
             {
 
                 foreach (KeyValuePair<State, double> entry in StatesFromAState)
@@ -38,6 +57,7 @@ namespace Manager.AI
                     }
                 }
                 double sample = reward + gamma*maxNextStateValue;
+              //  Console.WriteLine("r "+sample+ " "+reward +" "+gamma*maxNextStateValue);
                 double prevQ_value = q_values[prevState][nextState];
                 q_values[prevState][nextState] = (1 - alpha)*prevQ_value + alpha*sample;
             }
@@ -45,7 +65,8 @@ namespace Manager.AI
 
 
 
-
+       //     Console.WriteLine(" ------ ");
+       //     QValDisp();
 
         }
 

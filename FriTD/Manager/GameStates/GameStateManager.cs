@@ -64,10 +64,131 @@ namespace Manager.GameStates
             return "";
         }
 
+
+        public string ExecuteDecision1(GameStateImage img)
+        {
+            previousImage = img;
+            //Console.WriteLine("som v stave"+EncodeState(img).toString());
+            List<State> relevantStates = new List<State>();
+            
+            
+            var tempImg = img.CloneThis();
+            var seccImg = img.CloneThis();
+            var preImg = img.CloneThis();
+
+            //no action
+            relevantStates.Add(EncodeAction(tempImg));
+
+
+            // no tower sold
+
+            //build 1.
+            for (int i = 0; i < 6; i++)
+            {
+                tempImg = img.CloneThis();
+                if (tempImg.Towers[i] == -1 && tempImg.TowerCost <= tempImg.Gold)
+                {
+
+                    for (int j = 0; j < 3; j++)
+                    {
+                        tempImg = img.CloneThis();
+                        tempImg.Towers[i] = j;
+                        tempImg.Gold -= tempImg.TowerCost;
+                        relevantStates.Add(EncodeAction(tempImg));
+                        //build 2.
+                        for (int k = 0; k < 6; k++)
+                        {
+                            if (tempImg.Towers[i] == -1 && tempImg.TowerCost <= tempImg.Gold)
+                            {
+                                for (int l = 0; l < 3; l++)
+                                {
+                                    seccImg = tempImg.CloneThis();
+                                    seccImg.Towers[k] = l;
+                                    seccImg.Gold -= seccImg.TowerCost;
+                                    relevantStates.Add(EncodeAction(seccImg));
+                                }
+                                
+
+                            }
+                        }
+                    }
+                    
+                }
+
+                
+
+            }
+
+
+
+            // 1 tower sold
+
+            for (int t = 0; t < 6; t++)
+            {
+                if (img.Towers[t] >= 0)
+                {
+                    preImg = img.CloneThis();
+                    preImg.Towers[t] = -1;
+                    preImg.Gold += preImg.TowerRefundCost;
+                    if (preImg.Gold > preImg.TowerCost*3) preImg.Gold = preImg.TowerCost*3;
+
+                    for (int i = 0; i < 6; i++)
+                    {
+                        tempImg = preImg.CloneThis();
+                        if (tempImg.Towers[i] == -1 && tempImg.TowerCost <= tempImg.Gold)
+                        {
+
+                            for (int j = 0; j < 3; j++)
+                            {
+                                tempImg = preImg.CloneThis();
+                                tempImg.Towers[i] = j;
+                                tempImg.Gold -= tempImg.TowerCost;
+                                relevantStates.Add(EncodeAction(tempImg));
+                                //build 2.
+                                for (int k = 0; k < 6; k++)
+                                {
+                                    if (tempImg.Towers[i] == -1 && tempImg.TowerCost <= tempImg.Gold)
+                                    {
+                                        for (int l = 0; l < 3; l++)
+                                        {
+                                            seccImg = tempImg.CloneThis();
+                                            seccImg.Towers[k] = l;
+                                            seccImg.Gold -= seccImg.TowerCost;
+                                            relevantStates.Add(EncodeAction(seccImg));
+                                        }
+
+
+                                    }
+                                }
+                            }
+
+                        }
+
+
+
+                    }
+
+                }
+
+                
+            }
+
+            foreach (var state in relevantStates)
+            {
+               // if(state.toString().Length >0 ) Console.WriteLine(state.toString());
+                //Console.WriteLine(state.toString());
+            }
+
+
+
+            var result = core.getNextState(EncodeState(img), relevantStates);
+            return TransformStateToCommand(result);
+        }
+
         public void ExecuteReward(GameStateImage image)
         {
             var prev = EncodeState(previousImage);
-            var curr = EncodeState(image);
+            var curr = EncodeAction(image);
 
             if (image.GameState == GameState.Won)
             {
@@ -85,7 +206,7 @@ namespace Manager.GameStates
             double expectedHpCost = previousImage.NextWaveHpCost;
             double actualHpCost = previousImage.Hp - image.Hp;
             double reward = (actualHpCost / expectedHpCost)*200-100;
-
+            //Console.WriteLine(reward);
             core.updateQ_values(prev, curr, reward);
         }
 
@@ -110,6 +231,22 @@ namespace Manager.GameStates
             return new State(Convert.ToInt16(str,2));
         }
 
+
+        private State EncodeAction(GameStateImage img)
+        {
+            string str = "";
+            foreach (var tower in img.Towers)
+            {
+                str += EncodeNumberTo2LengthStr(tower + 1);
+
+            }
+            str += "000";
+            
+            return new State(Convert.ToInt16(str, 2));
+        }
+
+
+
         private string EncodeNumberTo2LengthStr(int num)
         {
             var str = Convert.ToString(num, 2);
@@ -124,6 +261,8 @@ namespace Manager.GameStates
             var response = "";
             var str = state.toString();
             var towerPlace = "";
+          //  Console.WriteLine("from "+EncodeState(previousImage).toString());
+          //  Console.WriteLine("transform: "+str);
 
             for (int i = 0; i < 6; i++)
             {
@@ -136,14 +275,14 @@ namespace Manager.GameStates
                 {
                     var typId = Convert.ToInt16(towerPlace, 2);
                     typId--;
-                    response = "b_"+i+"_"+typId;
+                    response += "b_"+i+"_"+typId;
                 }
                 
 
 
                 response += " ";
             }
-            
+           // Console.WriteLine(response);
 
             return response.Trim();
         }

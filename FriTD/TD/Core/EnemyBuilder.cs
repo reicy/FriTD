@@ -20,7 +20,10 @@ namespace TD.Core
             Template = template;
             _cd = 0;
             _remainingCd = 0;
-            
+
+            var temp = Template.Split(',');
+            HpCost = int.Parse(temp[5]);
+
         }
 
         public Enemy Build()
