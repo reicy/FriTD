@@ -1,8 +1,6 @@
 ﻿using System;
 using Manager.AI;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using TD.Core;
 using TD.Enums;
 
@@ -22,46 +20,128 @@ namespace Manager.GameStates
         public string ExecuteDecision(GameStateImage image)
         {
             previousImage = image;
-            List<State> stavy = new List<State>();
 
-            short x = 0; // stav
-            int j = 2 * image.Towers.Length; // pocet nastavenych bitov
-            for (int i = 0; i < image.Towers.Length; ++i)
+            List<State> states = new List<State>();
+
+            State state = EncodeState(image);
+
+            if (image.GameState != TD.Enums.GameState.Lost && image.GameState != TD.Enums.GameState.Won)
             {
-                switch (image.Towers[i])
+                // stavy - mozne operacie - postavenie max. 2 vezi, zburanie max. 1 veze
+                states.Add(state);
+
+                int numTowers = image.Towers.Length;
+
+                List<int> nepostavene = new List<int>();
+                List<int> postavene = new List<int>();
+                for (int i = 0; i < numTowers; ++i)
                 {
-                    case -1: // ziadna
-                        break;
-                    case 0: // typ 1
-                        x += 1;
-                        break;
-                    case 1: // typ 2
-                        x += 2;
-                        break;
-                    case 2: // typ 3
-                        x += 3;
-                        break;
+                    if (image.Towers[i] == -1)
+                        nepostavene.Add(i);
+                    else
+                        postavene.Add(i);
                 }
-                x <<= 2;
+
+                // iba buranie
+                GameStateImage tmpImage = image.CloneThis();
+                tmpImage.Gold += tmpImage.TowerRefundCost;
+                int pom;
+                for (int z = 0; z < postavene.Count; ++z)
+                {
+                    pom = tmpImage.Towers[postavene[z]];
+                    tmpImage.Towers[postavene[z]] = -1;
+                    states.Add(EncodeState(tmpImage));
+                    tmpImage.Towers[postavene[z]] = pom;
+                }
+
+                if (nepostavene.Count > 0) // ak je aspon jedna nepostavena, mozeme aj stavat, inak len burat
+                {
+                    if (postavene.Count == 0) // ak nie je ziadna postavena, mozeme len stavat
+                    {
+                        for (int p1 = 0; p1 < nepostavene.Count; ++p1)
+                        {
+                            for (int p2 = p1; p2 < nepostavene.Count; ++p2)
+                            {
+                                states.AddRange(StatesHelper(nepostavene, postavene, -1, p1, p2));
+                            }
+                        }
+                    }
+                    else // mozeme stavat aj burat
+                    {
+                        for (int z = 0; z < postavene.Count; ++z) // zburat
+                        {
+                            for (int p1 = 0; p1 < nepostavene.Count; ++p1)
+                            {
+                                for (int p2 = p1; p2 < nepostavene.Count; ++p2)
+                                {
+                                    states.AddRange(StatesHelper(nepostavene, postavene, z, p1, p2));
+                                }
+                            }
+                        }
+                    }
+                }
             }
-            if (j < 12)
+
+            State s = core.getNextState(state, states);
+
+            return TransformStateToCommand(s);
+        }
+
+        // p - postavene veze, n - nepostavene veze
+        private List<State> StatesHelper(List<int> n, List<int> p, int z, int p1, int p2)
+        {
+            List<State> states = new List<State>();
+
+            GameStateImage tmpImage;
+
+            int canAffordTowers;
+
+            int steps = z == -1 ? 1 : 2;
+
+            for (int k = 0; k < steps; ++k)
             {
-                x <<= (12 - j);
+
+                tmpImage = previousImage.CloneThis();
+
+                // zburanie
+                if (k == 1)
+                {
+                    tmpImage.Towers[p[z]] = -1;
+                    tmpImage.Gold += tmpImage.TowerRefundCost;
+                }
+
+                canAffordTowers = tmpImage.Gold / tmpImage.TowerCost;
+
+                // postavenie prvej
+                if (canAffordTowers > 0)
+                {
+                    tmpImage.Gold -= tmpImage.TowerCost;
+                    for (int i = 0; i < 3; ++i)
+                    {
+                        tmpImage.Towers[n[p1]] = i;
+                        states.Add(EncodeState(tmpImage));
+                    }
+
+                    // postavenie druhej
+                    if (p1 != p2 && canAffordTowers > 1)
+                    {
+                        tmpImage.Gold -= tmpImage.TowerCost;
+                        for (int i = 0; i < 3; ++i)
+                        {
+                            tmpImage.Towers[n[p1]] = i;
+
+                            for (int j = 0; j < 3; ++j)
+                            {
+                                tmpImage.Towers[n[p2]] = j;
+                                states.Add(EncodeState(tmpImage));
+                            }
+                        }
+                    }
+                }
+
             }
 
-            // TODO bity 12, 13
-            int k = image.Gold / image.TowerCost; // pocet vezi, ktore si mozem dovolit postavit
-            if (k > 3) k = 3;
-            x += (short)k;
-            x <<= 1;
-
-            // TODO bit 14
-            k = image.Hp > image.NextWaveHpCost ? 1 : 0;
-            x += (short)k;
-
-            stavy.Add(new State(x));
-
-            return "";
+            return states;
         }
 
         public void ExecuteReward(GameStateImage image)
@@ -81,10 +161,10 @@ namespace Manager.GameStates
                 return;
             }
 
-            
+
             double expectedHpCost = previousImage.NextWaveHpCost;
             double actualHpCost = previousImage.Hp - image.Hp;
-            double reward = (actualHpCost / expectedHpCost)*200-100;
+            double reward = (actualHpCost / expectedHpCost) * 200 - 100;
 
             core.updateQ_values(prev, curr, reward);
         }
@@ -95,9 +175,9 @@ namespace Manager.GameStates
             foreach (var tower in img.Towers)
             {
                 str += EncodeNumberTo2LengthStr(tower + 1);
-                
+
             }
-            str += EncodeNumberTo2LengthStr(img.Gold/img.TowerCost);
+            str += EncodeNumberTo2LengthStr(img.Gold / img.TowerCost);
             if (img.Hp <= img.NextWaveHpCost)
             {
                 str += "1";
@@ -106,8 +186,8 @@ namespace Manager.GameStates
             {
                 str += "0";
             }
-           // Debug.WriteLine(str);
-            return new State(Convert.ToInt16(str,2));
+            // Debug.WriteLine(str);
+            return new State(Convert.ToInt16(str, 2));
         }
 
         private string EncodeNumberTo2LengthStr(int num)
@@ -127,7 +207,7 @@ namespace Manager.GameStates
 
             for (int i = 0; i < 6; i++)
             {
-                towerPlace = str.Substring(i*2, 2);
+                towerPlace = str.Substring(i * 2, 2);
                 if (towerPlace.Equals("00"))
                 {
                     response += "s_" + i;
@@ -136,14 +216,14 @@ namespace Manager.GameStates
                 {
                     var typId = Convert.ToInt16(towerPlace, 2);
                     typId--;
-                    response = "b_"+i+"_"+typId;
+                    response = "b_" + i + "_" + typId;
                 }
-                
+
 
 
                 response += " ";
             }
-            
+
 
             return response.Trim();
         }
