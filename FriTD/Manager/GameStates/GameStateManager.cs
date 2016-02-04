@@ -3,6 +3,7 @@ using Manager.AI;
 using System.Collections;
 using System.Collections.Generic;
 using TD.Core;
+using TD.Enums;
 
 namespace Manager.GameStates
 {
@@ -63,7 +64,33 @@ namespace Manager.GameStates
 
         public void ExecuteReward(GameStateImage image)
         {
+            var prev = EncodeState(previousImage);
+            var curr = EncodeState(image);
 
+            if (image.GameState == GameState.Won)
+            {
+
+                core.updateQ_values(prev, curr, 10000);
+                return;
+            }
+            if (image.GameState == GameState.Lost)
+            {
+                core.updateQ_values(prev, curr, -10000);
+                return;
+            }
+
+            
+            double expectedHpCost = previousImage.NextWaveHpCost;
+            double actualHpCost = previousImage.Hp - image.Hp;
+            double reward = (actualHpCost / expectedHpCost)*200-100;
+
+            core.updateQ_values(prev, curr, reward);
+        }
+
+        private State EncodeState(GameStateImage img)
+        {
+            //TODO
+            return null;
         }
 
         private string TransformStateToCommand(State state)

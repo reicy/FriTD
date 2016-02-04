@@ -49,7 +49,7 @@ namespace TD.Core
 
         public int HpCost(int id)
         {
-            Debug.WriteLine(id);
+            //Debug.WriteLine(id);
             return _builders[id].HpCost;
         }
     }
