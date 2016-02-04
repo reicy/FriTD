@@ -162,7 +162,7 @@ namespace Manager.Core
         {
 
             PrepareGame();
-            _game.BuildTower(3,1);
+           // _game.BuildTower(3,1);
             while (_game.State == GameState.Waiting)
             {
                 StartAiDrivenTurn();
