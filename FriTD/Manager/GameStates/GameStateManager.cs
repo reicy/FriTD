@@ -17,7 +17,7 @@ namespace Manager.GameStates
             this.previousImage = null;
         }
 
-        public string ExecuteDecision(GameStateImage image)
+     /*   public string ExecuteDecision(GameStateImage image)
         {
             previousImage = image;
 
@@ -143,12 +143,12 @@ namespace Manager.GameStates
 
             return states;
         }
-
+        */
 
         public string ExecuteDecision1(GameStateImage img)
         {
             previousImage = img;
-            //Console.WriteLine("som v stave"+EncodeState(img).toString());
+         //   Console.WriteLine("som v stave"+EncodeState(img).toString()+" goldy: "+img.Gold);
             List<State> relevantStates = new List<State>();
             
             
@@ -268,27 +268,28 @@ namespace Manager.GameStates
         public void ExecuteReward(GameStateImage image)
         {
             var prev = EncodeState(previousImage);
+            var currS = EncodeState(image);
             var curr = EncodeAction(image);
 
             if (image.GameState == GameState.Won)
             {
 
-                core.updateQ_values(prev, curr, 10000);
+                core.updateQ_values(prev, currS, curr, 1000);
                 return;
             }
             if (image.GameState == GameState.Lost)
             {
-                core.updateQ_values(prev, curr, -10000);
+                core.updateQ_values(prev, currS, curr, -500);
                 return;
             }
 
 
             double expectedHpCost = previousImage.NextWaveHpCost;
             double actualHpCost = previousImage.Hp - image.Hp;
-            double reward = (actualHpCost / expectedHpCost)*200-100;
+            double reward = (actualHpCost / expectedHpCost)*2-1;
             //Console.WriteLine(reward);
 
-            core.updateQ_values(prev, curr, reward);
+            core.updateQ_values(prev,currS, curr, reward);
         }
 
         private State EncodeState(GameStateImage img)
@@ -341,30 +342,49 @@ namespace Manager.GameStates
         {
             var response = "";
             var str = state.toString();
+            var prevStr = EncodeState(previousImage).toString();
             var towerPlace = "";
+            string lastTowerPlace = "";
           //  Console.WriteLine("from "+EncodeState(previousImage).toString());
-          //  Console.WriteLine("transform: "+str);
+         //   Console.WriteLine("transform: "+str);
+
+            for (int i = 0; i < 6; i++)
+            {
+                towerPlace = str.Substring(i * 2, 2);
+                lastTowerPlace = prevStr.Substring(i*2, 2);
+                if (towerPlace != lastTowerPlace)
+                {
+                    response += "s_" + i;
+                }
+
+                
+
+
+                response += " ";
+            }
 
             for (int i = 0; i < 6; i++)
             {
                 towerPlace = str.Substring(i * 2, 2);
                 if (towerPlace.Equals("00"))
                 {
-                    response += "s_" + i;
+                
                 }
                 else
                 {
                     var typId = Convert.ToInt16(towerPlace, 2);
                     typId--;
-                    response += "b_"+i+"_"+typId;
-                    response = "b_" + i + "_" + typId;
+                    response += "b_" + i + "_" + typId;
+                    //response = "b_" + i + "_" + typId;
                 }
 
 
 
                 response += " ";
             }
-           // Console.WriteLine(response);
+
+
+            //Console.WriteLine(response);
 
             return response.Trim();
         }

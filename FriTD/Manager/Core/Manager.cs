@@ -53,7 +53,7 @@ namespace Manager.Core
 
         public void InsertAi()
         {
-            _ai = new AICore(0.5,1,0.5);
+            _ai = new AICore(0.09,1,0.5);
             _aiAdapter = new GameStateManager(_ai);
         }
 
@@ -133,8 +133,8 @@ namespace Manager.Core
             int won = 0;
             int lost = 0;
 
-            int innerInterval = 1000;
-            int iterations = 200;
+            int innerInterval = 100;
+            int iterations = 100;
 
             for (int i = 0; i < iterations; i++)
             {

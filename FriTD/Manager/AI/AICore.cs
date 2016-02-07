@@ -38,7 +38,7 @@ namespace Manager.AI
         }
 
         //update q_Value of a pair state-state(action) after executing and getting the reward
-        public void updateQ_values(State prevState,State nextState,double reward)
+        public void updateQ_values1(State prevState,State nextState,State action,double reward)
         {
 
             double maxNextStateValue = int.MinValue;
@@ -70,6 +70,45 @@ namespace Manager.AI
 
         }
 
+        public void updateQ_values(State prevState, State nextState, State action, double reward)
+        {
+
+            double maxNextStateValue = int.MinValue;
+            State maxNextState;
+            createAction(prevState, action);
+            Dictionary<State, double> StatesFromAState;// = q_values[prevState];
+            if (q_values.TryGetValue(nextState, out StatesFromAState))
+            {
+
+                foreach (KeyValuePair<State, double> entry in StatesFromAState)
+                {
+                    if (entry.Value >= maxNextStateValue)
+                    {
+                        maxNextStateValue = entry.Value;
+                        maxNextState = entry.Key;
+                    }
+                }
+                double sample = reward + gamma*maxNextStateValue;
+                //  Console.WriteLine("r "+sample+ " "+reward +" "+gamma*maxNextStateValue);
+                double prevQ_value = q_values[prevState][action];
+                q_values[prevState][action] = (1 - alpha)*prevQ_value + alpha*sample;
+            }
+            else
+            {
+                double sample = reward + gamma * 0;
+                //  Console.WriteLine("r "+sample+ " "+reward +" "+gamma*maxNextStateValue);
+                double prevQ_value = q_values[prevState][action];
+                q_values[prevState][action] = (1 - alpha) * prevQ_value + alpha * sample;
+            }
+
+
+
+
+            //     Console.WriteLine(" ------ ");
+            //     QValDisp();
+
+        }
+
         //dynamicaly create Pair state-state if not already created
         public void createAction(State prevState, State nextState)
         {
@@ -95,6 +134,7 @@ namespace Manager.AI
         //!!!!! if only negative q_values it still chooses from them
         public State getNextOptimalState(State state,List<State> relevantStates)
         {
+            
             Dictionary<State, double> StatesFromAState;
             q_values.TryGetValue(state, out StatesFromAState);
             double maxValue=double.MinValue;
