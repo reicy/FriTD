@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Net.Configuration;
 using Manager.AI;
@@ -52,7 +53,7 @@ namespace Manager.Core
 
         public void InsertAi()
         {
-            _ai = new AICore(1,1,1);
+            _ai = new AICore(0.09,1,0.5);
             _aiAdapter = new GameStateManager(_ai);
         }
 
@@ -88,11 +89,11 @@ namespace Manager.Core
                 _delayer.Delay();
 
                 var tmp = _game.GameVisualImage();
-                Debug.WriteLine(tmp.Hp);
-                Debug.WriteLine(tmp.Enemies.Count);
+                //Debug.WriteLine(tmp.Hp);
+                //Debug.WriteLine(tmp.Enemies.Count);
                 if (tmp.Enemies.Count > 0)
                 {
-                    Debug.WriteLine(tmp.Enemies[0].X +" "+ tmp.Enemies[0].Y );
+                    //Debug.WriteLine(tmp.Enemies[0].X +" "+ tmp.Enemies[0].Y );
                 }
             }
         }
@@ -113,7 +114,7 @@ namespace Manager.Core
 
         public void StartAiDrivenTurn()
         {
-            var decisionResult = _aiAdapter.ExecuteDecision(_game.GameStateImage());
+            var decisionResult = _aiAdapter.ExecuteDecision1(_game.GameStateImage());
             var arr = decisionResult.Split(' ');
             foreach (var cmd in arr)
             {
@@ -126,5 +127,53 @@ namespace Manager.Core
 
 
         }
+
+        public void AiLearningRun()
+        {
+            int won = 0;
+            int lost = 0;
+
+            int innerInterval = 100;
+            int iterations = 100;
+
+            for (int i = 0; i < iterations; i++)
+            {
+
+                for (int j = 0; j < innerInterval; j++)
+                {
+                    if (GameState.Won == SingleAiLongRunIteration())
+                    {
+                        won++;
+                    }
+                    else
+                    {
+                        lost++;
+                    }
+                }
+                
+                Console.WriteLine("Iteration: "+i+" won: "+won+" lost: "+lost);
+                won = 0;
+                lost = 0;
+            }
+            _ai.QValDisp();
+
+        }
+
+        private GameState SingleAiLongRunIteration()
+        {
+
+            PrepareGame();
+           // _game.BuildTower(3,1);
+            while (_game.State == GameState.Waiting)
+            {
+                StartAiDrivenTurn();
+            }
+           // _ai.QValDisp();
+
+            return _game.State;
+        }
     }
+
+
+
 }

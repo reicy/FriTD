@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Security.AccessControl;
 using TD.Core;
 using TD.Helpers;
 
@@ -15,8 +16,17 @@ namespace TD.Entities
         public int Id { get; set; }
         public int SeqId { get; set; }
         public double Perc { get; set; }
-        public int WX { get; set; }
-        public int WY { get; set; }
+        public int WX
+        {
+            get { return _lastEnemy != null ?_lastEnemy.X : 0; }
+            set { }
+        }
+
+        public int WY {
+            get { return _lastEnemy != null ? _lastEnemy.Y : 0; }
+            set { }
+        }
+        private Enemy _lastEnemy;
 
         public Tower(int range, ProjectileEffectFactory eFactory, int ProjSpeed)
         {
@@ -41,7 +51,8 @@ namespace TD.Entities
                     var effect = _effectFactory.Create();
                     if (effect == null) return null;
                     projectile = new Projectile(_projSpeed, enemy, effect) {X = X, Y = Y, Id = Id};
-                   
+                    _lastEnemy = enemy;
+                    
                     break;
                 };
             }

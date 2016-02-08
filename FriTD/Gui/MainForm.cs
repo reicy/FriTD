@@ -31,6 +31,8 @@ namespace Gui
                     _manager.PrepareGame();
                     break;
                 case 1:
+                    _manager = ManagerBuilder.BuildAiLearningManager();
+                    _manager.AiLearningRun();
                     break;
                 case 2:
                     break;

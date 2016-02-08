@@ -56,7 +56,7 @@ namespace TD.Core
             {
                 tmp = tmp.Next;
                 AdjustSize(tmp);
-                Debug.WriteLine(tmp.X + " " + tmp.Y);
+                //Debug.WriteLine(tmp.X + " " + tmp.Y);
                 
             } while (tmp.Next != null);
 
