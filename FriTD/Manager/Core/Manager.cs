@@ -77,6 +77,11 @@ namespace Manager.Core
                 _store.ExchangeData(_game.GameVisualImage());
             }
         }
+
+        public GameState GetGameState()
+        {
+            return _game.State;
+        }
         // ----------- unity hack end -------------
         
 
