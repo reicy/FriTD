@@ -16,4 +16,9 @@ public class InfoPanel : MonoBehaviour
     {
         _text = "HP: " + hp + "\nGold: " + gold;
     }
+
+    public void SetText(String text)
+    {
+        _text = text;
+    }
 }

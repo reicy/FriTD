@@ -35,6 +35,14 @@ namespace Assets.Scripts
             {
                 transform.Translate(new Vector3(0, speed*Time.deltaTime, 0));
             }
+            if (Input.GetKey(KeyCode.PageUp))
+            {
+                transform.Translate(new Vector3(0, 0, speed * Time.deltaTime));
+            }
+            if (Input.GetKey(KeyCode.PageDown))
+            {
+                transform.Translate(new Vector3(0, 0, -speed * Time.deltaTime));
+            }
         }
     }
 }

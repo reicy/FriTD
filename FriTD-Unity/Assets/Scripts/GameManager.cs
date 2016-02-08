@@ -37,34 +37,38 @@ namespace Assets
         private MapBuilder _mapBuilder;
         private InfoPanel _infoPanel;
 
+        private bool _gameStarted = false;
+        private bool _simplePlayer = false;
+        private string _command = "";
+        private string _aiLevel = "";
 
         private void Start()
         {
             _mapBuilder = GameObject.Find("MapBuilder").GetComponent<MapBuilder>();
             _infoPanel = GameObject.Find("InfoPanel").GetComponent<InfoPanel>();
-            _manager = ManagerBuilder.BuildSimplePlayerManager();
-            _manager.PrepareGame();
-            _dataStore = _manager._store;
             InvokeRepeating("Tic", interval, interval);
         }
 
         private void Update()
         {
-            GameVisualImage image = _dataStore.ExchangeData(null);
-            if (image != null)
+            if (_gameStarted)
             {
-                _servedEnemies.Clear();
-                _servedTowers.Clear();
-                _servedBullets.Clear();
-                UpdateGameObjects(image.Enemies, _enemies, EntityType.Enemy, _servedEnemies);
-                UpdateGameObjects(image.Projectiles, _bullets, EntityType.Bullet, _servedBullets);
-                UpdateGameObjects(image.Towers, _towers, EntityType.Tower, _servedTowers);
+                GameVisualImage image = _dataStore.ExchangeData(null);
+                if (image != null)
+                {
+                    _servedEnemies.Clear();
+                    _servedTowers.Clear();
+                    _servedBullets.Clear();
+                    UpdateGameObjects(image.Enemies, _enemies, EntityType.Enemy, _servedEnemies);
+                    UpdateGameObjects(image.Projectiles, _bullets, EntityType.Bullet, _servedBullets);
+                    UpdateGameObjects(image.Towers, _towers, EntityType.Tower, _servedTowers);
 
-                DestroyNotExistingGameObjects(_enemies, _servedEnemies);
-                DestroyNotExistingGameObjects(_bullets, _servedBullets);
-                DestroyNotExistingGameObjects(_towers, _servedTowers);
+                    DestroyNotExistingGameObjects(_enemies, _servedEnemies);
+                    DestroyNotExistingGameObjects(_bullets, _servedBullets);
+                    DestroyNotExistingGameObjects(_towers, _servedTowers);
 
-                _infoPanel.updateInfo(image.Hp, image.Gold);
+                    _infoPanel.updateInfo(image.Hp, image.Gold);
+                }
             }
         }
 
@@ -147,7 +151,7 @@ namespace Assets
                     GameObject go = gameObjects[entity.SeqId];
                     go.transform.position = new Vector3(entity.X*1.0f/100, 1, -entity.Y*1.0f/100);
                     go.GetComponentInChildren<Health>().SetPerctHp((float) entity.Perc);
-                    go.transform.LookAt(new Vector3(entity.WX * 1.0f / 100, 1, -entity.WY * 1.0f / 100));
+                    go.transform.LookAt(new Vector3(entity.WX*1.0f/100, 1, -entity.WY*1.0f/100));
                     //go.transform.Rotate(new Vector3(0, -90, 0));
                 }
                 served.Add(entity.SeqId);
@@ -156,18 +160,89 @@ namespace Assets
 
         private void OnGUI()
         {
-            if (GUI.Button(new Rect(Screen.width - 205, 10, 200, 50), "Start level"))
+            if (_gameStarted)
             {
-                _manager.UnityStartLevel();
-                GameVisualImage image = _dataStore.ExchangeData(null);
-                _mapBuilder.BuildMap(image.Map);
-                _manager.ExecuteCmd("b_3_1");
+                int y = 10;
+                var newInterval = GUI.HorizontalSlider(new Rect(Screen.width - 205, y, 200, 25), interval, 0.001f, 0.1f);
+                if (newInterval != interval)
+                {
+                    interval = newInterval;
+                    CancelInvoke("Tic");
+                    InvokeRepeating("Tic", interval, interval);
+                }
+                y += 35;
+                if (GUI.Button(new Rect(Screen.width - 205, y, 200, 50), "Stop game"))
+                {
+                    _gameStarted = false;
+                    _mapBuilder.DestroyCurrentMap();
+                    DestroyAllEntities();
+                    _infoPanel.SetText("");
+                }
+                y += 60;
+                if (_manager.GetGameState() == GameState.Waiting)
+                {
+                    if (GUI.Button(new Rect(Screen.width - 205, y, 200, 50), "Start next level"))
+                    {
+                        _manager.UnityStartLevel();
+                        GameVisualImage image = _dataStore.ExchangeData(null);
+                        _mapBuilder.BuildMap(image.Map);
+                        //_manager.ExecuteCmd("b_3_1");
+                    }
+                    y += 60;
+                    if (_simplePlayer)
+                    {
+                        _command = GUI.TextField(new Rect(Screen.width - 205, y, 200, 25), _command);
+                        y += 35;
+                        if (GUI.Button(new Rect(Screen.width - 205, y, 200, 50), "Execute command"))
+                        {
+                            _manager.ExecuteCmd(_command);
+                        }
+                    }
+                }
+                else if (_manager.GetGameState() == GameState.Lost || _manager.GetGameState() == GameState.Won)
+                {
+                    _infoPanel.SetText("You " + _manager.GetGameState());
+                }
             }
+            else
+            {
+                if (GUI.Button(new Rect(Screen.width - 205, 10, 200, 50), "Start simple game"))
+                {
+                    _manager = ManagerBuilder.BuildSimplePlayerManager();
+                    _manager.PrepareGame();
+                    _dataStore = _manager._store;
+                    _simplePlayer = true;
+                    _gameStarted = true;
+                }
+
+                if (GUI.Button(new Rect(Screen.width - 205, 70, 200, 50), "Start AI game"))
+                {
+                    _manager = ManagerBuilder.BuildAiLearningManager();
+                    _manager.PrepareGame();
+                    _dataStore = _manager._store;
+                    _simplePlayer = false;
+                    _gameStarted = true;
+                }
+                _aiLevel = GUI.TextField(new Rect(Screen.width - 205, 125, 200, 25), _aiLevel);
+            }
+        }
+
+        private void DestroyAllEntities()
+        {
+            _servedBullets.Clear();
+            _servedEnemies.Clear();
+            _servedTowers.Clear();
+            DestroyNotExistingGameObjects(_bullets, _servedBullets);
+            DestroyNotExistingGameObjects(_towers, _servedTowers);
+            DestroyNotExistingGameObjects(_enemies, _servedEnemies);
         }
 
         private void Tic()
         {
-            _manager.UnityTic();
+            if (_gameStarted)
+            {
+                _manager.UnityTic();
+            }
         }
     }
 }
