@@ -37,6 +37,7 @@ namespace Assets
         private MapBuilder _mapBuilder;
         private InfoPanel _infoPanel;
 
+
         private void Start()
         {
             _mapBuilder = GameObject.Find("MapBuilder").GetComponent<MapBuilder>();
@@ -146,11 +147,8 @@ namespace Assets
                     GameObject go = gameObjects[entity.SeqId];
                     go.transform.position = new Vector3(entity.X*1.0f/100, 1, -entity.Y*1.0f/100);
                     go.GetComponentInChildren<Health>().SetPerctHp((float) entity.Perc);
-                    if (entityType == EntityType.Enemy)
-                    {
-                        go.transform.LookAt(new Vector3(entity.WX * 1.0f / 100, 1, -entity.WY * 1.0f / 100));
-                        go.transform.Rotate(new Vector3(0, -90, 0));
-                    }
+                    go.transform.LookAt(new Vector3(entity.WX * 1.0f / 100, 1, -entity.WY * 1.0f / 100));
+                    //go.transform.Rotate(new Vector3(0, -90, 0));
                 }
                 served.Add(entity.SeqId);
             }

@@ -15,16 +15,6 @@ public class MapBuilder : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-        char[,] charMap = new char[,]
-        {
-            {'G', 'G', 'G', 'G', 'G'},
-            {'G', 'E', 'P', 'P', 'G'},
-            {'G', 'T', 'T', 'P', 'G'},
-            {'G', 'G', 'T', 'S', 'G'},
-            {'G', 'G', 'G', 'G', 'G'}
-        };
-
-        BuildMap(charMap);
     }
 
     // Update is called once per frame
@@ -66,7 +56,7 @@ public class MapBuilder : MonoBehaviour
         }
     }
 
-    private void DestroyCurrentMap()
+    public void DestroyCurrentMap()
     {
         foreach (var field in fields)
         {
