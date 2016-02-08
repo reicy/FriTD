@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TD.Enums;
 
 namespace TD.Core
 {
@@ -9,6 +10,7 @@ namespace TD.Core
         public int Gold { get; set; }
         public int TowerRefundCost { get; set; }
         public int TowerCost { get; set; }
+        public GameState State { get; set; }
 
         public List<IDisplayableObject> Towers { get; set; }
         public List<IDisplayableObject> Projectiles { get; set; }
