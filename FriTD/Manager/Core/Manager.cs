@@ -169,6 +169,7 @@ namespace Manager.Core
                         lost++;
                     }
                 }
+                _ai.saveQ_valuesToFile(@"C:\Users\Tomas\Desktop\copy\"+i);
                 
                 Console.WriteLine("Iteration: "+i+" won: "+won+" lost: "+lost);
                 won = 0;

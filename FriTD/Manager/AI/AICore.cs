@@ -20,7 +20,7 @@ namespace Manager.AI
             q_values = new Dictionary<State, Dictionary<State, double>>();
         }
 
-        public AICore(double e, double g, double a,StringReader sr)
+        public AICore(double e, double g, double a,StreamReader sr)
 
         {
             alpha = a;
@@ -92,7 +92,7 @@ namespace Manager.AI
             if (prevState.Equals(State.InitialState)) iterationCounter++;
             if (iterationCounter % iterationsToSave == 0)
             {
-                   saveQ_valuesToFile(""+iterationCounter+".txt");
+                  // saveQ_valuesToFile(""+iterationCounter+".txt");
             }
 
             double maxNextStateValue = int.MinValue;
@@ -223,7 +223,7 @@ namespace Manager.AI
             File.WriteAllText(fileName, s);
         }
 
-        public void readQ_valuesFromFile(StringReader sr)
+        public void readQ_valuesFromFile(StreamReader sr)
         {
             string readText = File.ReadAllText("q_values.txt");
 
