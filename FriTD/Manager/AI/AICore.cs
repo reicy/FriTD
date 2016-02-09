@@ -88,7 +88,7 @@ namespace Manager.AI
             if (prevState.Equals(State.InitialState)) iterationCounter++;
             if (iterationCounter % iterationsToSave == 0)
             {
-                saveQ_valuesToFile("" + iterationCounter + ".txt");
+                   saveQ_valuesToFile(""+iterationCounter+".txt");
             }
 
             double maxNextStateValue = int.MinValue;
@@ -251,6 +251,7 @@ namespace Manager.AI
 
 
         }
+
 
 
 
