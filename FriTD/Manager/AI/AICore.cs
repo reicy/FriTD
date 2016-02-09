@@ -225,7 +225,7 @@ namespace Manager.AI
 
         public void readQ_valuesFromFile(StreamReader sr)
         {
-            string readText = File.ReadAllText("q_values.txt");
+           // string readText = File.ReadAllText("q_values.txt");
 
             char[] delimiterChars1 = {' '};
             char[] delimiterChars2 = { ':' };
