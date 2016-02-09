@@ -181,7 +181,7 @@ namespace Assets
                     _infoPanel.SetText("");
                 }
                 y += 60;
-                if (_manager.GetGameState() == GameState.Waiting)
+                if (_manager.GetGameState() == GameState.Waiting || !_simplePlayer)
                 {
                     if (GUI.Button(new Rect(Screen.width - 205, y, 200, 50), "Start next level"))
                     {
@@ -201,14 +201,15 @@ namespace Assets
                         }
                     }
                 }
-                else if (_manager.GetGameState() == GameState.Lost || _manager.GetGameState() == GameState.Won)
+                if (_manager.GetGameState() == GameState.Lost || _manager.GetGameState() == GameState.Won)
                 {
                     _infoPanel.SetText("You " + _manager.GetGameState());
                 }
             }
             else
             {
-                if (GUI.Button(new Rect(Screen.width - 205, 10, 200, 50), "Start simple game"))
+                int y = 10;
+                if (GUI.Button(new Rect(Screen.width - 205, y, 200, 50), "Start simple game"))
                 {
                     _manager = ManagerBuilder.BuildSimplePlayerManager();
                     _manager.PrepareGame();
@@ -216,17 +217,31 @@ namespace Assets
                     _simplePlayer = true;
                     _gameStarted = true;
                 }
+                y += 60;
 
-                if (GUI.Button(new Rect(Screen.width - 205, 70, 200, 50), "Start AI game"))
+                if (GUI.Button(new Rect(Screen.width - 205, y, 200, 50), "Start learning AI game"))
                 {
-                    StreamReader streamReader = new StreamReader("qvalues/" + _aiLevel, Encoding.Default);
+                    _manager = ManagerBuilder.BuildAiLearningManager();
+                    _manager.PrepareGame();
+                    _dataStore = _manager._store;
+                    _simplePlayer = false;
+                    _gameStarted = true;
+                }
+                y += 60;
+
+                if (GUI.Button(new Rect(Screen.width - 205, y, 200, 50), "Start observable AI game"))
+                {
+                    string file = "qvalues/" + _aiLevel;
+                    Debug.Log(file);
+                    StreamReader streamReader = new StreamReader(file, Encoding.Default);
                     _manager = ManagerBuilder.BuildObservableAiLearningManager(streamReader);
                     _manager.PrepareGame();
                     _dataStore = _manager._store;
                     _simplePlayer = false;
                     _gameStarted = true;
                 }
-                _aiLevel = GUI.TextField(new Rect(Screen.width - 205, 125, 200, 25), _aiLevel);
+                y += 60;
+                _aiLevel = GUI.TextField(new Rect(Screen.width - 205, y, 200, 25), _aiLevel);
             }
         }
 
