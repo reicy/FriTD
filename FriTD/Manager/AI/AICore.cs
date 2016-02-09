@@ -8,10 +8,11 @@ namespace Manager.AI
     class AICore
     {
         double epsilon, gamma, alpha;
-
+        int iterationCounter = 0;
+        int iterationsToSave = 100;
         Dictionary<State, Dictionary<State, double>> q_values; 
 
-        public AICore(double e,double g,double a)
+        public AICore(double e,double  g,double a)
         {
             alpha = a;
             epsilon = e;
@@ -19,19 +20,24 @@ namespace Manager.AI
             q_values = new Dictionary<State, Dictionary<State, double>>();
         }
 
-        public AICore(double e, double g, double a, StreamReader reader)
+        public AICore(double e, double g, double a,StringReader sr)
+
         {
             alpha = a;
             epsilon = e;
             gamma = g;
             q_values = new Dictionary<State, Dictionary<State, double>>();
+
+            readQ_valuesFromFile(sr);
+
             //TODO    
+
         }
 
 
         public void QValDisp()
         {
-            Console.WriteLine("hej");
+            //Console.WriteLine("hej");
             Console.WriteLine(q_values.Keys.Count);
             foreach (var key in q_values.Keys)
             {
@@ -40,11 +46,12 @@ namespace Manager.AI
                 {
                     //Console.WriteLine(q_values[key].Keys.Count);
                    // Console.Write(" {0} v:{1}",innerKey.toString(),(q_values[key])[innerKey]);
-                    Console.WriteLine(innerKey.toString()+"    "+q_values[key][innerKey]);
+                    Console.Write(innerKey.toString()+"    "+q_values[key][innerKey]);
                 }
+                Console.WriteLine();
             }
             Console.WriteLine();
-            Console.WriteLine();
+            //Console.WriteLine();
         }
 
         //update q_Value of a pair state-state(action) after executing and getting the reward
@@ -82,6 +89,11 @@ namespace Manager.AI
 
         public void updateQ_values(State prevState, State nextState, State action, double reward)
         {
+            if (prevState.Equals(State.InitialState)) iterationCounter++;
+            if (iterationCounter % iterationsToSave == 0)
+            {
+                   saveQ_valuesToFile(""+iterationCounter+".txt");
+            }
 
             double maxNextStateValue = int.MinValue;
             State maxNextState;
@@ -144,7 +156,6 @@ namespace Manager.AI
         //!!!!! if only negative q_values it still chooses from them
         public State getNextOptimalState(State state,List<State> relevantStates)
         {
-            
             Dictionary<State, double> StatesFromAState;
             q_values.TryGetValue(state, out StatesFromAState);
             double maxValue=double.MinValue;
@@ -192,6 +203,60 @@ namespace Manager.AI
             else if (randomDouble <= epsilon) return getNextRandomState(state, relevantStates);
             else return  getNextOptimalState(state, relevantStates);
         }
+
+        public void saveQ_valuesToFile(string fileName)
+        {
+            string s = "";
+
+            foreach (var key in q_values.Keys)
+            {
+                s+=key.IntState + " ";
+                foreach (var innerKey in q_values[key].Keys)
+                {
+                    //Console.WriteLine(q_values[key].Keys.Count);
+                    // Console.Write(" {0} v:{1}",innerKey.toString(),(q_values[key])[innerKey]);
+                    s+=innerKey.IntState + ":" + q_values[key][innerKey]+" ";
+                }
+                s += Environment.NewLine;
+            }
+
+            File.WriteAllText(fileName, s);
+        }
+
+        public void readQ_valuesFromFile(StringReader sr)
+        {
+            string readText = File.ReadAllText("q_values.txt");
+
+            char[] delimiterChars1 = {' '};
+            char[] delimiterChars2 = { ':' };
+            string line;
+            string[] data;
+            string[] data2;
+            State state;
+            State state1;
+            double q_value;
+            Dictionary<State, double> states;
+
+            while ((line = sr.ReadLine()) != null)
+            {
+                line = line.Trim();
+                states = new Dictionary<State, double>();
+                data = line.Split(delimiterChars1);
+                state1= new State(Int16.Parse(data[0]));
+                for (int i = 1; i < data.Length; i++)
+                {
+                    data2 = data[i].Split(delimiterChars2);
+                    state = new State(Int16.Parse(data2[0]));
+                    q_value = Double.Parse(data2[1]);
+                    states.Add(state, q_value);
+                }
+                q_values.Add(state1, states);
+            }
+
+
+        }
+
+
 
 
     }

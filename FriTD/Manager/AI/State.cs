@@ -3,7 +3,8 @@ namespace Manager.AI
 {
     class State
     {
-        private Int16 IntState { get; }
+        public Int16 IntState { get; }
+        public static State InitialState = new State(0);
 
         public State(Int16 intState)
         {
@@ -41,6 +42,7 @@ namespace Manager.AI
             return IntState.GetHashCode();
         }
     }
+
 
     
 }
