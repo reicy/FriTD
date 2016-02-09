@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Net.Configuration;
 using Manager.AI;
 using Manager.Core.Delayers;
@@ -28,6 +29,12 @@ namespace Manager.Core
             _delayer = new LearningDelayer();
 
            
+        }
+
+        internal void InsertAi(StreamReader reader)
+        {
+            _ai = new AICore(0.09, 1, 0.5,reader);
+            _aiAdapter = new GameStateManager(_ai);
         }
 
         public bool IsAiMode()
