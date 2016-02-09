@@ -10,8 +10,9 @@ namespace Manager.AI
 
         Dictionary<State, Dictionary<State, double>> q_values; 
 
-        public AICore(double e,double g,double a)
+        public AICore(double e,double  g,double a)
         {
+
             alpha = a;
             epsilon = e;
             gamma = g;
@@ -37,11 +38,6 @@ namespace Manager.AI
             double sample = reward + gamma * maxNextStateValue;
             double prevQ_value = q_values[prevState][nextState];
             q_values[prevState][nextState] = (1 - alpha) * prevQ_value + alpha * sample;
-
-
-
-
-
 
         }
 
