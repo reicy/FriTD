@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Manager.AI
 {
@@ -16,6 +17,15 @@ namespace Manager.AI
             epsilon = e;
             gamma = g;
             q_values = new Dictionary<State, Dictionary<State, double>>();
+        }
+
+        public AICore(double e, double g, double a, StreamReader reader)
+        {
+            alpha = a;
+            epsilon = e;
+            gamma = g;
+            q_values = new Dictionary<State, Dictionary<State, double>>();
+            //TODO    
         }
 
 
