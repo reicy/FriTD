@@ -21,12 +21,16 @@ namespace Manager.AI
         }
 
         public AICore(double e, double g, double a,StringReader sr)
+
         {
             alpha = a;
             epsilon = e;
             gamma = g;
             q_values = new Dictionary<State, Dictionary<State, double>>();
+
             readQ_valuesFromFile(sr);
+
+            //TODO    
 
         }
 

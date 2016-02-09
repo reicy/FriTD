@@ -1,4 +1,5 @@
-﻿using System.Runtime.Remoting.Messaging;
+﻿using System.IO;
+using System.Runtime.Remoting.Messaging;
 
 namespace Manager.Core
 {
@@ -17,9 +18,11 @@ namespace Manager.Core
             return mng;
         }
 
-        public static Manager BuildObservableAiLearningManager()
+        public static Manager BuildObservableAiLearningManager(StreamReader reader)
         {
-            return null;
+            var mng = new Manager();
+            mng.InsertAi(reader);
+            return mng;
         }
 
         public static Manager BuildSimplePlayerManager()
