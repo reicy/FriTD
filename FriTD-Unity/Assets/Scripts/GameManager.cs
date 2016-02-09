@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using Assets.Scripts;
 using Manager.Core;
 using TD.Core;
@@ -217,7 +219,8 @@ namespace Assets
 
                 if (GUI.Button(new Rect(Screen.width - 205, 70, 200, 50), "Start AI game"))
                 {
-                    _manager = ManagerBuilder.BuildAiLearningManager();
+                    StreamReader streamReader = new StreamReader("qvalues/" + _aiLevel, Encoding.Default);
+                    _manager = ManagerBuilder.BuildObservableAiLearningManager(streamReader);
                     _manager.PrepareGame();
                     _dataStore = _manager._store;
                     _simplePlayer = false;
