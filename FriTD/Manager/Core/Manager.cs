@@ -71,7 +71,14 @@ namespace Manager.Core
         {
             if (_game.State != GameState.InProgress)
             {
-                _game.StartLevel();
+                if (IsAiMode())
+                {
+                    StartAiDrivenTurn();
+                }
+                else
+                {
+                    StartTurn();
+                }
                 _store.ExchangeData(_game.GameVisualImage());
             }
         }
