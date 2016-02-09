@@ -69,6 +69,11 @@ namespace Manager.Core
         // ----------- unity hack begin ------------
         public void UnityStartLevel()
         {
+            if (_game.State == GameState.Won || _game.State == GameState.Lost)
+            {
+                PrepareGame();
+            }
+
             if (_game.State != GameState.InProgress)
             {
                 if (IsAiMode())
