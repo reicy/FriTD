@@ -78,11 +78,20 @@ namespace Manager.Core
             {
                 if (IsAiMode())
                 {
-                    StartAiDrivenTurn();
+                    var decisionResult = _aiAdapter.ExecuteDecision1(_game.GameStateImage());
+                    var arr = decisionResult.Split(' ');
+                    foreach (var cmd in arr)
+                    {
+                        if (cmd.Length > 0) ExecuteCmd(cmd);
+                    }
+
+                    _game.StartLevel();
+
+                    
                 }
                 else
                 {
-                    StartTurn();
+                    _game.StartLevel();
                 }
                 _store.ExchangeData(_game.GameVisualImage());
             }
@@ -90,11 +99,18 @@ namespace Manager.Core
 
         public void UnityTic()
         {
+           
             if (_game.State == GameState.InProgress)
             {
                 _game.Tic();
                 _store.ExchangeData(_game.GameVisualImage());
+
+                if (_game.State != GameState.InProgress && IsAiMode())
+                {
+                    _aiAdapter.ExecuteReward(_game.GameStateImage());
+                }
             }
+            
         }
 
         public GameState GetGameState()
