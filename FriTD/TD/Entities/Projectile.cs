@@ -68,7 +68,7 @@ namespace TD.Entities
             }
             else
             {
-                nextY = X;
+                nextY = Y;
             }
 
             //MCH
