@@ -260,6 +260,10 @@ namespace Manager.GameStates
             }
 
 
+            if (relevantStates.Count > 1)
+            {
+                relevantStates.RemoveAt(0);
+            }
 
             var result = core.getNextState(EncodeState(img), relevantStates);
             return TransformStateToCommand(result);
