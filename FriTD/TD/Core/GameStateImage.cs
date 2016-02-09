@@ -13,7 +13,21 @@ namespace TD.Core
         public int TowerCost { get; set; }
         public int[] Towers { get; set; }
         public GameState GameState { get; set; }
-        //game over
+
+        public GameStateImage CloneThis()
+        {
+
+            return new GameStateImage()
+            {
+                Hp = Hp,
+                NextWaveHpCost = NextWaveHpCost,
+                Gold = Gold,
+                Towers = (int[])Towers.Clone(),
+                TowerRefundCost = TowerRefundCost,
+                GameState = GameState,
+                TowerCost = TowerCost
+            };
+        }
 
     }
 }

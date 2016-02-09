@@ -253,7 +253,8 @@ namespace TD.Core
                 Map = Map,
                 Enemies = foes,
                 Towers = towers,
-                Projectiles = shots
+                Projectiles = shots,
+                State = State
             };
 
 

@@ -50,8 +50,8 @@
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 16;
             this.listBox1.Items.AddRange(new object[] {
-            "1 Ai learning mode",
-            "2 Ai learning mode(observer mode)",
+            "1 Ai learning mode(single run)",
+            "2 Ai learning mode(long run)",
             "3 Player mode",
             "4 Simple player mode"});
             this.listBox1.Location = new System.Drawing.Point(35, 55);

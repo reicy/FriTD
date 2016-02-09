@@ -54,7 +54,7 @@ namespace TD.Entities
 
         public void Move()
         {
-            Debug.WriteLine("Enemy hp: " + Hp + " id " + SeqId + " moved from " + Y + " " + X + " " + Speed);
+            //Debug.WriteLine("Enemy hp: " + Hp + " id " + SeqId + " moved from " + Y + " " + X + " " + Speed);
 
             var expiredEffects = new LinkedList<Effect>();
             Speed = MaxSpeed;

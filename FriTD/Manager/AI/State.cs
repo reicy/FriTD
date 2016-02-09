@@ -4,6 +4,7 @@ namespace Manager.AI
     class State
     {
         private Int16 IntState { get; }
+        static State InitialState = new State(0);
 
         public State(Int16 intState)
         {
@@ -23,6 +24,24 @@ namespace Manager.AI
             return result;
         }
 
+        protected bool Equals(State other)
+        {
+            return IntState == other.IntState;
+        }
 
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((State) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return IntState.GetHashCode();
+        }
     }
+
+    
 }
