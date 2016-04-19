@@ -16,7 +16,12 @@ namespace Manager.Core
     {
         private TDGame _game;
         private GameStateManager _aiAdapter;
-        private AICore _ai; 
+        private AICore _ai;
+
+        private int firstGameWonLevel;
+        private int won;
+        private int numOfStates;
+
 
         //private DataStore _store;
         public DataStore _store { get; set; }
@@ -31,9 +36,36 @@ namespace Manager.Core
            
         }
 
+        public void StatisticsRun()
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                Console.WriteLine("run num: "+i);
+                firstGameWonLevel = -1;
+                won = 0;
+               
+                this.InsertAi();
+                AiLearningRun();
+                numOfStates = _ai.StatCount();
+                Statistics.counter++;
+                Statistics.endgameStatesNum += numOfStates;
+                if (firstGameWonLevel > 0)
+                {
+                    Statistics.firstWonRound += firstGameWonLevel;
+                    Statistics.gamesWithVictory++;
+                }
+                
+                Statistics.gamesWon += won;
+                Statistics.gamesLost += 1000 - won;
+            }
+
+            Console.WriteLine("count: {0} states: {1} first game won: {2} won: {3} lost: {4}",Statistics.counter, Statistics.endgameStatesNum*1.0/Statistics.counter, Statistics.firstWonRound * 1.0 / Statistics.gamesWithVictory, Statistics.gamesWon * 1.0 / Statistics.counter, Statistics.gamesLost * 1.0 / Statistics.counter);
+
+        }
+
         internal void InsertAi(StreamReader reader)
         {
-            _ai = new AICore(0.09, 1, 0.5,reader);
+            _ai = new AICore(0.1, 1, 0.5,reader);
             _aiAdapter = new GameStateManager(_ai);
         }
 
@@ -60,7 +92,7 @@ namespace Manager.Core
 
         public void InsertAi()
         {
-            _ai = new AICore(0.09,1,0.5);
+            _ai = new AICore(0.4,1,0.5);
             _aiAdapter = new GameStateManager(_ai);
         }
 
@@ -174,7 +206,7 @@ namespace Manager.Core
             int lost = 0;
 
             int innerInterval = 100;
-            int iterations = 100;
+            int iterations = 10;
 
             for (int i = 0; i < iterations; i++)
             {
@@ -183,6 +215,7 @@ namespace Manager.Core
                 {
                     if (GameState.Won == SingleAiLongRunIteration())
                     {
+                        if (firstGameWonLevel == -1) firstGameWonLevel = i*innerInterval + j;
                         won++;
                     }
                     else
@@ -190,13 +223,14 @@ namespace Manager.Core
                         lost++;
                     }
                 }
-                _ai.saveQ_valuesToFile(@"C:\Users\Tomas\Desktop\copy\"+i);
-                
+               // _ai.saveQ_valuesToFile(@"C:\Users\Tomas\Desktop\copy\"+i);
+                this.won += won;
                 Console.WriteLine("Iteration: "+i+" won: "+won+" lost: "+lost);
                 won = 0;
                 lost = 0;
             }
-            _ai.QValDisp();
+            
+            //_ai.QValDisp();
 
         }
 

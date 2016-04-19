@@ -28,7 +28,7 @@ namespace Manager.AI
             gamma = g;
             q_values = new Dictionary<State, Dictionary<State, double>>();
 
-            readQ_valuesFromFile(sr);
+        //    readQ_valuesFromFile(sr);
 
             //TODO    
 
@@ -204,7 +204,7 @@ namespace Manager.AI
             else return  getNextOptimalState(state, relevantStates);
         }
 
-        public void saveQ_valuesToFile(string fileName)
+    /*    public void saveQ_valuesToFile(string fileName)
         {
             string s = "";
 
@@ -257,7 +257,11 @@ namespace Manager.AI
         }
 
 
+    */
 
-
+        public int StatCount()
+        {
+            return q_values.Keys.Count;
+        }
     }
 }
