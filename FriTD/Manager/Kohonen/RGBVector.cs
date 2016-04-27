@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Manager.QLearning;
+using System;
 
 namespace Manager.Kohonen
 {
-    public class RgbVector : IVector<RgbVector>
+    public class RgbVector : IVector<RgbVector> 
     {
 
         private readonly int[] _rgb;
@@ -20,7 +21,7 @@ namespace Manager.Kohonen
         public RgbVector()
         {
             _rgb = new int[3];
-            _rgb[0] = 0;//rnd.Next(255);
+            _rgb[0] = /*0;//*/rnd.Next(255);
             _rgb[1] = rnd.Next(255);
             _rgb[2] = rnd.Next(255);
         }

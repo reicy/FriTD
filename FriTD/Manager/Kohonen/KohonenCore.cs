@@ -158,5 +158,17 @@ namespace Manager.Kohonen
             }
             Console.WriteLine(_radius);
         }
+
+        //////////////////////////////////////////////////////////////////////////////
+
+        public V getApproximatedState(V input)
+        {
+            int[] winnerCoords = Winner(input);
+            return _arr[winnerCoords[0], winnerCoords[1]];
+        }
+
+
+
+
     }
 }

@@ -6,7 +6,7 @@ namespace TD.Core
 {
     public class GameStateImage
     {
-        public int Hp { get; set; }
+       /* public int Hp { get; set; }
         public int NextWaveHpCost { get; set; }
         public int Gold { get; set; }
         public int TowerRefundCost { get; set; }
@@ -27,7 +27,10 @@ namespace TD.Core
                 GameState = GameState,
                 TowerCost = TowerCost
             };
-        }
+        }*/
+
+
+
 
     }
 }

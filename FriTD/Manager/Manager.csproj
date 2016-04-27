@@ -65,6 +65,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="QLearning\TDAction.cs" />
+    <Compile Include="QLearning\TDGameState.cs" />
+    <Compile Include="QLearning\QState.cs" />
+    <Compile Include="QLearning\QAction.cs" />
+    <Compile Include="QLearning\QLearning.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TD\TD.csproj">
