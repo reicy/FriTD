@@ -133,6 +133,11 @@ namespace Gui
             Console.WriteLine();
      
         }
-    
+
+        private void LongRun_Click(object sender, EventArgs e)
+        {
+            _manager = ManagerBuilder.BuildAiLearningManager();
+            _manager.AiLearningRun();
+        }
     }
 }

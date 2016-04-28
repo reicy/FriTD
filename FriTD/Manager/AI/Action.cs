@@ -1,14 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Manager.QLearning;
 
 namespace Manager.AI
 {
-    public class State:QState
+    class Action:QAction
     {
+
         public Int16 IntState { get; }
         public static State InitialState = new State(0);
 
-        public State(Int16 intState)
+        public Action(Int16 intState)
         {
             this.IntState = intState;
         }
@@ -26,7 +30,7 @@ namespace Manager.AI
             return result;
         }
 
-        protected bool Equals(State other)
+        protected bool Equals(Action other)
         {
             return IntState == other.IntState;
         }
@@ -36,7 +40,7 @@ namespace Manager.AI
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((State) obj);
+            return Equals((Action)obj);
         }
 
         public override int GetHashCode()
@@ -44,8 +48,6 @@ namespace Manager.AI
             return IntState.GetHashCode();
         }
 
+      
     }
-
-
-    
 }

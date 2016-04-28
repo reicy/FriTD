@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
+using Manager.AIUtils;
 using TD.Enums;
 
 
 namespace TD.Core
 {
-    public class GameStateImage
+    public class GameStateImage : GameStateImg
     {
-       /* public int Hp { get; set; }
+        public int Hp { get; set; }
         public int NextWaveHpCost { get; set; }
         public int Gold { get; set; }
         public int TowerRefundCost { get; set; }
@@ -27,7 +28,7 @@ namespace TD.Core
                 GameState = GameState,
                 TowerCost = TowerCost
             };
-        }*/
+        }
 
 
 

@@ -7,12 +7,12 @@ using System.Text;
 namespace Manager.QLearning
 {
     //class QLearning<State> where State : IVector<State>/*, new()*/
-    class QLearning<State> where State : QState/*, new()*/
+    public class QLearning<TState> where TState : QState/*, new()*/
     {
         double epsilon, gamma, alpha;
         int iterationCounter = 0;
         //int iterationsToSave = 100;
-        Dictionary<State, Dictionary<QAction, double>> q_values;
+        Dictionary<TState, Dictionary<QAction, double>> q_values;
         Random explorationGen = new Random();
 
         public QLearning(double e, double g, double a)
@@ -20,13 +20,13 @@ namespace Manager.QLearning
             alpha = a;
             epsilon = e;
             gamma = g;
-            q_values = new Dictionary<State, Dictionary<QAction, double>>();
+            q_values = new Dictionary<TState, Dictionary<QAction, double>>();
         }
 
 
-         public void updateQ_values(State prevState, QAction action,State nextState , double reward)
+         public void updateQ_values(TState prevState, QAction action,TState nextState , double reward)
          {
-
+             //Console.WriteLine(reward);
              double maxNextActionValue = double.MinValue;
              QAction maxNextAction;
 
@@ -61,7 +61,7 @@ namespace Manager.QLearning
 
         //dynamicaly create Pair state-state if not already created
         //if already in q tree nothing happens
-        public void createAction(State state, QAction newAction)
+        public void createAction(TState state, QAction newAction)
         {
             Dictionary<QAction, double> actionsFromAState;
             double tempReward;
@@ -83,7 +83,7 @@ namespace Manager.QLearning
 
         //get action with max q_value
         //!!!!! if only negative q_values it still chooses from them
-        public QAction getNextOptimalAction(State state, List<QAction> possibleActions)
+        public QAction getNextOptimalAction(TState state, List<QAction> possibleActions)
         {
             Dictionary<QAction, double> actionsFromAState;
             q_values.TryGetValue(state, out actionsFromAState);
@@ -102,14 +102,17 @@ namespace Manager.QLearning
                         bestAction = A;
                         maxValue = tempValue;
                     }
+
+
                 }
             }
+           // if(maxValue > 0) Console.WriteLine(maxValue);
             if (bestAction == null) Console.Write("Something is ***** wrong in getNextOptimalAction2");
             return bestAction;
         }
 
         //get random q_state
-         public QAction getNextRandomAction(State state, List<QAction> possibleActions)
+         public QAction getNextRandomAction(TState state, List<QAction> possibleActions)
          {
              if (possibleActions.Count == 0) Console.Write("Something is ***** wrong in getNextRandomAction-- no possible actions");
              int randomIndex = explorationGen.Next(possibleActions.Count);
@@ -120,7 +123,7 @@ namespace Manager.QLearning
          }
 
         //get the next action by the rules of q_learning (alpha,gamma,eps)
-         public QAction getNextAction(State state, List<QAction> possibleActions)
+         public QAction getNextAction(TState state, List<QAction> possibleActions)
          {
              if (possibleActions == null) Console.Write("Something is ***** wrong in getNextAction --- no possible actions");
 
@@ -129,30 +132,35 @@ namespace Manager.QLearning
 
              if (!q_values.TryGetValue(state, out actionsFromAState)) return getNextRandomAction(state, possibleActions);
              else if (randomDouble <= epsilon) return getNextRandomAction(state, possibleActions);
-             else return getNextOptimalAction(state, possibleActions);
+             else
+             {
+                 QAction optAction = getNextOptimalAction(state, possibleActions);
+                 if (optAction == null) return getNextRandomAction(state, possibleActions);
+                 return optAction;
+             }
          }
 
 
 
 
-        /*public void QValDisp()
+        public void QValDisp()
         {
             //Console.WriteLine("hej");
             Console.WriteLine(q_values.Keys.Count);
             foreach (var key in q_values.Keys)
             {
-                Console.Write(key.toString() + " - ");
+                Console.Write(key.ToString() + " - ");
                 foreach (var innerKey in q_values[key].Keys)
                 {
                     //Console.WriteLine(q_values[key].Keys.Count);
                     // Console.Write(" {0} v:{1}",innerKey.toString(),(q_values[key])[innerKey]);
-                    Console.Write(innerKey.toString() + "    " + q_values[key][innerKey]);
+                    Console.Write(innerKey.ToString() + "    " + q_values[key][innerKey]);
                 }
                 Console.WriteLine();
             }
             Console.WriteLine();
             //Console.WriteLine();
-        }*/
+        }
 
         //update q_Value of a pair state-state(action) after executing and getting the reward
         /*public void updateQ_values1(State prevState, State nextState, State action, double reward)

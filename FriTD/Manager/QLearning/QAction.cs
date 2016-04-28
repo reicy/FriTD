@@ -5,8 +5,8 @@ using System.Text;
 
 namespace Manager.QLearning
 {
-    interface QAction
+    public interface QAction
     {
-        QState getNewState(QState prevState);
+        
     }
 }

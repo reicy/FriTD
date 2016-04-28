@@ -41,12 +41,12 @@ namespace Manager.AI
             Console.WriteLine(q_values.Keys.Count);
             foreach (var key in q_values.Keys)
             {
-                Console.Write(key.toString()+" - ");
+                Console.Write(key.ToString()+" - ");
                 foreach (var innerKey in q_values[key].Keys)
                 {
                     //Console.WriteLine(q_values[key].Keys.Count);
                    // Console.Write(" {0} v:{1}",innerKey.toString(),(q_values[key])[innerKey]);
-                    Console.Write(innerKey.toString()+"    "+q_values[key][innerKey]);
+                    Console.Write(innerKey.ToString()+"    "+q_values[key][innerKey]);
                 }
                 Console.WriteLine();
             }
@@ -175,7 +175,7 @@ namespace Manager.AI
                     }
                 }
             }
-
+           // if(maxValue > 0) Console.WriteLine(maxValue);
             return maxState;
         }
 

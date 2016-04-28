@@ -1,32 +1,41 @@
 ﻿using System;
-using Manager.AI;
 using System.Collections.Generic;
+using Manager.AI;
 using Manager.AIUtils;
+using Manager.Kohonen;
 using TD.Core;
 using TD.Enums;
+using Manager.QLearning;
 
 namespace Manager.GameStates
 {
-    class GameStateManager : IAiAdapter
+    public class KohonenGameStateManager:IAiAdapter
     {
-        private AICore core;
+        private QLearning<KohonenAiState> q_learning;
+        private KohonenAiState previousState;
+        private KohonenCore<StateVector> kohonen;
+        private GameStateProcessor gameStateProcessor;
         private GameStateImage previousImage;
 
-        public GameStateManager(AICore core)
+        public KohonenGameStateManager(QLearning<KohonenAiState> q_learning, KohonenCore<StateVector> kohonen)
         {
-            this.core = core;
-            this.previousImage = null;
+            this.q_learning = q_learning;
+            this.previousState = null;
+            this.kohonen = kohonen;
+            gameStateProcessor = new GameStateProcessor();
+            
         }
 
-    
 
-        public string ExecuteDecision1(GameStateImage img)
+        public string ExecuteDecision(GameStateImg gameStateImage)
         {
+            GameStateImage img = (GameStateImage) gameStateImage;
+            previousState = EncodeState(img);
             previousImage = img;
-         //   Console.WriteLine("som v stave"+EncodeState(img).toString()+" goldy: "+img.Gold);
-            List<State> relevantStates = new List<State>();
-            
-            
+            //   Console.WriteLine("som v stave"+EncodeState(img).toString()+" goldy: "+img.Gold);
+            List<AI.Action> relevantStates = new List<AI.Action>();
+
+
             var tempImg = img.CloneThis();
             var seccImg = img.CloneThis();
             var preImg = img.CloneThis();
@@ -62,15 +71,15 @@ namespace Manager.GameStates
                                     seccImg.Gold -= seccImg.TowerCost;
                                     relevantStates.Add(EncodeAction(seccImg));
                                 }
-                                
+
 
                             }
                         }
                     }
-                    
+
                 }
 
-                
+
 
             }
 
@@ -85,7 +94,7 @@ namespace Manager.GameStates
                     preImg = img.CloneThis();
                     preImg.Towers[t] = -1;
                     preImg.Gold += preImg.TowerRefundCost;
-                    if (preImg.Gold > preImg.TowerCost*3) preImg.Gold = preImg.TowerCost*3;
+                    if (preImg.Gold > preImg.TowerCost * 3) preImg.Gold = preImg.TowerCost * 3;
 
                     for (int i = 0; i < 6; i++)
                     {
@@ -125,75 +134,34 @@ namespace Manager.GameStates
 
                 }
 
-                
+
             }
 
-            foreach (var state in relevantStates)
-            {
-               // if(state.toString().Length >0 ) Console.WriteLine(state.toString());
-                //Console.WriteLine(state.toString());
-            }
-
+            
 
             if (relevantStates.Count > 1)
             {
                 relevantStates.RemoveAt(0);
             }
-
-            var result = core.getNextState(EncodeState(img), relevantStates);
-            return TransformStateToCommand(result);
+            List<QAction> actions = new List<QAction>();
+            foreach (var item in relevantStates)
+            {
+                actions.Add(item);
+            }
+            var result = q_learning.getNextAction(previousState, actions);
+            return TransformActionToCommand((AI.Action)result);
         }
 
-        public void ExecuteReward1(GameStateImage image)
+        private KohonenAiState EncodeState(GameStateImage img)
         {
-            var prev = EncodeState(previousImage);
-            var currS = EncodeState(image);
-            var curr = EncodeAction(image);
-
-            if (image.GameState == GameState.Won)
-            {
-
-                core.updateQ_values(prev, currS, curr, 1000);
-                return;
-            }
-            if (image.GameState == GameState.Lost)
-            {
-                core.updateQ_values(prev, currS, curr, -500);
-                return;
-            }
-
-
-            double expectedHpCost = previousImage.NextWaveHpCost;
-            double actualHpCost = previousImage.Hp - image.Hp;
-            double reward = (actualHpCost / expectedHpCost)*2-1;
-            //Console.WriteLine(reward);
-
-            core.updateQ_values(prev,currS, curr, reward);
+            int[] dim;
+            var state = gameStateProcessor.ProcessGameState(img);
+            dim = kohonen.Winner(state);
+            kohonen.ReArrange(dim[0], dim[1], state);
+            return new KohonenAiState(dim);
         }
 
-        private State EncodeState(GameStateImage img)
-        {
-            string str = "";
-            foreach (var tower in img.Towers)
-            {
-                str += EncodeNumberTo2LengthStr(tower + 1);
-
-            }
-            str += EncodeNumberTo2LengthStr(img.Gold / img.TowerCost);
-            if (img.Hp <= img.NextWaveHpCost)
-            {
-                str += "1";
-            }
-            else
-            {
-                str += "0";
-            }
-            // Debug.WriteLine(str);
-            return new State(Convert.ToInt16(str, 2));
-        }
-
-
-        private State EncodeAction(GameStateImage img)
+        private AI.Action EncodeAction(GameStateImage img)
         {
             string str = "";
             foreach (var tower in img.Towers)
@@ -202,10 +170,9 @@ namespace Manager.GameStates
 
             }
             str += "000";
-            
-            return new State(Convert.ToInt16(str, 2));
-        }
 
+            return new AI.Action(Convert.ToInt16(str, 2));
+        }
 
 
         private string EncodeNumberTo2LengthStr(int num)
@@ -217,26 +184,27 @@ namespace Manager.GameStates
             return str;
         }
 
-        private string TransformStateToCommand(State state)
+        private string TransformActionToCommand(AI.Action state)
         {
             var response = "";
             var str = state.ToString();
-            var prevStr = EncodeState(previousImage).ToString();
+            //TODO
+            var prevStr = EncodeAction(previousImage).ToString();
             var towerPlace = "";
             string lastTowerPlace = "";
-          //  Console.WriteLine("from "+EncodeState(previousImage).toString());
-         //   Console.WriteLine("transform: "+str);
+            //  Console.WriteLine("from "+EncodeState(previousImage).toString());
+            //   Console.WriteLine("transform: "+str);
 
             for (int i = 0; i < 6; i++)
             {
                 towerPlace = str.Substring(i * 2, 2);
-                lastTowerPlace = prevStr.Substring(i*2, 2);
+                lastTowerPlace = prevStr.Substring(i * 2, 2);
                 if (towerPlace != lastTowerPlace)
                 {
                     response += "s_" + i;
                 }
 
-                
+
 
 
                 response += " ";
@@ -247,7 +215,7 @@ namespace Manager.GameStates
                 towerPlace = str.Substring(i * 2, 2);
                 if (towerPlace.Equals("00"))
                 {
-                
+
                 }
                 else
                 {
@@ -268,14 +236,31 @@ namespace Manager.GameStates
             return response.Trim();
         }
 
-        public string ExecuteDecision(GameStateImg gameStateImage)
-        {
-            return ExecuteDecision1((GameStateImage) gameStateImage);
-        }
-
         public void ExecuteReward(GameStateImg gameStateImage)
         {
-            ExecuteReward1((GameStateImage)gameStateImage);
+            GameStateImage image = (GameStateImage) gameStateImage;
+            var prev = previousState;
+            var curr = EncodeState(image);
+            var action = EncodeAction(image);
+
+            if (image.GameState == GameState.Won)
+            {
+
+                q_learning.updateQ_values(prev, action, curr, 1000);
+                return;
+            }
+            if (image.GameState == GameState.Lost)
+            {
+                q_learning.updateQ_values(prev, action, curr, -500);
+                return;
+            }
+
+
+            double expectedHpCost = previousImage.NextWaveHpCost;
+            double actualHpCost = previousImage.Hp - image.Hp;
+            double reward = (actualHpCost / expectedHpCost) * 2 - 1;
+            
+            q_learning.updateQ_values(prev, action, curr, reward);
         }
     }
 }

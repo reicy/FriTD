@@ -6,8 +6,8 @@ using System.Text;
 
 namespace Manager.QLearning
 {
-    interface QState 
+    public interface QState 
     {
-        QState getNewState(QAction action);
+        
     }
 }

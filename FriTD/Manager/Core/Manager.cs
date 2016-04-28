@@ -4,8 +4,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Net.Configuration;
 using Manager.AI;
+using Manager.AIUtils;
 using Manager.Core.Delayers;
 using Manager.GameStates;
+using Manager.Kohonen;
+using Manager.QLearning;
 using TD.Core;
 using TD.Enums;
 
@@ -15,8 +18,11 @@ namespace Manager.Core
     public class Manager
     {
         private TDGame _game;
-        private GameStateManager _aiAdapter;
+        private IAiAdapter _aiAdapter;
         private AICore _ai;
+
+        private QLearning<KohonenAiState> _qLearning; 
+                
 
         private int firstGameWonLevel;
         private int won;
@@ -67,6 +73,7 @@ namespace Manager.Core
         {
             _ai = new AICore(0.1, 1, 0.5,reader);
             _aiAdapter = new GameStateManager(_ai);
+            
         }
 
         public bool IsAiMode()
@@ -92,8 +99,13 @@ namespace Manager.Core
 
         public void InsertAi()
         {
-            _ai = new AICore(0.4,1,0.5);
-            _aiAdapter = new GameStateManager(_ai);
+            _ai = new AICore(0.1,1,0.5);
+           // _aiAdapter = new GameStateManager(_ai);
+            Console.WriteLine("AI inserted");
+            _qLearning = new QLearning<KohonenAiState>(0.4, 1, 0.5);
+           // _aiAdapter = new NewGameStateManager(_qLearning);
+            KohonenCore<StateVector> kohonen = new KohonenCore<StateVector>(50, 50, 3, 0.5, 1, 1, 0.5);
+            _aiAdapter = new KohonenGameStateManager(_qLearning,kohonen);
         }
 
 
@@ -110,7 +122,7 @@ namespace Manager.Core
             {
                 if (IsAiMode())
                 {
-                    var decisionResult = _aiAdapter.ExecuteDecision1(_game.GameStateImage());
+                    var decisionResult = _aiAdapter.ExecuteDecision(_game.GameStateImage());
                     var arr = decisionResult.Split(' ');
                     foreach (var cmd in arr)
                     {
@@ -186,7 +198,7 @@ namespace Manager.Core
 
         public void StartAiDrivenTurn()
         {
-            var decisionResult = _aiAdapter.ExecuteDecision1(_game.GameStateImage());
+            var decisionResult = _aiAdapter.ExecuteDecision(_game.GameStateImage());
             var arr = decisionResult.Split(' ');
             foreach (var cmd in arr)
             {
@@ -206,7 +218,7 @@ namespace Manager.Core
             int lost = 0;
 
             int innerInterval = 100;
-            int iterations = 10;
+            int iterations = 1000;
 
             for (int i = 0; i < iterations; i++)
             {
@@ -230,7 +242,8 @@ namespace Manager.Core
                 lost = 0;
             }
             
-            //_ai.QValDisp();
+           // _ai.QValDisp();
+          // _qLearning.QValDisp();
 
         }
 
@@ -247,7 +260,14 @@ namespace Manager.Core
 
             return _game.State;
         }
+
+      
+
+
     }
+
+
+   
 
 
 
