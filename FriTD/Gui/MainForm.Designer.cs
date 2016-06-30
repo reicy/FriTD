@@ -35,6 +35,7 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.LongRun = new System.Windows.Forms.Button();
+            this.MTStartButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -109,11 +110,23 @@
             this.LongRun.UseVisualStyleBackColor = true;
             this.LongRun.Click += new System.EventHandler(this.LongRun_Click);
             // 
+            // MTStartButton
+            // 
+            this.MTStartButton.Location = new System.Drawing.Point(744, 85);
+            this.MTStartButton.Name = "MTStartButton";
+            this.MTStartButton.Size = new System.Drawing.Size(129, 31);
+            this.MTStartButton.TabIndex = 7;
+            this.MTStartButton.Text = "MT";
+            this.MTStartButton.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.MTStartButton.UseVisualStyleBackColor = true;
+            this.MTStartButton.Click += new System.EventHandler(this.MTStartButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1035, 789);
+            this.Controls.Add(this.MTStartButton);
             this.Controls.Add(this.LongRun);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
@@ -137,6 +150,7 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button LongRun;
+        private System.Windows.Forms.Button MTStartButton;
     }
 }
 

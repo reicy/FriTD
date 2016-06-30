@@ -61,8 +61,8 @@ namespace Manager.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Marauder,0,5000,5,20,1000,10,0,20
-        ///Vermin,1,50,10,1,1,0,0,2
+        ///   Looks up a localized string similar to Marauder,0,5000,5,20,5000,10,0,30
+        ///Vermin,1,50,10,2,1000,0,0,1
         ///.
         /// </summary>
         internal static string Enemies {
@@ -73,10 +73,10 @@ namespace Manager.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to 0:1
-        ///1:1
-        ///1:40
+        ///1:5
+        ///1:100
         ///1:60
-        ///1:80
+        ///0:15
         ///.
         /// </summary>
         internal static string Levels {
@@ -110,9 +110,9 @@ namespace Manager.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sniper,20,10,0,1000,20,500,0,0,0,0,0,50
-        ///GrenadeThrower,20,10,0,30,5,100,0,0,0,1,50,50
-        ///ArcaneMage,20,10,1,100,20,200,40,10,10,0,0,50
+        ///   Looks up a localized string similar to Sniper,20,10,0,1000,20,500,0,0,0,0,0,25
+        ///GrenadeThrower,20,10,0,24,8,300,0,0,0,1,50,25
+        ///ArcaneMage,20,10,1,100,20,300,40,10,10,0,0,25
         ///.
         /// </summary>
         internal static string Towers {

@@ -19,6 +19,7 @@ namespace TD.Core
         private List<Enemy> _enemies;
         private List<Projectile> _projectiles;
         private PathSquare _spawn;
+        private int _level;
 
         public int Money
         {
@@ -26,8 +27,7 @@ namespace TD.Core
             private set
             {
                 _money = value;
-                //max 3 veze 
-                if (_money > 60) _money = 60;
+               
             }
         }
 
@@ -36,21 +36,23 @@ namespace TD.Core
 
         public void InitGame(string towers, string map, string enemies, string levels)
         {
-
+            _level = 0;
             _mapBuilder = new MapBuilder();
             _mapBuilder.Build(map);
             _mapBuilder.Info(out _spawn, out _map, out _towerPlaces);
             _enemyFactory = new EnemyFactory();
             _enemyFactory.InitBuilders(enemies, _spawn.Next, _spawn);
-            _towerFactory = new TowerFactory();
+            _towerFactory = new TowerFactory() {Game = this};
             _towerFactory.InitBuilders(towers);
+            _towerFactory.EvalTowerPlaces(_towerPlaces,_map);
             _spawner = new Spawner(levels,_enemyFactory);
             _life = 10000;
-            Money = 20;
+            Money = 30;
             Enemies = new List<Enemy>();
             Projectiles = new List<Projectile>();
             State = GameState.Waiting;
-            GlobalEventHandler.SetManagedGame(this);
+           
+
         }
 
         public void StartLevel()
@@ -59,6 +61,7 @@ namespace TD.Core
             {
                 State = GameState.InProgress;
                 _spawner.LoadNextWave();
+                _level++;
             }
             
         }
@@ -212,10 +215,15 @@ namespace TD.Core
         public GameStateImage GameStateImage()
         {
             var towers = new int[TowerPlaces.Count];
+            var ranges = new int[TowerPlaces.Count, _towerFactory.TowerTypesCount()];
             //-1 no tower placed, 0 - 2 tower ids
             for (int i = 0; i < TowerPlaces.Count; i++)
             {
                 towers[i] = -1;
+                for (int j = 0; j < ranges.GetLength(1); j++)
+                {
+                    ranges[i, j] = TowerPlaces[i].TypePathFieldsInRangeCount(j);
+                }
                 if (TowerPlaces[i].HasTower())
                 {
                     towers[i] = TowerPlaces[i].Tower().Id;
@@ -230,7 +238,10 @@ namespace TD.Core
                 Towers = towers,
                 TowerCost = _towerFactory.Cost(0),
                 TowerRefundCost = _towerFactory.RefundCost(0),
-                GameState = State
+                GameState = State,
+                Ranges = ranges,
+                Level = _level
+
             };
 
             return img;

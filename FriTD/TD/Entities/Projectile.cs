@@ -20,6 +20,7 @@ namespace TD.Entities
         private readonly int _speed;
         private readonly Enemy _target;
         private Effect _effect;
+        public TDGame Game { get; set; }
 
         public Projectile(int speed, Enemy target, Effect effect)
         {
@@ -77,7 +78,7 @@ namespace TD.Entities
                 _target.ApplyEffect(_effect);
                 if (_effect.IsSplash())
                 {
-                    GlobalEventHandler.AreaOfDmg(_target.X, _target.Y, _effect.PrimaryDmg, _effect.DmgType, _effect.SplashRadius);
+                    GlobalEventHandler.AreaOfDmg(_target.X, _target.Y, _effect.PrimaryDmg, _effect.DmgType, _effect.SplashRadius, Game);
                 }
                 _effect = null;
                 State = ProjectileState.NonActive;

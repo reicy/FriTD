@@ -36,7 +36,8 @@ namespace Manager.Kohonen
 
         public override int GetHashCode()
         {
-            return (_dim != null ? _dim.GetHashCode() : 0);
+            //TODO inak
+            return (_dim != null ? _dim[0]*1000+_dim[1] : 0);
         }
     }
 }

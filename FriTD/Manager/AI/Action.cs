@@ -9,10 +9,10 @@ namespace Manager.AI
     class Action:QAction
     {
 
-        public Int16 IntState { get; }
+        public int IntState { get; }
         public static State InitialState = new State(0);
 
-        public Action(Int16 intState)
+        public Action(int intState)
         {
             this.IntState = intState;
         }
@@ -20,12 +20,13 @@ namespace Manager.AI
         public override string ToString()
         {
             string result = "";
-            string converted = Convert.ToString(IntState, 2);
+         /*   string converted = Convert.ToString(IntState, 2);
             for (int i = 0; i < 15 - converted.Length; i++)
             {
                 result += "0";
             }
-            result += converted;
+            result += converted;*/
+            result = "" + IntState;
 
             return result;
         }

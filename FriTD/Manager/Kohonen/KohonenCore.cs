@@ -64,6 +64,9 @@ namespace Manager.Kohonen
         {
           //  Console.WriteLine(_radius);
          //   _radius *= 0.99995;
+
+            //Displ();
+
             int offset = (int) Math.Ceiling(_radius - 0.5);
             double temp;
             double radSqrt = Math.Sqrt(_radius);
@@ -97,7 +100,8 @@ namespace Manager.Kohonen
                 ProcessRow(start, end, row - i, row, col, value);
             }
 
-          
+           // Displ();
+
         }
 
         public Boolean IsWithinTable(int row, int col)
@@ -107,7 +111,16 @@ namespace Manager.Kohonen
 
         private void UpdateVector(int i, int j, int row, int col, V value)
         {
+          /*  Console.Write("pred ");
+            _arr[i,j].Print();
+            Console.WriteLine();
+            Console.WriteLine("lr: "+ _learningRate);
+            Console.WriteLine("NF: "+ NFunction(new int[] { i, j }, new int[] { row, col }));*/
             _arr[i,j] = _arr[i,j].Add(value.Diff(_arr[i,j]).Multiply(_learningRate).Multiply(NFunction(new int[]{i,j},new int[]{ row,col})));
+          /*  Console.Write("po ");
+            _arr[i,j].Print();
+            Console.WriteLine();*/
+
         }
 
         private double NFunction(int [] dim1, int [] dim2)
@@ -147,11 +160,12 @@ namespace Manager.Kohonen
         public void Displ()
         {
 
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < _rows; i++)
             {
-                for (int j = 0; j < 50; j++)
+                for (int j = 0; j < _cols; j++)
                 {
                     _arr[i,j].Print();
+
                 }
                 Console.WriteLine();
                 

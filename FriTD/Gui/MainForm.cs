@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using Manager.Core;
 using Manager.Kohonen;
+using Manager.MTCore;
 
 namespace Gui
 {
@@ -138,6 +139,12 @@ namespace Gui
         {
             _manager = ManagerBuilder.BuildAiLearningManager();
             _manager.AiLearningRun();
+        }
+
+        private void MTStartButton_Click(object sender, EventArgs e)
+        {
+            MtManager manager = new MtManager();
+            manager.ProcessLearning();
         }
     }
 }

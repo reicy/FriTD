@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using TD.Entities;
@@ -10,6 +11,7 @@ namespace TD.Core
 
         private readonly List<TowerBuilder> _builders;
         private int _nextSeqId;
+        public TDGame Game { get; set; }
 
 
         public TowerFactory( )
@@ -24,13 +26,17 @@ namespace TD.Core
             using (var reader = new StringReader(towerFile))
             {
                 string line;
+                
                 while ((line = reader.ReadLine())!=null)
                 {
-                    _builders.Add(new TowerBuilder(line));
+                    var towerBuilder = new TowerBuilder(line) {Id = _builders.Count, Game = Game};
+                    _builders.Add(towerBuilder);
                 }
                 
             }
         }
+
+        
 
         public Tower CreateTower(int id)
         {
@@ -50,5 +56,21 @@ namespace TD.Core
             return _builders[id].Cost;
         }
 
+        public void EvalTowerPlaces(List<TowerPlace> towerPlaces, char[,] map)
+        {
+            foreach (var towerPlace in towerPlaces)
+            {
+                foreach (var towerBuilder in _builders)
+                {
+                    
+                    towerBuilder.EvaluateTowerPlace(towerPlace, map);
+                }
+            }
+        }
+
+        public int TowerTypesCount()
+        {
+            return _builders.Count;
+        }
     }
 }

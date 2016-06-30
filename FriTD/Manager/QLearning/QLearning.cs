@@ -2,13 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.Remoting.Contexts;
 using System.Text;
 
 namespace Manager.QLearning
 {
+
+    [Synchronization]
+    
+
     //class QLearning<State> where State : IVector<State>/*, new()*/
     public class QLearning<TState> where TState : QState/*, new()*/
     {
+        
+
         double epsilon, gamma, alpha;
         int iterationCounter = 0;
         //int iterationsToSave = 100;
@@ -23,8 +31,8 @@ namespace Manager.QLearning
             q_values = new Dictionary<TState, Dictionary<QAction, double>>();
         }
 
-
-         public void updateQ_values(TState prevState, QAction action,TState nextState , double reward)
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public void updateQ_values(TState prevState, QAction action,TState nextState , double reward)
          {
              //Console.WriteLine(reward);
              double maxNextActionValue = double.MinValue;
@@ -61,6 +69,7 @@ namespace Manager.QLearning
 
         //dynamicaly create Pair state-state if not already created
         //if already in q tree nothing happens
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public void createAction(TState state, QAction newAction)
         {
             Dictionary<QAction, double> actionsFromAState;
@@ -83,6 +92,7 @@ namespace Manager.QLearning
 
         //get action with max q_value
         //!!!!! if only negative q_values it still chooses from them
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public QAction getNextOptimalAction(TState state, List<QAction> possibleActions)
         {
             Dictionary<QAction, double> actionsFromAState;
@@ -107,12 +117,13 @@ namespace Manager.QLearning
                 }
             }
            // if(maxValue > 0) Console.WriteLine(maxValue);
-            if (bestAction == null) Console.Write("Something is ***** wrong in getNextOptimalAction2");
+          //  if (bestAction == null) Console.Write("Something is ***** wrong in getNextOptimalAction2");
             return bestAction;
         }
 
         //get random q_state
-         public QAction getNextRandomAction(TState state, List<QAction> possibleActions)
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public QAction getNextRandomAction(TState state, List<QAction> possibleActions)
          {
              if (possibleActions.Count == 0) Console.Write("Something is ***** wrong in getNextRandomAction-- no possible actions");
              int randomIndex = explorationGen.Next(possibleActions.Count);
@@ -123,7 +134,8 @@ namespace Manager.QLearning
          }
 
         //get the next action by the rules of q_learning (alpha,gamma,eps)
-         public QAction getNextAction(TState state, List<QAction> possibleActions)
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public QAction getNextAction(TState state, List<QAction> possibleActions)
          {
              if (possibleActions == null) Console.Write("Something is ***** wrong in getNextAction --- no possible actions");
 
@@ -142,7 +154,7 @@ namespace Manager.QLearning
 
 
 
-
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public void QValDisp()
         {
             //Console.WriteLine("hej");
@@ -154,7 +166,9 @@ namespace Manager.QLearning
                 {
                     //Console.WriteLine(q_values[key].Keys.Count);
                     // Console.Write(" {0} v:{1}",innerKey.toString(),(q_values[key])[innerKey]);
+                    Console.Write("(");
                     Console.Write(innerKey.ToString() + "    " + q_values[key][innerKey]);
+                    Console.Write(")");
                 }
                 Console.WriteLine();
             }

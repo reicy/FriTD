@@ -6,17 +6,11 @@ namespace TD.Core
 {
     public static class GlobalEventHandler
     {
-        private static TDGame _managedGame;
-
-        public static void SetManagedGame(TDGame game)
+       
+        public static void AreaOfDmg(int x, int y, double dmg, DmgType dmgType, int radius, TDGame game)
         {
-            _managedGame = game;
-        }
-
-        public static void AreaOfDmg(int x, int y, double dmg, DmgType dmgType, int radius)
-        {
-            if (_managedGame == null) return;
-            foreach (var enemy in _managedGame.Enemies)
+           
+            foreach (var enemy in game.Enemies)
             {
                 if (MathHelper.DistanceBetweenPoints(enemy.X, enemy.Y, x, y) <= radius)
                 {

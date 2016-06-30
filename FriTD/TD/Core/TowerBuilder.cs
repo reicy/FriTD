@@ -1,6 +1,8 @@
-﻿using System.CodeDom;
+﻿using System;
+using System.CodeDom;
 using TD.Entities;
 using TD.Enums;
+using TD.Helpers;
 
 namespace TD.Core
 {
@@ -13,6 +15,8 @@ namespace TD.Core
         public int Cd { get; }
         public int Range { get; }
         public int ProjSpeed { get; }
+        public int Id { set; get; }
+        public TDGame Game { get; set; }
 
         private ProjectileEffectFactory _factory; 
 
@@ -43,10 +47,34 @@ namespace TD.Core
         public Tower Build()
         {
             
-            var tower = new Tower(Range, _factory, ProjSpeed);
+            var tower = new Tower(Range, _factory, ProjSpeed) {Game = Game};
 
 
             return tower;
+        }
+
+     
+
+        public void EvaluateTowerPlace(TowerPlace towerPlace, char[,] map) 
+        {
+
+            for (int i = 0; i < map.GetLength(0); i++)
+            {
+                for (int j = 0; j < map.GetLength(1); j++)
+                {
+                    if (map[i, j] == 'P')
+                    {
+                        if (
+                            MathHelper.DistanceBetweenPoints((j + 0.5)*MapBuilder.SQUARE_SIZE, (i + 0.5) * MapBuilder.SQUARE_SIZE, towerPlace.X, towerPlace.Y ) <=
+                            Range)
+                        {
+                            towerPlace.TypePathFieldInRange(Id);
+                        }
+                    }
+                }
+            }
+            
+            
         }
     }
 }

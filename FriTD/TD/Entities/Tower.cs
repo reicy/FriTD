@@ -16,6 +16,7 @@ namespace TD.Entities
         public int Id { get; set; }
         public int SeqId { get; set; }
         public double Perc { get; set; }
+        public TDGame Game { get; set; }
         public int WX
         {
             get { return _lastEnemy != null ?_lastEnemy.X : 0; }
@@ -50,7 +51,7 @@ namespace TD.Entities
                    // Debug.WriteLine("Firing "+SeqId);
                     var effect = _effectFactory.Create();
                     if (effect == null) return null;
-                    projectile = new Projectile(_projSpeed, enemy, effect) {X = X, Y = Y, Id = Id};
+                    projectile = new Projectile(_projSpeed, enemy, effect) {X = X, Y = Y, Id = Id, Game = Game};
                     _lastEnemy = enemy;
                     
                     break;
@@ -61,5 +62,6 @@ namespace TD.Entities
 
         }
 
+        
     }
 }

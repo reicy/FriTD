@@ -14,6 +14,8 @@ namespace TD.Core
         public int TowerCost { get; set; }
         public int[] Towers { get; set; }
         public GameState GameState { get; set; }
+        public int[,] Ranges { get; set; }
+        public int Level { get; set; }
 
         public GameStateImage CloneThis()
         {

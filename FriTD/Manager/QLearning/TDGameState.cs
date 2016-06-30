@@ -6,11 +6,8 @@ using System.Text;
 namespace Manager.QLearning
 {
 
-    class TDGameState : QState
+    class TdGameState : QState
     {
-        public QState getNewState(QAction action)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

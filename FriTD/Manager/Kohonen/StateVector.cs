@@ -61,6 +61,11 @@ namespace Manager.Kohonen
 
         public StateVector Add(StateVector vector)
         {
+          /*  Console.WriteLine("add");
+            this.Print();
+            Console.Write("   ");
+            vector.Print();
+            Console.WriteLine();*/
             double[] second = vector.Vector;
             double[] result = new double[Size];
             for (int i = 0; i < _vector.Length; i++)
@@ -79,13 +84,17 @@ namespace Manager.Kohonen
             {
                 result[i] = _vector[i]*factor;
             }
-            return new StateVector(_vector);
+            return new StateVector(result);
 
         }
 
         public void Print()
         {
-            
+            for (int i = 0; i < _vector.Length; i++)
+            {
+                Console.Write(String.Format("{0:0.00} ",_vector[i]));
+            }
+            Console.Write(" ---|");
         }
 
         public double this[int index]

@@ -16,6 +16,8 @@ namespace Manager.GameStates
         private KohonenCore<StateVector> kohonen;
         private GameStateProcessor gameStateProcessor;
         private GameStateImage previousImage;
+        private bool learningEnabled;
+        private double _rewardMultiplier;
 
         public KohonenGameStateManager(QLearning<KohonenAiState> q_learning, KohonenCore<StateVector> kohonen)
         {
@@ -23,14 +25,28 @@ namespace Manager.GameStates
             this.previousState = null;
             this.kohonen = kohonen;
             gameStateProcessor = new GameStateProcessor();
-            
+            learningEnabled = true;
+            _rewardMultiplier = 1;
+        }
+
+        public void disableLearning()
+        {
+            this.learningEnabled = false;
         }
 
 
         public string ExecuteDecision(GameStateImg gameStateImage)
         {
             GameStateImage img = (GameStateImage) gameStateImage;
-            previousState = EncodeState(img);
+            
+            int[] dim;
+            var state = gameStateProcessor.ProcessGameState(img);
+            dim = kohonen.Winner(state);
+            previousState = new KohonenAiState(dim);
+            if(learningEnabled)kohonen.ReArrange(dim[0], dim[1], state);
+
+
+
             previousImage = img;
             //   Console.WriteLine("som v stave"+EncodeState(img).toString()+" goldy: "+img.Gold);
             List<AI.Action> relevantStates = new List<AI.Action>();
@@ -157,7 +173,7 @@ namespace Manager.GameStates
             int[] dim;
             var state = gameStateProcessor.ProcessGameState(img);
             dim = kohonen.Winner(state);
-            kohonen.ReArrange(dim[0], dim[1], state);
+           // kohonen.ReArrange(dim[0], dim[1], state);
             return new KohonenAiState(dim);
         }
 
@@ -259,8 +275,14 @@ namespace Manager.GameStates
             double expectedHpCost = previousImage.NextWaveHpCost;
             double actualHpCost = previousImage.Hp - image.Hp;
             double reward = (actualHpCost / expectedHpCost) * 2 - 1;
-            
+
+            reward = reward*_rewardMultiplier;
             q_learning.updateQ_values(prev, action, curr, reward);
+        }
+
+        public void SetRewardMultiplier(double d)
+        {
+            _rewardMultiplier = d;
         }
     }
 }
