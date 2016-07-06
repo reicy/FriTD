@@ -104,7 +104,7 @@ namespace Manager.Core
             Console.WriteLine("AI inserted");
             _qLearning = new QLearning<KohonenAiState>(0.3, 1, 0.5);
             // _aiAdapter = new NewGameStateManager(_qLearning);
-            _kohonen = new KohonenCore<StateVector>(30, 30, 2, 0.5, 1, 1, 0.5);
+            _kohonen = new KohonenCore<StateVector>(30, 30, 2, 0.5, 1, 1, 0.5, false);
             //_aiAdapter = new KohonenGameStateManager(_qLearning,_kohonen);
             _aiAdapter = new KohonenGameStateManagerSemiInteligentActions(_qLearning, _kohonen);
         }

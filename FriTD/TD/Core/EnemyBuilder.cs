@@ -58,6 +58,19 @@ namespace TD.Core
 
         }
 
-      
+
+        public string EnemyType()
+        {
+            var temp = Template.Split(',');
+            return temp[9];
+
+        }
+
+        public int EnemyHp()
+        {
+            var temp = Template.Split(',');
+            return int.Parse(temp[2]);
+
+        }
     }
 }

@@ -70,11 +70,16 @@
     <Compile Include="Kohonen\KohonenCore.cs" />
     <Compile Include="Kohonen\RGBVector.cs" />
     <Compile Include="Kohonen\StateVector.cs" />
-    <Compile Include="MTCore\KohonenUpdate.cs" />
-    <Compile Include="MTCore\MTAiAdapter.cs" />
-    <Compile Include="MTCore\MTManager.cs" />
-    <Compile Include="MTCore\MTSingleDaemon.cs" />
-    <Compile Include="MTCore\MTStats.cs" />
+    <Compile Include="MTCore\KohonenUtils\AdaptiveStateEncoder.cs" />
+    <Compile Include="MTCore\KohonenUtils\IStateEncoder.cs" />
+    <Compile Include="MTCore\Adapters\MtAiAction.cs" />
+    <Compile Include="MTCore\Adapters\MtAiState.cs" />
+    <Compile Include="MTCore\KohonenUtils\SimpleStateEncoder.cs" />
+    <Compile Include="MTCore\Core\KohonenUpdate.cs" />
+    <Compile Include="MTCore\Adapters\MTAiAdapter.cs" />
+    <Compile Include="MTCore\Core\MTManager.cs" />
+    <Compile Include="MTCore\Core\MTSingleDaemon.cs" />
+    <Compile Include="MTCore\Core\MTStats.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -110,6 +115,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Towers.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Map1.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Levels1.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

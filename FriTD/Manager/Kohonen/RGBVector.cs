@@ -37,6 +37,11 @@ namespace Manager.Kohonen
             return Math.Sqrt(temp);
         }
 
+        public double Difference(RgbVector vector, double[] weight)
+        {
+            throw new NotImplementedException();
+        }
+
         public RgbVector Diff(RgbVector vector)
         {
             int[] second = vector.Rgb;
@@ -72,6 +77,16 @@ namespace Manager.Kohonen
         public void Print()
         {
             Console.Write("("+_rgb[0] + "  " + _rgb[1] + "  " + _rgb[2]+")");
+        }
+
+        public void Load(string v)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsEmpty()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 
 namespace Manager.Kohonen
 {
     public class StateVector:IVector<StateVector>
     {
-        public static int Size = 8;
+        public static int Size = 20;
         private readonly double[] _vector;
+        private int Count { get; }
         private static Random rnd = new Random();
 
 
@@ -17,9 +19,33 @@ namespace Manager.Kohonen
             _vector = new double[Size];
             for (int i = 0; i < _vector.Length; i++)
             {
-                _vector[i] = rnd.NextDouble();
+                _vector[i] = 0; //rnd.NextDouble();
             }
+            Count = Size;
         }
+
+        public void Load(string template)
+        {
+            
+            var temp = template.Split(' ');
+            for (int i = 0; i < _vector.Length; i++)
+            {
+                _vector[i] = double.Parse(temp[i]); //rnd.NextDouble();
+            }
+            
+
+        }
+
+        /* public StateVector(int size)
+         {
+             _vector = new double[size];
+             for (int i = 0; i < _vector.Length; i++)
+             {
+                 _vector[i] = rnd.NextDouble();
+             }
+             Count = size;
+
+         }*/
 
         public StateVector(double[] _vector, double factor)
         {
@@ -33,6 +59,7 @@ namespace Manager.Kohonen
         public StateVector(double[] _vector)
         {
             this._vector = _vector;
+            Count = _vector.Length;
         }
 
         public double Difference(StateVector vector)
@@ -46,10 +73,21 @@ namespace Manager.Kohonen
             return Math.Sqrt(temp);
         }
 
+        public double Difference(StateVector vector, double[] weight)
+        {
+            double temp = 0;
+
+            for (int i = 0; i < _vector.Length; i++)
+            {
+                temp += Math.Pow(vector[i] - this[i], 2) * weight[i]; //*_priorita[i];
+            }
+            return Math.Sqrt(temp);
+        }
+
         public StateVector Diff(StateVector vector)
         {
             double[] second = vector.Vector;
-            double[] result = new double[Size];
+            double[] result = new double[vector.Count];
             for (int i = 0; i < _vector.Length; i++)
             {
                 result[i] = _vector[i] - second[i];
@@ -67,7 +105,7 @@ namespace Manager.Kohonen
             vector.Print();
             Console.WriteLine();*/
             double[] second = vector.Vector;
-            double[] result = new double[Size];
+            double[] result = new double[vector.Count];
             for (int i = 0; i < _vector.Length; i++)
             {
                 result[i] = Math.Abs(_vector[i] + second[i]);
@@ -79,7 +117,7 @@ namespace Manager.Kohonen
       
         public StateVector Multiply(Double factor)
         {
-            double[] result = new double[Size];
+            double[] result = new double[Count];
             for (int i = 0; i < _vector.Length; i++)
             {
                 result[i] = _vector[i]*factor;
@@ -92,7 +130,7 @@ namespace Manager.Kohonen
         {
             for (int i = 0; i < _vector.Length; i++)
             {
-                Console.Write(String.Format("{0:0.00} ",_vector[i]));
+                Console.Write(String.Format("{0:0.000} ",_vector[i]));
             }
             Console.Write(" ---|");
         }
@@ -108,6 +146,13 @@ namespace Manager.Kohonen
             get { return _vector; }
         }
 
-      
+        public Boolean IsEmpty()
+        {
+            foreach (var d in _vector)
+            {
+                if (d != 0) return false;
+            }
+            return true;
+        }
     }
 }

@@ -52,5 +52,15 @@ namespace TD.Core
             //Debug.WriteLine(id);
             return _builders[id].HpCost;
         }
+
+        public string EnemyType(int id)
+        {
+            return _builders[id].EnemyType();
+        }
+
+        public int EnemyHp(int id)
+        {
+            return _builders[id].EnemyHp();
+        }
     }
 }

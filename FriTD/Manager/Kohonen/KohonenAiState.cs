@@ -39,5 +39,10 @@ namespace Manager.Kohonen
             //TODO inak
             return (_dim != null ? _dim[0]*1000+_dim[1] : 0);
         }
+
+        public override string ToString()
+        {
+            return _dim[0]+" " +_dim[1]+ "     ";
+        }
     }
 }

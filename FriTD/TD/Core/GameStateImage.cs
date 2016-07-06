@@ -16,6 +16,10 @@ namespace TD.Core
         public GameState GameState { get; set; }
         public int[,] Ranges { get; set; }
         public int Level { get; set; }
+        public EnemyType NextWaveType { get; set; }
+        public int NextWaveHpPool { get; set; }
+        public int NextWaveNumberOfEnemies { get; set; }
+        public int NextWaveEnemiesID { get; set; }
 
         public GameStateImage CloneThis()
         {

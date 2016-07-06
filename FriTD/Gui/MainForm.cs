@@ -18,7 +18,7 @@ namespace Gui
         public MainForm()
         {
             InitializeComponent();
-            kc = new KohonenCore<RgbVector>(50, 50, 3, 0.5, 1, 1, 0.5);
+            kc = new KohonenCore<RgbVector>(50, 50, 3, 0.5, 1, 1, 0.5, false);
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)

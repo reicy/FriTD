@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Threading;
 using Manager.GameStates;
 using Manager.Kohonen;
+using Manager.MTCore.KohonenUtils;
 using Manager.QLearning;
 using TD.Core;
 using TD.Enums;
@@ -18,23 +19,33 @@ namespace Manager.MTCore
         public int Won { get; set; }
         public int IterationStartLearning { get; set; }
         private TDGame _game;
+        private string _map;
         private MtAiAdapter _aiAdapter;
+        private string _levels;
+        private int _type;
 
-  
         public MtSingleDaemon(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState> qLearning,
-            BlockingCollection<KohonenUpdate> updatesQueue)
+            BlockingCollection<KohonenUpdate> updatesQueue, string map)
         {
             Kohonen = kohonen;
             QLearning = qLearning;
             UpdatesQueue = updatesQueue;
             Won = 0;
             Lost = 0;
-            
+            _map = map;
+
+        }
+
+        public MtSingleDaemon(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState> qLearning, BlockingCollection<KohonenUpdate> updatesQueue, string map, string levels1, int type) : this(kohonen, qLearning, updatesQueue, map)
+        {
+            this._levels = levels1;
+            this._type = type;
         }
 
         public void ProcessLearning()
         {
-            _aiAdapter = new MtAiAdapter(QLearning, Kohonen);
+            //_aiAdapter = new MtAiAdapter(QLearning, Kohonen, new SimpleStateEncodern());
+            _aiAdapter = new MtAiAdapter(QLearning, Kohonen, new AdaptiveStateEncoder());
             _aiAdapter.SetRewardMultiplier(1.0/10000);
             KohonenUpdate update;
             int iteration = 0;
@@ -43,7 +54,7 @@ namespace Manager.MTCore
             {
                 
                 iteration++;
-                if (iteration%IterationStartLearning == 0)
+                if (iteration==IterationStartLearning)
                 {
                     _aiAdapter.SetRewardMultiplier(1);
                 }
@@ -51,12 +62,12 @@ namespace Manager.MTCore
                 if (GameState.Won == RunIteration())
                 {
                     Won++;
-                    MtStats.IncWL(1);
+                    MtStats.IncWL(1, _game.GameStateImage().Level, _type);
                 }
                 else
                 {
                     Lost++;
-                    MtStats.IncWL(0);
+                    MtStats.IncWL(0, _game.GameStateImage().Level, _type);
                 }
                 
 
@@ -89,8 +100,8 @@ namespace Manager.MTCore
         public void PrepareGame()
         {
             _game = new TDGame();
-            _game.InitGame(Properties.Resources.Towers, Properties.Resources.Map, Properties.Resources.Enemies,
-                Properties.Resources.Levels);
+            _game.InitGame(Properties.Resources.Towers, _map, Properties.Resources.Enemies,
+                _levels);
         }
 
         public void StartAiDrivenTurn()

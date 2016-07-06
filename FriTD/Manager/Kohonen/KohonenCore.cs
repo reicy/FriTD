@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.IO;
 using System.Threading;
 
 namespace Manager.Kohonen
@@ -7,15 +8,18 @@ namespace Manager.Kohonen
     public class KohonenCore<V> where V:IVector<V>, new() 
     {
         private readonly V[,] _arr;
+        private readonly int[,] _accesses;
         private double _radius;
         private double _learningRate;
+        private double[] _weight;
         private double _distFactor;
         private readonly int _rows;
         private readonly int _cols;
         private double _aHN;// 0 - 1
         private double _rAHN;
+        private bool _nonEmptyModeActive;
 
-        public KohonenCore(int rows, int cols, double radius, double learningRate, double distFactor, double aHN, double rAHN)
+        public KohonenCore(int rows, int cols, double radius, double learningRate, double distFactor, double aHN, double rAHN, Boolean nonEmptyModeActive)
         {
             _arr = new V[rows,cols];
             _radius = radius;
@@ -25,7 +29,8 @@ namespace Manager.Kohonen
             _cols = cols;
             _aHN = aHN;
             _rAHN = rAHN;
-
+            _accesses = new int[rows,cols];
+            _nonEmptyModeActive = nonEmptyModeActive;
 
             for (int i = 0; i < rows; i++)
             {
@@ -46,7 +51,20 @@ namespace Manager.Kohonen
             {
                 for (int j = 0; j < _cols; j++)
                 {
-                    var temp = input.Difference(_arr[i,j]);
+                    if(_nonEmptyModeActive)if((i>0 || j> 0) && _arr[i,j].IsEmpty())continue;
+                    double temp;
+                    if (_weight == null)
+                    {
+                        temp = input.Difference(_arr[i, j]);
+                    }
+                    else
+                    {
+                        
+                        temp = input.Difference(_arr[i, j], _weight);
+                    }
+                    
+                    
+
                     if (temp < minDiff)
                     {
                         minDiff = temp;
@@ -56,8 +74,35 @@ namespace Manager.Kohonen
                 }
             }
 
-
+            _accesses[result[0], result[1]]++;
             return result;
+        }
+
+        public void ResetAccesses()
+        {
+            for (int i = 0; i < _rows; i++)
+            {
+
+                for (int j = 0; j < _cols; j++)
+                {
+                    _accesses[i, j] = 1;
+                }
+            }
+        }
+
+        public void PrintAccesses()
+        {
+            Console.WriteLine();
+            for (int i = 0; i < _rows; i++)
+            {
+
+                for (int j = 0; j < _cols; j++)
+                {
+                    Console.Write("{0,7:########}",_accesses[i,j]);
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();
         }
 
         public void ReArrange(int row, int col, V value)
@@ -102,6 +147,22 @@ namespace Manager.Kohonen
 
            // Displ();
 
+        }
+
+        internal void Displ(int v)
+        {
+            Console.WriteLine();
+            for (int i = 0; i < _rows; i++)
+            {
+
+                for (int j = 0; j < _cols; j++)
+                {
+                    //TODO remove
+                    Console.Write("{0,5:###}", (_arr[i,j]as StateVector)[v]);
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();
         }
 
         public Boolean IsWithinTable(int row, int col)
@@ -182,7 +243,31 @@ namespace Manager.Kohonen
         }
 
 
+        public void SetWeight(double[] weight)
+        {
+            _weight = weight;
+        }
 
-
+        public void Load(string location)
+        {
+            string text = System.IO.File.ReadAllText(location);
+            using (var reader = new StringReader(text))
+            {
+                var rows = _arr.GetLength(0);
+                var cols = _arr.GetLength(1);
+                string[] separator = new string[] { "  ---|" };
+                string line;
+               
+                for (int i = 0; i < rows; i++)
+                {
+                    line = reader.ReadLine();
+                    var temp = line.Split(separator, StringSplitOptions.None);
+                    for (int j = 0; j < cols; j++)
+                    {
+                        _arr[i, j].Load(temp[j]);
+                    }
+                }
+            }
+        }
     }
 }

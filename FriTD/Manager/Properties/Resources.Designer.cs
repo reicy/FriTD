@@ -61,8 +61,8 @@ namespace Manager.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Marauder,0,5000,5,20,5000,10,0,30
-        ///Vermin,1,50,10,2,1000,0,0,1
+        ///   Looks up a localized string similar to Marauder,0,5000,5,20,5000,10,0,30,heavy
+        ///Vermin,1,50,10,2,1000,0,0,1,swarm
         ///.
         /// </summary>
         internal static string Enemies {
@@ -82,6 +82,22 @@ namespace Manager.Properties {
         internal static string Levels {
             get {
                 return ResourceManager.GetString("Levels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 0:1
+        ///1:5
+        ///1:100
+        ///1:200
+        ///0:15
+        ///0:60
+        ///1:500
+        ///.
+        /// </summary>
+        internal static string Levels1 {
+            get {
+                return ResourceManager.GetString("Levels1", resourceCulture);
             }
         }
         
@@ -106,6 +122,35 @@ namespace Manager.Properties {
         internal static string Map {
             get {
                 return ResourceManager.GetString("Map", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 20
+        ///GGGGGGGGGGGGGGGGGGGG
+        ///GEPPPPGGGGTGGGGTPPPG
+        ///GGGGGPGGGGTGGGGGPGPG
+        ///GGGGGPTGGGGGGGTGPGPG
+        ///GGGGGPPPPPPPPPPPPGPG
+        ///GGTGGGGGGGGGGGGGGGPG
+        ///GPPPPPPPPPPPPPPPPPPG
+        ///GPGGGGGTGGGGGGGGGGGG
+        ///GPGGGGGTGGGGGGGGGGGG
+        ///GPPPPPPPPPPPPPPPPPPG
+        ///GGGGTTGGGGGGGGGGGGPG
+        ///GGGGGGGGGGGGGGGGTTPG
+        ///GPPPPPPPPPPPPPPPPPPG
+        ///GPGGGGGGGGGGGGTGGGGG
+        ///GPGGTGGGGGGTGGGGGGGG
+        ///GPPPPPPPPPPPPPPPPPPG
+        ///GGGGGGGGGGGGGGGGTGPG
+        ///GGGGGGGTGGGGTGGGGGPG
+        ///GSPPPPPPPPPPPPPPPPPG
+        ///GGGGGGGGGGGGGGGGGGGG.
+        /// </summary>
+        internal static string Map1 {
+            get {
+                return ResourceManager.GetString("Map1", resourceCulture);
             }
         }
         

@@ -240,7 +240,12 @@ namespace TD.Core
                 TowerRefundCost = _towerFactory.RefundCost(0),
                 GameState = State,
                 Ranges = ranges,
-                Level = _level
+                Level = _level,
+                NextWaveHpPool = _spawner.NextWaveHpPool(),
+                NextWaveType = _spawner.NextWaveType(),
+                NextWaveNumberOfEnemies = _spawner.NextWaveEnemiesNum(),
+                NextWaveEnemiesID = _spawner.NextWaveEnemiesID()
+
 
             };
 
