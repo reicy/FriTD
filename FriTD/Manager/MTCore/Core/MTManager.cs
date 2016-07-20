@@ -15,15 +15,15 @@ namespace Manager.MTCore
 {
     public class MtManager
     {
-        private bool _loadKohonen = true;
+        private bool _loadKohonen = false;
         private string _kohonenLoadPath = @"C:\Users\Tomas\Desktop\kohonenLearnt\k24kForM1.txt";//@"C:\Users\Tomas\Desktop\kohonenLearnt\MixedKohonen24_4_2.txt";//@"C:\Users\Tomas\Desktop\kohonenLearnt\KMixed24_M1_4_M0.txt";//@"C:\Users\Tomas\Desktop\kohonenLearnt\k24kForM1.txt";// @"C:\Users\Tomas\Desktop\kohonenLearnt\K3kForMMEfekt2.txt";//@"C:\Users\Tomas\Desktop\kohonenLearnt\Kohonen3kForM0MEfekt.txt";
         private bool nonEmptyModeCohonenActive = true;
 
 
-        private int _numOfType2 = 4;
+        private int _numOfType2 = 0;
         private const int ThreadsNum = 4;
-        private const int Iterations = 2000;
-        private const int IterationStopKohonenUpdate = 0;
+        private const int Iterations = 5000;
+        private const int IterationStopKohonenUpdate = 3000;
         private const int IterationOfSingleThreadStartLearning = 5;
         private const int QueueMaxCapactity = 1;
         
