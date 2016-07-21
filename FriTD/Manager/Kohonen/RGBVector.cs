@@ -42,6 +42,11 @@ namespace Manager.Kohonen
             throw new NotImplementedException();
         }
 
+        public double DifferenceCosine(RgbVector vector)
+        {
+            return 1.0 - this.Dot(vector) / (this.Norm() * vector.Norm());
+        }
+
         public RgbVector Diff(RgbVector vector)
         {
             int[] second = vector.Rgb;
@@ -61,6 +66,22 @@ namespace Manager.Kohonen
             //Console.WriteLine("multiplied by "+factor);
             return new RgbVector((int)(_rgb[0]*factor), (int)(_rgb[1]*factor), (int)(_rgb[2]*factor));
 
+        }
+
+        public double Dot(RgbVector vector)
+        {
+            double result = 0.0;
+            for (int i = 0; i < _rgb.Length; ++i)
+                result += _rgb[i] * vector._rgb[i];
+            return result;
+        }
+
+        public double Norm()
+        {
+            double result = 0.0;
+            for (int i = 0; i < _rgb.Length; ++i)
+                result += _rgb[i] * _rgb[i];
+            return result;
         }
 
         public int this[int index]

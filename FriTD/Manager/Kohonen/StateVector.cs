@@ -84,6 +84,11 @@ namespace Manager.Kohonen
             return Math.Sqrt(temp);
         }
 
+        public double DifferenceCosine(StateVector vector)
+        {
+            return 1.0 - this.Dot(vector) / (this.Norm() * vector.Norm());
+        }
+
         public StateVector Diff(StateVector vector)
         {
             double[] second = vector.Vector;
@@ -124,6 +129,22 @@ namespace Manager.Kohonen
             }
             return new StateVector(result);
 
+        }
+
+        public double Dot(StateVector vector)
+        {
+            double result = 0.0;
+            for (int i = 0; i < _vector.Length; ++i)
+                result += _vector[i] * vector._vector[i];
+            return result;
+        }
+
+        public double Norm()
+        {
+            double result = 0.0;
+            for (int i = 0; i < _vector.Length; ++i)
+                result += _vector[i] * _vector[i];
+            return result;
         }
 
         public void Print()

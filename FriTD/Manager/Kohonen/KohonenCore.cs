@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Threading;
@@ -18,6 +19,20 @@ namespace Manager.Kohonen
         private double _aHN;// 0 - 1
         private double _rAHN;
         private bool _nonEmptyModeActive;
+
+        public delegate double DistanceDelegate(V v1, V v2);
+
+        // euclidean distance between two vectors
+        private double DistEuclidean(V v1, V v2)
+        {
+            return v1.Difference(v2);
+        }
+
+        // cosine distance between two vectors
+        private double DistCosine(V v1, V v2)
+        {
+            return v1.DifferenceCosine(v2);
+        }
 
         public KohonenCore(int rows, int cols, double radius, double learningRate, double distFactor, double aHN, double rAHN, Boolean nonEmptyModeActive)
         {
@@ -76,6 +91,63 @@ namespace Manager.Kohonen
 
             _accesses[result[0], result[1]]++;
             return result;
+        }
+
+        public int[] WinnerHeuristic(V input, DistanceDelegate distFun)
+        {
+            int hsqrt = (int)Math.Sqrt(_rows); // height square root
+            int wsqrt = (int)Math.Sqrt(_cols); // width square root
+            int nrows = hsqrt;         // <----------------------------- you can change heuristic attributes here
+            int ncols = wsqrt;         // <----------------------------- you can change heuristic attributes here
+            int itemh = _rows / nrows;
+            int itemw = _cols / ncols;
+            List<KeyValuePair<double, int[]>> candidates = new List<KeyValuePair<double, int[]>>(nrows * ncols);
+            for (int r = 0; r < nrows; ++r)
+            {
+                for (int c = 0; c < ncols; ++c)
+                {
+                    int rr = (int)Math.Round(0.5 + r) * itemh;
+                    int cc = (int)Math.Round(0.5 + c) * itemw;
+                    double dist = distFun(_arr[rr, cc], input);
+                    candidates.Add(new KeyValuePair<double, int[]>(dist, new int[] { rr, cc }));
+                }
+            }
+            candidates.Sort();
+            double bestDist = candidates[0].Key;
+            int[] best = candidates[0].Value;
+            int search = 5;            // <----------------------------- you can change heuristic attributes here
+            int search_candidates = 5; // <----------------------------- you can change heuristic attributes here
+            Random rnd = new Random();
+            while (true)
+            {
+                bool found = false;
+                for (int i = 0; i < search; ++i)
+                {
+                    int[] coords = candidates[0].Value;
+                    candidates.RemoveAt(0);
+                    for (int j = 0; j < search_candidates; ++j)
+                    {
+                        int r = coords[0] + rnd.Next(-itemh / 2, itemh / 2);
+                        int c = coords[1] + rnd.Next(-itemw / 2, itemw / 2);
+                        if (0 <= r && r < _rows && 0 <= c && c < _cols)
+                        {
+                            V v = _arr[r, c];
+                            double dist = distFun(v, input);
+                            if (dist < bestDist)
+                            {
+                                bestDist = dist;
+                                best[0] = r; best[1] = c;
+                                candidates.Add(new KeyValuePair<double, int[]>(dist, new int[] { r, c }));
+                                candidates.Sort();
+                                found = true;
+                            }
+                        }
+                    }
+                }
+                if (!found) break;
+            }
+            ++_accesses[best[0], best[1]];
+            return best;
         }
 
         public void ResetAccesses()
