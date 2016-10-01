@@ -23,6 +23,8 @@ namespace Manager.MTCore
         private MtAiAdapter _aiAdapter;
         private string _levels;
         private int _type;
+        private bool _heuristicActive;
+        private bool _cosinusDistActive;
 
         public MtSingleDaemon(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState> qLearning,
             BlockingCollection<KohonenUpdate> updatesQueue, string map)
@@ -34,18 +36,22 @@ namespace Manager.MTCore
             Lost = 0;
             _map = map;
 
+
         }
 
-        public MtSingleDaemon(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState> qLearning, BlockingCollection<KohonenUpdate> updatesQueue, string map, string levels1, int type) : this(kohonen, qLearning, updatesQueue, map)
+        public MtSingleDaemon(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState> qLearning, BlockingCollection<KohonenUpdate> updatesQueue, string map, string levels1, int type, bool heuristicActive, bool cosinusDistActive) : this(kohonen, qLearning, updatesQueue, map)
         {
             this._levels = levels1;
             this._type = type;
+            _heuristicActive = heuristicActive;
+            _cosinusDistActive = cosinusDistActive;
+
         }
 
         public void ProcessLearning()
         {
             //_aiAdapter = new MtAiAdapter(QLearning, Kohonen, new SimpleStateEncodern());
-            _aiAdapter = new MtAiAdapter(QLearning, Kohonen, new AdaptiveStateEncoder());
+            _aiAdapter = new MtAiAdapter(QLearning, Kohonen, new AdaptiveStateEncoder(), _heuristicActive, _cosinusDistActive);
             _aiAdapter.SetRewardMultiplier(1.0/10000);
             KohonenUpdate update;
             int iteration = 0;

@@ -21,6 +21,10 @@ namespace TD.Core
         public int NextWaveNumberOfEnemies { get; set; }
         public int NextWaveEnemiesID { get; set; }
 
+        public double MaxTowers { get; set; }
+        public double MaxNextWaveHpPool { get; set; }
+        public double MaxType { get; set; }
+
         public GameStateImage CloneThis()
         {
 

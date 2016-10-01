@@ -84,10 +84,7 @@ namespace Manager.Kohonen
             return Math.Sqrt(temp);
         }
 
-        public double DifferenceCosine(StateVector vector)
-        {
-            return 1.0 - this.Dot(vector) / (this.Norm() * vector.Norm());
-        }
+        
 
         public StateVector Diff(StateVector vector)
         {
@@ -131,6 +128,11 @@ namespace Manager.Kohonen
 
         }
 
+        public double DifferenceCosine(StateVector vector)
+        {
+            return 1.0 - this.Dot(vector) / (this.Norm() * vector.Norm());
+        }
+
         public double Dot(StateVector vector)
         {
             double result = 0.0;
@@ -144,6 +146,7 @@ namespace Manager.Kohonen
             double result = 0.0;
             for (int i = 0; i < _vector.Length; ++i)
                 result += _vector[i] * _vector[i];
+            result = Math.Sqrt(result);
             return result;
         }
 
@@ -174,6 +177,20 @@ namespace Manager.Kohonen
                 if (d != 0) return false;
             }
             return true;
+        }
+
+        public void CheckForNorm()
+        {
+            for (int i = 0; i < _vector.Length; i++)
+            {
+                if (_vector[i] > 1)
+                {
+                    Console.WriteLine("Bad normalization error !");
+                    this.Print();
+                    Console.WriteLine();
+
+                }
+            }
         }
     }
 }

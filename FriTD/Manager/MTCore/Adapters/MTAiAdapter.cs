@@ -24,9 +24,12 @@ namespace Manager.MTCore
         private GameStateImage previousImage;
         private KohonenAiState previousState;
         public KohonenUpdate KohonenUpdate { get; set; }
+        private bool _heuristicActive;
+        private bool _cosinusDistActive;
+        
 
         public MtAiAdapter(QLearning<KohonenAiState> q_learning,
-            KohonenCore<StateVector> kohonen, IStateEncoder stateEncoder)
+            KohonenCore<StateVector> kohonen, IStateEncoder stateEncoder, bool heuristicActive, bool cosinusDistActive)
         {
             _qLearning = q_learning;
             previousState = null;
@@ -35,6 +38,8 @@ namespace Manager.MTCore
             learningEnabled = true;
             _rewardMultiplier = 1;
             _intelligentActionInterpreter = new IntelligentActionInterpreter();
+            _heuristicActive = heuristicActive;
+            _cosinusDistActive = cosinusDistActive;
         }
 
 
@@ -43,7 +48,31 @@ namespace Manager.MTCore
            
             int[] dim;
             var state = _stateEncoder.TranslateGameImage(img);
-            dim = _kohonen.Winner(state);
+
+            if (_heuristicActive)
+            {
+                if (_cosinusDistActive)
+                {
+                    dim = _kohonen.WinnerHeuristic(state, _kohonen.DistCosine);
+                }
+                else
+                {
+                    dim = _kohonen.WinnerHeuristic(state, _kohonen.DistEuclidean);
+                }
+                
+            }
+            else
+            {
+                if (_cosinusDistActive)
+                {
+                    dim = _kohonen.Winner(state, _kohonen.DistCosine, false);
+                }
+                else
+                {
+                    dim = _kohonen.Winner(state, _kohonen.DistEuclidean, true);
+                }
+            }
+           
             previousState = new KohonenAiState(dim);
 
             KohonenUpdate = new KohonenUpdate()
@@ -181,7 +210,31 @@ namespace Manager.MTCore
         {
             int[] dim;
             var state = _stateEncoder.TranslateGameImage(img);
-            dim = _kohonen.Winner(state);
+
+            if (_heuristicActive)
+            {
+                if (_cosinusDistActive)
+                {
+                    dim = _kohonen.WinnerHeuristic(state, _kohonen.DistCosine);
+                }
+                else
+                {
+                    dim = _kohonen.WinnerHeuristic(state, _kohonen.DistEuclidean);
+                }
+
+            }
+            else
+            {
+                if (_cosinusDistActive)
+                {
+                    dim = _kohonen.Winner(state, _kohonen.DistCosine, false);
+                }
+                else
+                {
+                    dim = _kohonen.Winner(state, _kohonen.DistEuclidean, true);
+                }
+            }
+            //dim = _kohonen.Winner(state);
             return new KohonenAiState(dim);
         }
         

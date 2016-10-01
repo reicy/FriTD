@@ -244,8 +244,12 @@ namespace TD.Core
                 NextWaveHpPool = _spawner.NextWaveHpPool(),
                 NextWaveType = _spawner.NextWaveType(),
                 NextWaveNumberOfEnemies = _spawner.NextWaveEnemiesNum(),
-                NextWaveEnemiesID = _spawner.NextWaveEnemiesID()
-
+                NextWaveEnemiesID = _spawner.NextWaveEnemiesID(),
+                //TODO do this by program
+                MaxTowers = 30,
+                MaxNextWaveHpPool = 200000,
+                MaxType = 4
+                
 
             };
 

@@ -7,11 +7,15 @@ namespace Manager.MTCore.KohonenUtils
 {
     public class AdaptiveStateEncoder : IStateEncoder
     {
+
+        private double _normWaveEncode;
+
         public StateVector TranslateGameImage(GameStateImage image)
         {
 
             StateVector vector = new StateVector();
             int [,] towers = new int[3,3];
+           
             
             for (var i = 0; i < image.Ranges.GetLength(0); i++)
             {
@@ -53,7 +57,7 @@ namespace Manager.MTCore.KohonenUtils
             {
                 for (int j = 0; j < towers.GetLength(1); j++)
                 {
-                    vector[pointer++] = towers[i, j];
+                    vector[pointer++] = towers[i, j] / image.MaxTowers;
                   //  Console.Write(towers[i,j]+" ");
 
                 }
@@ -62,21 +66,23 @@ namespace Manager.MTCore.KohonenUtils
             Console.WriteLine();*/
 
             //type of enemies challenged
-            vector[pointer++] = typeOfWave;
+            vector[pointer++] = typeOfWave / image.MaxType;
 
             //wave size // how dangerous it is
-            vector[pointer++] = encodeWaveSize(image.NextWaveNumberOfEnemies, image.NextWaveEnemiesID);
+            vector[pointer++] = encodeWaveSize(image.NextWaveNumberOfEnemies, image.NextWaveEnemiesID)/_normWaveEncode;
 
 
-            //  vector[pointer++] = hpPoolOfWave;
-              vector[pointer++] = image.Level;
+            vector[pointer++] = hpPoolOfWave / image.MaxNextWaveHpPool;
+         //     vector[pointer++] = image.Level;
           //  Console.WriteLine(pointer-1);
-
+           // vector.CheckForNorm();
+           
             return vector;
         }
 
         public int encodeWaveSize(int size, int enemyType)
         {
+            _normWaveEncode = 2;
             if (enemyType == 0)
             {
                 if (size < 5) return 0;

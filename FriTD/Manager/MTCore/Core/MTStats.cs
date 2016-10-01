@@ -11,6 +11,8 @@ namespace Manager.MTCore
         public static int Won { get; set; }
         public static int Lost { get; set; }
         public static int Total { get; set; }
+        public static int TWon { get; set; }
+        public static int TLost { get; set; }
         public static int[] Level = new int[10];
         public static int[] TypeW = new int[2];
         public static int[] TypeL = new int[2];
@@ -23,16 +25,20 @@ namespace Manager.MTCore
             if (wl == 0)
             {
                 Lost++;
-                
+                TLost++;
+
             }
             else
             {
                 Won++;
+                TWon++;
+
             }
             if ((Lost + Won)%100 == 0)
             {
                 //Console.WriteLine("Iteration: {0} Won: {1} Lost: {2}", Total, Won, Lost);
-                Console.WriteLine("Iteration: {0} Won: {1} Lost: {2} -W {3}  {4} -L {5}  {6}", Total, Won, Lost, TypeW[0], TypeW[1], TypeL[0], TypeL[1]);
+               // Console.WriteLine("Iteration: {0} Won: {1} Lost: {2} -W {3}  {4} -L {5}  {6}", Total, Won, Lost, TypeW[0], TypeW[1], TypeL[0], TypeL[1]);
+             //   Console.WriteLine(Won);
                 Reset();
             }
         }
@@ -72,6 +78,11 @@ namespace Manager.MTCore
                 TypeW[type]++;
             }
             IncWL(v, level);
+        }
+
+        public static void PrintTotalScore()
+        {
+            Console.WriteLine("Total score: w "+TWon+" l "+TLost);
         }
     }
 }
