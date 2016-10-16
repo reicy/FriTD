@@ -122,6 +122,12 @@
   <ItemGroup>
     <None Include="Resources\Levels1.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Map2.txt" />
+    <Content Include="Resources\Map3.txt" />
+    <Content Include="Resources\Map4.txt" />
+    <Content Include="Resources\Map5.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
