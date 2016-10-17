@@ -86,18 +86,62 @@ namespace Manager.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 0:1
-        ///1:5
+        ///   Looks up a localized string similar to 1:10
+        ///1:30
         ///1:100
         ///1:200
-        ///0:15
-        ///0:60
         ///1:500
+        ///0:5
+        ///0:30
         ///.
         /// </summary>
         internal static string Levels1 {
             get {
                 return ResourceManager.GetString("Levels1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 0:5
+        ///1:20
+        ///0:10
+        ///1:100
+        ///0:30
+        ///1:300
+        ///0:50
+        ///1:500
+        ///.
+        /// </summary>
+        internal static string Levels2 {
+            get {
+                return ResourceManager.GetString("Levels2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string Levels3 {
+            get {
+                return ResourceManager.GetString("Levels3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string Levels4 {
+            get {
+                return ResourceManager.GetString("Levels4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO.
+        /// </summary>
+        internal static string Levels5 {
+            get {
+                return ResourceManager.GetString("Levels5", resourceCulture);
             }
         }
         
@@ -151,6 +195,87 @@ namespace Manager.Properties {
         internal static string Map1 {
             get {
                 return ResourceManager.GetString("Map1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 19
+        ///GGGGGGGGGGGGGGGGGG
+        ///GGGGGGGGGGGGGGGGGG
+        ///GGGSPPPPPPPPPPPPGG
+        ///GGGGGGGGGGGGGGTPGG
+        ///GGGGGGGGGGGGGGGPGG
+        ///GGGPPPPPPPPPPGGPGG
+        ///GGGPTGGGGGGTPGGPGG
+        ///GGGPGGGGGGGGPGGPGG
+        ///GGGPGGPPPPGGPGGPGG
+        ///GGGPGGPTTPGGPGGPGG
+        ///GGGPGGPGGEGGPGGPGG
+        ///GGGPGGPGGGGGPGGPGG
+        ///GGGPGGPTGGGTPGGPGG
+        ///GGGPGGPPPPPPPGGPGG
+        ///GGGPGGGGGGGGGGGPGG
+        ///GGGPTGGGGGGGGGTPGG
+        ///GGGPPPPPPPPPPPPPGG
+        ///GGGGGGGGGGGGGGGGGG
+        ///GGGGGGGGGGGGGGGGGG.
+        /// </summary>
+        internal static string Map2 {
+            get {
+                return ResourceManager.GetString("Map2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 15
+        ///GGGGGGGG
+        ///GSGPPPEG
+        ///GPTPGGGG
+        ///GPTPGGGG
+        ///GPGPPPPG
+        ///GPGGGTPG
+        ///GPGGGTPG
+        ///GPGPPPPG
+        ///GPTPGGGG
+        ///GPTPGGGG
+        ///GPGPPPPG
+        ///GPGGGTPG
+        ///GPGGGTPG
+        ///GPPPPPPG
+        ///GGGGGGGG.
+        /// </summary>
+        internal static string Map3 {
+            get {
+                return ResourceManager.GetString("Map3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 5
+        ///GGGGGGGGGGGGGGG
+        ///GGGGGGGGTGTGTGG
+        ///GSPPPPPPPPPPPEG
+        ///GGGGGGGTGTGTGGG
+        ///GGGGGGGGGGGGGGG.
+        /// </summary>
+        internal static string Map4 {
+            get {
+                return ResourceManager.GetString("Map4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 6
+        ///GGGGGGGGGGGGGGGGG
+        ///GGPPPPPGGGPPPPPGG
+        ///GGPGGGPPPPPGGGPGG
+        ///GGPGGTGTTTGTGGPGG
+        ///GGPPPPPEGSPPPPPGG
+        ///GGGGGGGGGGGGGGGGG.
+        /// </summary>
+        internal static string Map5 {
+            get {
+                return ResourceManager.GetString("Map5", resourceCulture);
             }
         }
         
