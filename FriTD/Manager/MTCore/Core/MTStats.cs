@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Dynamic;
 using System.Resources;
 using System.Runtime.CompilerServices;
 
@@ -37,7 +36,7 @@ namespace Manager.MTCore
             if ((Lost + Won)%100 == 0)
             {
                 //Console.WriteLine("Iteration: {0} Won: {1} Lost: {2}", Total, Won, Lost);
-               // Console.WriteLine("Iteration: {0} Won: {1} Lost: {2} -W {3}  {4} -L {5}  {6}", Total, Won, Lost, TypeW[0], TypeW[1], TypeL[0], TypeL[1]);
+                  Console.WriteLine("Iteration: {0} Won: {1} Lost: {2} -W {3}  {4} -L {5}  {6}", Total, Won, Lost, TypeW[0], TypeW[1], TypeL[0], TypeL[1]);
              //   Console.WriteLine(Won);
                 Reset();
             }
