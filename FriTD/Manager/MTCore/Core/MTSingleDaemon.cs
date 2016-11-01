@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
+//using System.Collections.Concurrent;
 using System.Threading;
 using Manager.GameStates;
 using Manager.Kohonen;
@@ -7,6 +7,8 @@ using Manager.MTCore.KohonenUtils;
 using Manager.QLearning;
 using TD.Core;
 using TD.Enums;
+using Manager.Core;
+using System.Collections.Generic;
 
 namespace Manager.MTCore
 {
@@ -14,7 +16,7 @@ namespace Manager.MTCore
     {
         public KohonenCore<StateVector> Kohonen { get; }
         public QLearning<KohonenAiState> QLearning { get; }
-        public BlockingCollection<KohonenUpdate> UpdatesQueue { get; }
+        public List<KohonenUpdate> UpdatesQueue { get; }
         public int Lost { get; set; }
         public int Won { get; set; }
         public int IterationStartLearning { get; set; }
@@ -25,10 +27,12 @@ namespace Manager.MTCore
         private int _type;
         private bool _heuristicActive;
         private bool _cosinusDistActive;
+        public DataStore _store { get; }
 
         public MtSingleDaemon(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState> qLearning,
-            BlockingCollection<KohonenUpdate> updatesQueue, string map)
+            List<KohonenUpdate> updatesQueue, string map)
         {
+            _store = new DataStore();
             Kohonen = kohonen;
             QLearning = qLearning;
             UpdatesQueue = updatesQueue;
@@ -39,7 +43,7 @@ namespace Manager.MTCore
 
         }
 
-        public MtSingleDaemon(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState> qLearning, BlockingCollection<KohonenUpdate> updatesQueue, string map, string levels1, int type, bool heuristicActive, bool cosinusDistActive) : this(kohonen, qLearning, updatesQueue, map)
+        public MtSingleDaemon(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState> qLearning, List<KohonenUpdate> updatesQueue, string map, string levels1, int type, bool heuristicActive, bool cosinusDistActive) : this(kohonen, qLearning, updatesQueue, map)
         {
             this._levels = levels1;
             this._type = type;
@@ -151,5 +155,61 @@ namespace Manager.MTCore
                 _game.SellTower(int.Parse(arr[1]));
             }
         }
+
+        // ----------- unity hack begin ------------
+        public void UnityStartLevel()
+        {
+            if (_game.State == GameState.Won || _game.State == GameState.Lost)
+            {
+                PrepareGame();
+            }
+
+            if (_game.State != GameState.InProgress)
+            {
+                if (IsAiMode())
+                {
+                    var decisionResult = _aiAdapter.ExecuteDecision(_game.GameStateImage());
+                    var arr = decisionResult.Split(' ');
+                    foreach (var cmd in arr)
+                    {
+                        if (cmd.Length > 0) ExecuteCmd(cmd);
+                    }
+
+                    _game.StartLevel();
+                }
+                else
+                {
+                    _game.StartLevel();
+                }
+                _store.ExchangeData(_game.GameVisualImage());
+            }
+        }
+
+        public void UnityTic()
+        {
+            if (_game.State == GameState.InProgress)
+            {
+                _game.Tic();
+                _store.ExchangeData(_game.GameVisualImage());
+
+                if (_game.State != GameState.InProgress && IsAiMode())
+                {
+                    _aiAdapter.ExecuteReward(_game.GameStateImage());
+                }
+            }
+        }
+
+        public GameState GetGameState()
+        {
+            return _game.State;
+        }
+
+        // TODO !!!
+        private bool IsAiMode()
+        {
+            return false;
+        }
+
+        // ----------- unity hack end -------------
     }
 }

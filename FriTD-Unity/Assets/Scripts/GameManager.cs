@@ -27,8 +27,9 @@ namespace Assets
         public GameObject vermin;
         public GameObject marauder;
         public float interval = 0.05f;
-
-        private Manager.Core.Manager _manager;
+        
+        private Manager.MTCore.MtSingleDaemon _manager;
+        //private Manager.Core.Manager _manager;
         private DataStore _dataStore;
         private Dictionary<int, GameObject> _enemies = new Dictionary<int, GameObject>();
         private Dictionary<int, GameObject> _towers = new Dictionary<int, GameObject>();
@@ -211,26 +212,41 @@ namespace Assets
                 int y = 10;
                 if (GUI.Button(new Rect(Screen.width - 205, y, 200, 50), "Start simple game"))
                 {
-                    _manager = ManagerBuilder.BuildSimplePlayerManager();
+
+                    string mobs = @"1:10
+                                    0:5
+                                    0:25
+                                    1:100
+                                    0:50
+                                    1:400
+                                    0:100
+                                    1:1000
+                                    1:2000
+                                    0:300";
+                    _manager = ManagerBuilder.BuildMTSingleDaemon(5, mobs);
                     _manager.PrepareGame();
                     _dataStore = _manager._store;
                     _simplePlayer = true;
                     _gameStarted = true;
+                    
                 }
                 y += 60;
 
                 if (GUI.Button(new Rect(Screen.width - 205, y, 200, 50), "Start learning AI game"))
                 {
+                    /*
                     _manager = ManagerBuilder.BuildAiLearningManager();
                     _manager.PrepareGame();
                     _dataStore = _manager._store;
                     _simplePlayer = false;
                     _gameStarted = true;
+                    */
                 }
                 y += 60;
 
                 if (GUI.Button(new Rect(Screen.width - 205, y, 200, 50), "Start observable AI game"))
                 {
+                    /*
                     string file = "qvalues/" + _aiLevel;
                     Debug.Log(file);
                     StreamReader streamReader = new StreamReader(file, Encoding.Default);
@@ -239,6 +255,7 @@ namespace Assets
                     _dataStore = _manager._store;
                     _simplePlayer = false;
                     _gameStarted = true;
+                    */
                 }
                 y += 60;
                 _aiLevel = GUI.TextField(new Rect(Screen.width - 205, y, 200, 25), _aiLevel);

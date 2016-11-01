@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
+//using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -16,7 +16,7 @@ namespace Manager.MTCore
 {
     public class MtManager
     {
-        private bool _loadKohonen = true;
+        private bool _loadKohonen = false;
         private string _kohonenLoadPath = @"C:\Users\Tomas\Desktop\kohonenLearnt\M010KE.txt"; 
           // @"C:\Users\Tomas\Desktop\kohonenLearnt\cosFixed5k.txt";
         // @"C:\Users\Tomas\Desktop\kohonenLearnt\k24kForM1.txt";
@@ -34,7 +34,6 @@ namespace Manager.MTCore
 
         private static readonly bool CosDistActive = false;
         private static readonly bool HeuristicActive = true;
-
 
         public void ProcessLearning()
         {
@@ -66,7 +65,8 @@ namespace Manager.MTCore
             kohonen.SetWeight(weight);
             List<Thread> threads = new List<Thread>();
             List<MtSingleDaemon> daemons = new List<MtSingleDaemon>();
-            List< BlockingCollection <KohonenUpdate>> kohonenUpdateQueues = new List<BlockingCollection<KohonenUpdate>>();
+            //List< BlockingCollection <KohonenUpdate>> kohonenUpdateQueues = new List<BlockingCollection<KohonenUpdate>>();
+            List<List<KohonenUpdate>> kohonenUpdateQueues = new List<List<KohonenUpdate>>();
             List<KohonenUpdate> kohonenUpdatesToProcess = new List<KohonenUpdate>();
 
             int won = 0;
@@ -79,7 +79,8 @@ namespace Manager.MTCore
             MtSingleDaemon singleDaemon;
             for (int i = 0; i < ThreadsNum; i++)
             {
-                var queue = new BlockingCollection<KohonenUpdate>(QueueMaxCapactity);
+                //var queue = new BlockingCollection<KohonenUpdate>(QueueMaxCapactity);
+                var queue = new List<KohonenUpdate>(QueueMaxCapactity);
                 if (i < _numOfType2)
                 {
                     Console.WriteLine("map1");
@@ -126,8 +127,9 @@ namespace Manager.MTCore
                 
                 foreach (var queue in kohonenUpdateQueues)
                 {
-                    
-                    up = queue.Take();
+
+                    up = queue[0];
+                    queue.RemoveAt(0);
                     kohonenUpdatesToProcess.Add(up);
                     
                 }
@@ -216,7 +218,7 @@ namespace Manager.MTCore
             kohonen.SetWeight(weight);
             List<Thread> threads = new List<Thread>();
             List<MtSingleDaemon> daemons = new List<MtSingleDaemon>();
-            List<BlockingCollection<KohonenUpdate>> kohonenUpdateQueues = new List<BlockingCollection<KohonenUpdate>>();
+            List<List<KohonenUpdate>> kohonenUpdateQueues = new List<List<KohonenUpdate>>();
             List<KohonenUpdate> kohonenUpdatesToProcess = new List<KohonenUpdate>();
 
             int won = 0;
@@ -229,7 +231,7 @@ namespace Manager.MTCore
             MtSingleDaemon singleDaemon;
             for (int i = 0; i < ThreadsNum; i++)
             {
-                var queue = new BlockingCollection<KohonenUpdate>(QueueMaxCapactity);
+                var queue = new List<KohonenUpdate>(QueueMaxCapactity);
                 if (i < _numOfType2)
                 {
                     Console.WriteLine("map1");
@@ -277,7 +279,8 @@ namespace Manager.MTCore
                 foreach (var queue in kohonenUpdateQueues)
                 {
 
-                    up = queue.Take();
+                    up = queue[0];
+                    queue.RemoveAt(0);
                     kohonenUpdatesToProcess.Add(up);
 
                 }
