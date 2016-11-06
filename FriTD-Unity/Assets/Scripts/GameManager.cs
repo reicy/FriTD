@@ -213,17 +213,14 @@ namespace Assets
                 if (GUI.Button(new Rect(Screen.width - 205, y, 200, 50), "Start simple game"))
                 {
 
-                    string mobs = @"1:10
-                                    0:5
-                                    0:25
+                    string mobs = @"1:1
+                                    1:30
                                     1:100
-                                    0:50
-                                    1:400
-                                    0:100
-                                    1:1000
-                                    1:2000
-                                    0:300";
-                    _manager = ManagerBuilder.BuildMTSingleDaemon(5, mobs);
+                                    1:200
+                                    1:500
+                                    0:5
+                                    0:30";
+                    _manager = ManagerBuilder.BuildMTSingleDaemon(2, mobs);
                     _manager.PrepareGame();
                     _dataStore = _manager._store;
                     _simplePlayer = true;
