@@ -159,6 +159,18 @@ namespace Manager.Kohonen
             Console.Write(" ---|");
         }
 
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            for (var i = 0; i < _vector.Length; i++)
+            {
+                sb.Append($"{_vector[i]:0.000} ");
+            }
+            sb.Append(" ---|");
+
+            return sb.ToString();
+        }
+
         public double this[int index]
         {
             get { return _vector[index]; }

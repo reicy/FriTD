@@ -1,6 +1,7 @@
 ﻿using Manager.Kohonen;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Remoting.Contexts;
@@ -23,9 +24,15 @@ namespace Manager.QLearning
         Dictionary<TState, Dictionary<QAction, double>> q_values;
         Random explorationGen = new Random();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e">pravdebodobnost, ci vykonam spravnu akciu</param>
+        /// <param name="g">discount factor</param>
+        /// <param name="a">learning rate</param>
         public QLearning(double e, double g, double a)
         {
-            alpha = a;
+            alpha = a; 
             epsilon = e;
             gamma = g;
             q_values = new Dictionary<TState, Dictionary<QAction, double>>();
@@ -174,6 +181,25 @@ namespace Manager.QLearning
             }
             Console.WriteLine();
             //Console.WriteLine();
+        }
+
+        public void Save(string filename)
+        {
+            var sb = new StringBuilder();
+
+            sb.Append($"{q_values.Keys.Count}{Environment.NewLine}");
+            foreach (var key in q_values.Keys)
+            {
+                sb.Append($"{key} - ");
+                foreach (var innerKey in q_values[key].Keys)
+                {
+                    sb.Append($"({innerKey}    {q_values[key][innerKey]})");
+                }
+                sb.Append(Environment.NewLine);
+            }
+            sb.Append(Environment.NewLine);
+
+            File.WriteAllText(filename, sb.ToString());
         }
 
         //update q_Value of a pair state-state(action) after executing and getting the reward

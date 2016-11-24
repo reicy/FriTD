@@ -141,6 +141,12 @@ namespace Gui
             _manager.AiLearningRun();
         }
 
+        private void buttonLongRunMoreMaps_Click(object sender, EventArgs e)
+        {
+            _manager = ManagerBuilder.BuildAiLearningManager();
+            _manager.AiLearningRunMultileMaps();
+        }
+
         private void MTStartButton_Click(object sender, EventArgs e)
         {
             MtManager manager = new MtManager();

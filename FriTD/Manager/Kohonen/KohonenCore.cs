@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Text;
 using System.Threading;
 
 namespace Manager.Kohonen
@@ -27,7 +28,7 @@ namespace Manager.Kohonen
         // euclidean distance between two vectors
         public double DistEuclidean(V v1, V v2)
         {
-            
+
 
             if (_weight == null)
             {
@@ -49,8 +50,8 @@ namespace Manager.Kohonen
         {
             int IComparer.Compare(object a, object b)
             {
-                KeyValuePair<double, int[]> c1 = (KeyValuePair<double, int[]>) a;
-                KeyValuePair<double, int[]> c2 = (KeyValuePair<double, int[]>) a;
+                KeyValuePair<double, int[]> c1 = (KeyValuePair<double, int[]>)a;
+                KeyValuePair<double, int[]> c2 = (KeyValuePair<double, int[]>)a;
 
                 if (c1.Key > c2.Key)
                     return 1;
@@ -99,7 +100,7 @@ namespace Manager.Kohonen
 
         public int[] Winner(V input)
         {
-            int[] result = {0, 0};
+            int[] result = { 0, 0 };
             double minDiff = input.Difference(_arr[0, 0]);
 
 
@@ -132,9 +133,15 @@ namespace Manager.Kohonen
             return result;
         }
 
+        /// <param name="percentage">Percentage in interval [0.0, 1.0]</param>
+        internal void DecreaseLRBy(double percentage)
+        {
+            _learningRate -= percentage * _learningRate;
+        }
+
         internal int[] Winner(V input, DistanceDelegate distFun, bool weightenedFunction)
         {
-            int[] result = {0, 0};
+            int[] result = { 0, 0 };
             double minDiff = distFun(input, _arr[0, 0]);
 
 
@@ -176,21 +183,21 @@ namespace Manager.Kohonen
 
         public int[] WinnerHeuristic(V input, DistanceDelegate distFun)
         {
-            int hsqrt = (int) Math.Sqrt(_rows); // height square root
-            int wsqrt = (int) Math.Sqrt(_cols); // width square root
+            int hsqrt = (int)Math.Sqrt(_rows); // height square root
+            int wsqrt = (int)Math.Sqrt(_cols); // width square root
             int nrows = hsqrt; // <----------------------------- you can change heuristic attributes here
             int ncols = wsqrt; // <----------------------------- you can change heuristic attributes here
-            int itemh = _rows/nrows;
-            int itemw = _cols/ncols;
-            List<KeyValuePair<double, int[]>> candidates = new List<KeyValuePair<double, int[]>>(nrows*ncols);
+            int itemh = _rows / nrows;
+            int itemw = _cols / ncols;
+            List<KeyValuePair<double, int[]>> candidates = new List<KeyValuePair<double, int[]>>(nrows * ncols);
             for (int r = 0; r < nrows; ++r)
             {
                 for (int c = 0; c < ncols; ++c)
                 {
-                    int rr = (int) Math.Round(0.5 + r)*itemh;
-                    int cc = (int) Math.Round(0.5 + c)*itemw;
+                    int rr = (int)Math.Round(0.5 + r) * itemh;
+                    int cc = (int)Math.Round(0.5 + c) * itemw;
                     double dist = distFun(_arr[rr, cc], input);
-                    candidates.Add(new KeyValuePair<double, int[]>(dist, new int[] {rr, cc}));
+                    candidates.Add(new KeyValuePair<double, int[]>(dist, new int[] { rr, cc }));
                 }
             }
             candidates.Sort(_candidatesHeuristic);
@@ -208,8 +215,8 @@ namespace Manager.Kohonen
                     candidates.RemoveAt(0);
                     for (int j = 0; j < search_candidates; ++j)
                     {
-                        int r = coords[0] + rnd.Next(-itemh/2, itemh/2);
-                        int c = coords[1] + rnd.Next(-itemw/2, itemw/2);
+                        int r = coords[0] + rnd.Next(-itemh / 2, itemh / 2);
+                        int c = coords[1] + rnd.Next(-itemw / 2, itemw / 2);
                         if (0 <= r && r < _rows && 0 <= c && c < _cols)
                         {
                             V v = _arr[r, c];
@@ -219,7 +226,7 @@ namespace Manager.Kohonen
                                 bestDist = dist;
                                 best[0] = r;
                                 best[1] = c;
-                                candidates.Add(new KeyValuePair<double, int[]>(dist, new int[] {r, c}));
+                                candidates.Add(new KeyValuePair<double, int[]>(dist, new int[] { r, c }));
                                 candidates.Sort(_candidatesHeuristic);
                                 found = true;
                             }
@@ -264,13 +271,13 @@ namespace Manager.Kohonen
 
             //Displ();
 
-            int offset = (int) Math.Ceiling(_radius - 0.5);
+            int offset = (int)Math.Ceiling(_radius - 0.5);
             double temp;
             double radSqrt = Math.Sqrt(_radius);
             double midr = row + 0.5, midc = col + 0.5;
 
-            int start = (int) Math.Floor(col + 0.5 - _radius);
-            int end = (int) Math.Ceiling(col + 0.5 + _radius);
+            int start = (int)Math.Floor(col + 0.5 - _radius);
+            int end = (int)Math.Ceiling(col + 0.5 + _radius);
 
             //     Console.WriteLine("main c"+(col-offset)+" "+(col+offset));
             for (int i = start; i <= end; i++)
@@ -284,12 +291,12 @@ namespace Manager.Kohonen
             }*/
 
 
-            for (int i = 1; i < (int) Math.Ceiling(0.5 + _radius); i++)
+            for (int i = 1; i < (int)Math.Ceiling(0.5 + _radius); i++)
             {
                 temp = Math.Sqrt(Math.Pow(_radius, 2) - Math.Pow(i - 0.5, 2));
                 //     Console.WriteLine(temp);
-                start = (int) Math.Floor(col + 0.5 - temp);
-                end = (int) Math.Ceiling(col + 0.5 + temp);
+                start = (int)Math.Floor(col + 0.5 - temp);
+                end = (int)Math.Ceiling(col + 0.5 + temp);
                 //     Console.WriteLine(start+" "+end);
                 ProcessRow(start, end, row + i, row, col, value);
                 ProcessRow(start, end, row - i, row, col, value);
@@ -329,7 +336,7 @@ namespace Manager.Kohonen
                 _arr[i, j].Add(
                     value.Diff(_arr[i, j])
                         .Multiply(_learningRate)
-                        .Multiply(NFunction(new int[] {i, j}, new int[] {row, col})));
+                        .Multiply(NFunction(new int[] { i, j }, new int[] { row, col })));
             /*  Console.Write("po ");
             _arr[i,j].Print();
             Console.WriteLine();*/
@@ -339,7 +346,7 @@ namespace Manager.Kohonen
         {
             //  Console.WriteLine("dist "+ Dist(dim1, dim2)+" radius "+_radius);
             //double r = _aHN*Math.Pow(Math.E, Math.Pow((Dist(dim1,dim2))/_radius,2));
-            double r = 1/Math.Pow(Math.E, Math.Pow((Dist(dim1, dim2))/_radius, 2));
+            double r = 1 / Math.Pow(Math.E, Math.Pow((Dist(dim1, dim2)) / _radius, 2));
             if (r > 1)
             {
                 return 1;
@@ -348,6 +355,24 @@ namespace Manager.Kohonen
             {
                 return r;
             }
+        }
+
+        public void Save(string filename)
+        {
+            var sb = new StringBuilder();
+
+            for (var i = 0; i < _rows; i++)
+            {
+                for (var j = 0; j < _cols; j++)
+                {
+                    //_arr[i, j].Print();
+                    sb.Append($"{_arr[i, j]} ");
+                }
+                sb.Append(Environment.NewLine);
+            }
+            sb.Append($"{_radius}{Environment.NewLine}");
+
+            File.WriteAllText(filename, sb.ToString());
         }
 
         private double Dist(int[] dim1, int[] dim2)
@@ -404,7 +429,7 @@ namespace Manager.Kohonen
             {
                 var rows = _arr.GetLength(0);
                 var cols = _arr.GetLength(1);
-                string[] separator = new string[] {"  ---|"};
+                string[] separator = new string[] { "  ---|" };
                 string line;
 
                 for (int i = 0; i < rows; i++)
