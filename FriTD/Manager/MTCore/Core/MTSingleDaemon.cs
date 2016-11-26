@@ -20,6 +20,7 @@ namespace Manager.MTCore
         public int IterationStartLearning { get; set; }
         private TDGame _game;
         private string _map;
+        private int _mapNumber;
         private MtAiAdapter _aiAdapter;
         private string _levels;
         private int _type;
@@ -39,13 +40,13 @@ namespace Manager.MTCore
 
         }
 
-        public MtSingleDaemon(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState> qLearning, BlockingCollection<KohonenUpdate> updatesQueue, string map, string levels1, int type, bool heuristicActive, bool cosinusDistActive) : this(kohonen, qLearning, updatesQueue, map)
+        public MtSingleDaemon(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState> qLearning, BlockingCollection<KohonenUpdate> updatesQueue, string map, string levels1, int type, bool heuristicActive, bool cosinusDistActive, int mapNumber = 0) : this(kohonen, qLearning, updatesQueue, map)
         {
             this._levels = levels1;
             this._type = type;
             _heuristicActive = heuristicActive;
             _cosinusDistActive = cosinusDistActive;
-
+            _mapNumber = mapNumber;
         }
 
         public void ProcessLearning()
@@ -67,12 +68,12 @@ namespace Manager.MTCore
                 if (GameState.Won == RunIteration())
                 {
                     Won++;
-                    MtStats.IncWL(1, _game.GameStateImage().Level, _type);
+                    MtStats.IncWL(1, _game.GameStateImage().Level, _type, _mapNumber);
                 }
                 else
                 {
                     Lost++;
-                    MtStats.IncWL(0, _game.GameStateImage().Level, _type);
+                    MtStats.IncWL(0, _game.GameStateImage().Level, _type, _mapNumber);
                 }
 
                 update = _aiAdapter.KohonenUpdate;
