@@ -58,7 +58,6 @@ namespace Manager.MTCore
             
             while (true)
             {
-                
                 iteration++;
                 if (iteration==IterationStartLearning)
                 {
@@ -75,15 +74,10 @@ namespace Manager.MTCore
                     Lost++;
                     MtStats.IncWL(0, _game.GameStateImage().Level, _type);
                 }
-                
 
                 update = _aiAdapter.KohonenUpdate;
                 
                 UpdatesQueue.Add(update);
-                
-
-
-
             }
         }
 
@@ -96,9 +90,6 @@ namespace Manager.MTCore
             {
                 StartAiDrivenTurn();
             }
-
-           
-
             return _game.State;
         }
 
