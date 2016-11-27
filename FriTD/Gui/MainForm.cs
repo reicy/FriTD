@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Manager.Core;
 using Manager.Kohonen;
-using Manager.MTCore.Core;
+using Manager.MTCore;
 
 namespace Gui
 {
@@ -136,6 +136,13 @@ namespace Gui
         {
             MtManager manager = new MtManager();
             manager.ProcessLearning();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            Console.WriteLine("Zmačkol som MT experimenty");
+            MtManager manager = new MtManager();
+            manager.ExperimentRun1();
         }
     }
 }

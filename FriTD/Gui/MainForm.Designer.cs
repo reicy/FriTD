@@ -37,6 +37,7 @@
             this.LongRun = new System.Windows.Forms.Button();
             this.MTStartButton = new System.Windows.Forms.Button();
             this.buttonLongRunMoreMaps = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -139,11 +140,24 @@
             this.buttonLongRunMoreMaps.UseVisualStyleBackColor = true;
             this.buttonLongRunMoreMaps.Click += new System.EventHandler(this.buttonLongRunMoreMaps_Click);
             // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(558, 98);
+            this.button5.Margin = new System.Windows.Forms.Padding(2);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(97, 25);
+            this.button5.TabIndex = 9;
+            this.button5.Text = "MT - experiment";
+            this.button5.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(776, 641);
+            this.Controls.Add(this.button5);
             this.Controls.Add(this.buttonLongRunMoreMaps);
             this.Controls.Add(this.MTStartButton);
             this.Controls.Add(this.LongRun);
@@ -172,6 +186,7 @@
         private System.Windows.Forms.Button LongRun;
         private System.Windows.Forms.Button MTStartButton;
         private System.Windows.Forms.Button buttonLongRunMoreMaps;
+        private System.Windows.Forms.Button button5;
     }
 }
 
