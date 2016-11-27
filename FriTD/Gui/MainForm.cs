@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Manager.Core;
 using Manager.Kohonen;
-using Manager.MTCore;
+using Manager.MTCore.Core;
 
 namespace Gui
 {
@@ -134,14 +134,14 @@ namespace Gui
 
         private void MTStartButton_Click(object sender, EventArgs e)
         {
-            MtManager manager = new MtManager();
+            var manager = new MtManager();
             manager.ProcessLearning();
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            Console.WriteLine("Zmačkol som MT experimenty");
-            MtManager manager = new MtManager();
+            Console.WriteLine(@"Zmačkol som MT experimenty");
+            var manager = new MtManager();
             manager.ExperimentRun1();
         }
     }
