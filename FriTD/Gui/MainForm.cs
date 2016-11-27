@@ -157,7 +157,7 @@ namespace Gui
         {
             Console.WriteLine("Zmačkol som MT experimenty");
             MtManager manager = new MtManager();
-            manager.ExperimentRun();
+            manager.ExperimentRun1();
         }
     }
 }

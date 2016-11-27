@@ -38,12 +38,12 @@ namespace Manager.MTCore
                 TWon++;
                 wPerMap[mapNumber]++;
             }
-            if ((Lost + Won)%100 == 0)
+            if ((Lost + Won)%1000 == 0)
             {
-                //Console.WriteLine("Iteration: {0} Won: {1} Lost: {2}", Total, Won, Lost);
-                Console.WriteLine("Iteration: {0} Won: {1} Lost: {2} -W {3}  {4} -L {5}  {6}", Total, Won, Lost, TypeW[0], TypeW[1], TypeL[0], TypeL[1]);
+                Console.WriteLine("Iteration: {0} Won: {1} Lost: {2}", Total, Won, Lost);
+                //Console.WriteLine("Iteration: {0} Won: {1} Lost: {2} -W {3}  {4} -L {5}  {6}", Total, Won, Lost, TypeW[0], TypeW[1], TypeL[0], TypeL[1]);
                 //   Console.WriteLine(Won);
-                string perMap = "\t";
+                string perMap = "\tW/L per map type: ";
                 for (int i = 0; i < wPerMap.Length; i++)
                 {
                     perMap += i + ":(" + wPerMap[i] + ":" + lPerMap[i] + "); ";
@@ -73,15 +73,20 @@ namespace Manager.MTCore
             TypeL = new[] { 0, 0 };
         }
 
+        public static void ResetAll()
+        {
+            Console.WriteLine("########################## RESETTING STATISTICS ##########################");
+            Reset();
+            Level = new int[20];
+            wPerMap = new int[10];
+            lPerMap = new int[10];
+        }
+
         internal static void IncWL(int v, int level, int type, int mapNumber = 0)
         {
-            
-            
             if (v == 0)
             {
                 TypeL[type]++;
-
-
             }
             else
             {

@@ -329,7 +329,8 @@ namespace Manager.MTCore
             }
         }
 
-        public void ExperimentRun()
+        // run 6 types of maps from one kohonen and qlearning
+        public void ExperimentRun1()
         {
             /*
             TODO: interationstart learning in MTSingleDaemon
@@ -346,10 +347,6 @@ namespace Manager.MTCore
             List<BlockingCollection<KohonenUpdate>> kohonenUpdateQueues = new List<BlockingCollection<KohonenUpdate>>();
             List<KohonenUpdate> kohonenUpdatesToProcess = new List<KohonenUpdate>();
 
-            int won = 0;
-            int lost = 0;
-            int counter = 0;
-
             // init threads
             CreateMTDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map,  Properties.Resources.Levels,  0, threads, daemons, kohonenUpdateQueues);
             CreateMTDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map1, Properties.Resources.Levels1, 1, threads, daemons, kohonenUpdateQueues);
@@ -358,6 +355,14 @@ namespace Manager.MTCore
             CreateMTDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map4, Properties.Resources.Levels4, 4, threads, daemons, kohonenUpdateQueues);
             CreateMTDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map5, Properties.Resources.Levels5, 5, threads, daemons, kohonenUpdateQueues);
 
+            StartMAGIC(kohonen, 10000, 3500, threads, daemons, kohonenUpdateQueues, kohonenUpdatesToProcess);
+        }
+
+        public void StartMAGIC(KohonenCore<StateVector> kohonen, int numOfIterationsPerThread, int numOfIterationsWithKohonenLearningPerThread, List<Thread> threads, List<MtSingleDaemon> daemons, List<BlockingCollection<KohonenUpdate>> kohonenUpdateQueues, List<KohonenUpdate> kohonenUpdatesToProcess)
+        {
+            int won = 0;
+            int lost = 0;
+            int counter = 0;
 
             //start threads
             foreach (var thread in threads)
@@ -372,7 +377,7 @@ namespace Manager.MTCore
 
             //Core cycle
             //execute level -> update kohonen -> repeat
-            for (int i = 0; i < Iterations; i++)
+            for (int i = 0; i < numOfIterationsPerThread; i++)
             {
 
                 won = 0;
@@ -398,9 +403,9 @@ namespace Manager.MTCore
                 //update kohonen
                 foreach (var update in kohonenUpdatesToProcess)
                 {
-                    if (IterationStopKohonenUpdate > i) kohonen.ReArrange(update.Row, update.Col, update.Vector);
+                    if (numOfIterationsWithKohonenLearningPerThread > i) kohonen.ReArrange(update.Row, update.Col, update.Vector);
                 }
-                if (IterationStopKohonenUpdate == i)
+                if (numOfIterationsWithKohonenLearningPerThread == i)
                 {
                     kohonen.ResetAccesses();
                 }
