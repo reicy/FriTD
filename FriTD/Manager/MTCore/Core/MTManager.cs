@@ -4,52 +4,46 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using Manager.Kohonen;
-using Manager.MTCore.Core;
 using Manager.QLearning;
 
-namespace Manager.MTCore
+namespace Manager.MTCore.Core
 {
     public class MtManager
     {
         private bool _loadKohonen = false;
-        private string _kohonenLoadPath = @"C:\Users\Tomas\Desktop\kohonenLearnt\M010KE.txt"; 
-          // @"C:\Users\Tomas\Desktop\kohonenLearnt\cosFixed5k.txt";
+        private string _kohonenLoadPath = @"C:\Users\Tomas\Desktop\kohonenLearnt\M010KE.txt";
+        // @"C:\Users\Tomas\Desktop\kohonenLearnt\cosFixed5k.txt";
         // @"C:\Users\Tomas\Desktop\kohonenLearnt\k24kForM1.txt";
 
         // @"C:\Users\Tomas\Desktop\kohonenLearnt\k20kCosM0.txt";// @"C:\Users\Tomas\Desktop\kohonenLearnt\Map0K20k.txt";//@"C:\Users\Tomas\Desktop\kohonenLearnt\k20kHeuriM0.txt"; // @"C:\Users\Tomas\Desktop\kohonenLearnt\CTest.txt";////@"C:\Users\Tomas\Desktop\kohonenLearnt\k24kForM1.txt";//@"C:\Users\Tomas\Desktop\kohonenLearnt\MixedKohonen24_4_2.txt";//@"C:\Users\Tomas\Desktop\kohonenLearnt\KMixed24_M1_4_M0.txt";//@"C:\Users\Tomas\Desktop\kohonenLearnt\k24kForM1.txt";// @"C:\Users\Tomas\Desktop\kohonenLearnt\K3kForMMEfekt2.txt";//@"C:\Users\Tomas\Desktop\kohonenLearnt\Kohonen3kForM0MEfekt.txt";
-        private bool nonEmptyModeCohonenActive = false;
-
+        private bool _nonEmptyModeCohonenActive = false;
 
         private int _numOfType2 = 0;
-        private const int ThreadsNum = 6;
-        private const int Iterations = 10000;
-        private const int IterationStopKohonenUpdate = 30000;
-        private const int IterationOfSingleThreadStartLearning = 5;
-        private const int QueueMaxCapactity = 1;
+        private const int THREADS_NUM = 6;
+        private const int ITERATIONS = 10000;
+        private const int ITERATION_STOP_KOHONEN_UPDATE = 30000;
+        private const int ITERATION_OF_SINGLE_THREAD_START_LEARNING = 5;
+        private const int QUEUE_MAX_CAPACTITY = 1;
 
         private static readonly bool CosDistActive = false;
         private static readonly bool HeuristicActive = true;
 
-
         public void ProcessLearning()
         {
-
             for (int i = 0; i < 10; i++)
             {
                 SingleRun();
             }
-           
-
 
             //init core
             var qLearning = new QLearning<KohonenAiState>(0.3, 1, 0.5);
-            
-            var kohonen = new KohonenCore<StateVector>(30, 30, 2, 0.5, 1, 1, 0.5, nonEmptyModeCohonenActive);
+            var kohonen = new KohonenCore<StateVector>(30, 30, 2, 0.5, 1, 1, 0.5, _nonEmptyModeCohonenActive);
+
             //load kohonen
             if (_loadKohonen)
             {
                 kohonen.Load(_kohonenLoadPath);
-               // kohonen.Displ();
+                //kohonen.Displ();
             }
 
             //var weight = new double[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 100, 0.001, 1000, 1, 1, 1, 1, 1, 1, 1, 1};
@@ -57,38 +51,37 @@ namespace Manager.MTCore
             //var weight = new double[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1000000, 100, 0, 1, 1, 1, 1, 1, 1, 1, 1 };
             var weight = new double[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 
-
             kohonen.SetWeight(weight);
-            List<Thread> threads = new List<Thread>();
-            List<MtSingleDaemon> daemons = new List<MtSingleDaemon>();
-            List< BlockingCollection <KohonenUpdate>> kohonenUpdateQueues = new List<BlockingCollection<KohonenUpdate>>();
-            List<KohonenUpdate> kohonenUpdatesToProcess = new List<KohonenUpdate>();
+            var threads = new List<Thread>();
+            var daemons = new List<MtSingleDaemon>();
+            var kohonenUpdateQueues = new List<BlockingCollection<KohonenUpdate>>();
+            var kohonenUpdatesToProcess = new List<KohonenUpdate>();
 
             int won = 0;
             int lost = 0;
             int counter = 0;
 
-            Console.WriteLine(DateTime.Now.ToString());
+            Console.WriteLine(DateTime.Now);
 
             //init threads
-            MtSingleDaemon singleDaemon;
-            for (int i = 0; i < ThreadsNum; i++)
+            for (int i = 0; i < THREADS_NUM; i++)
             {
-                var queue = new BlockingCollection<KohonenUpdate>(QueueMaxCapactity);
+                var queue = new BlockingCollection<KohonenUpdate>(QUEUE_MAX_CAPACTITY);
+                MtSingleDaemon singleDaemon;
                 if (i < _numOfType2)
                 {
-                    Console.WriteLine("map1");
-                    singleDaemon = new MtSingleDaemon(kohonen, qLearning, queue, Properties.Resources.Map1, Properties.Resources.Levels1,1, HeuristicActive, CosDistActive)
+                    Console.WriteLine(@"map1");
+                    singleDaemon = new MtSingleDaemon(kohonen, qLearning, queue, Properties.Resources.Map1, Properties.Resources.Levels1, 1, HeuristicActive, CosDistActive)
                     {
-                        IterationStartLearning = IterationOfSingleThreadStartLearning
+                        IterationStartLearning = ITERATION_OF_SINGLE_THREAD_START_LEARNING
                     };
                 }
                 else
                 {
-                    Console.WriteLine("map");
-                    singleDaemon = new MtSingleDaemon(kohonen, qLearning, queue, Properties.Resources.Map, Properties.Resources.Levels,0, HeuristicActive, CosDistActive)
+                    Console.WriteLine(@"map");
+                    singleDaemon = new MtSingleDaemon(kohonen, qLearning, queue, Properties.Resources.Map, Properties.Resources.Levels, 0, HeuristicActive, CosDistActive)
                     {
-                        IterationStartLearning = IterationOfSingleThreadStartLearning
+                        IterationStartLearning = ITERATION_OF_SINGLE_THREAD_START_LEARNING
                     };
                 }
                 var thread = new Thread(singleDaemon.ProcessLearning);
@@ -101,7 +94,7 @@ namespace Manager.MTCore
             foreach (var thread in threads)
             {
                 thread.Start();
-                while (!thread.IsAlive);
+                while (!thread.IsAlive) { }
             }
 
             //init stopwatch
@@ -110,68 +103,57 @@ namespace Manager.MTCore
 
             //Core cycle
             //execute level -> update kohonen -> repeat
-            for (int i = 0; i < Iterations; i++)
+            for (int i = 0; i < ITERATIONS; i++)
             {
-                
                 won = 0;
                 lost = 0;
-                
+
                 //collect kohonen updates
-                KohonenUpdate up;
-                
                 foreach (var queue in kohonenUpdateQueues)
                 {
-                    
-                    up = queue.Take();
+                    KohonenUpdate up = queue.Take();
                     kohonenUpdatesToProcess.Add(up);
-                    
                 }
 
                 //wait for threads to stop
                 foreach (var queue in kohonenUpdateQueues)
                 {
-                    while (queue.Count != QueueMaxCapactity) ;
+                    while (queue.Count != QUEUE_MAX_CAPACTITY) { }
                 }
 
                 //update kohonen
                 foreach (var update in kohonenUpdatesToProcess)
                 {
-                    if (IterationStopKohonenUpdate > i) kohonen.ReArrange(update.Row, update.Col, update.Vector);
+                    if (ITERATION_STOP_KOHONEN_UPDATE > i) kohonen.ReArrange(update.Row, update.Col, update.Vector);
                 }
-                if (IterationStopKohonenUpdate == i)
+                if (ITERATION_STOP_KOHONEN_UPDATE == i)
                 {
                     kohonen.ResetAccesses();
                 }
                 kohonenUpdatesToProcess.Clear();
-                
+
                 foreach (var mtSingleDaemon in daemons)
                 {
-
                     won += mtSingleDaemon.Won;
                     lost += mtSingleDaemon.Lost;
-                   
                 }
-               
-                
             }
 
             // stop watch and displ time elapsed
-          
             stopWatch.Stop();
 
             TimeSpan ts = stopWatch.Elapsed;
-            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",ts.Hours, ts.Minutes, ts.Seconds,ts.Milliseconds / 10);
-            Console.WriteLine("RunTime " + elapsedTime);
+            Console.WriteLine(@"RunTime {0:hh\:mm\:ss\.ff}", ts);
             MtStats.PrintLevelsOfEnding();
             MtStats.PrintTotalScore();
 
             kohonen.PrintAccesses();
             kohonen.Displ();
             kohonen.Displ(11);
-            
-            //  Console.WriteLine("won: " + won + " lost: " + lost);
 
-            Console.WriteLine(DateTime.Now.ToString());
+            //Console.WriteLine(@"won: {0} lost: {1}", won, lost);
+
+            Console.WriteLine(DateTime.Now);
             qLearning.QValDisp();
 
             //Dispose threads in inhuman manner, TODO change to more human approach
@@ -179,27 +161,19 @@ namespace Manager.MTCore
             {
                 thread.Abort();
             }
-
         }
-
-
-
-
 
         public void SingleRun()
         {
-
-
-
             //init core
             var qLearning = new QLearning<KohonenAiState>(0.3, 1, 0.5);
+            var kohonen = new KohonenCore<StateVector>(30, 30, 2, 0.5, 1, 1, 0.5, _nonEmptyModeCohonenActive);
 
-            var kohonen = new KohonenCore<StateVector>(30, 30, 2, 0.5, 1, 1, 0.5, nonEmptyModeCohonenActive);
             //load kohonen
             if (_loadKohonen)
             {
                 kohonen.Load(_kohonenLoadPath);
-                // kohonen.Displ();
+                //kohonen.Displ();
             }
 
             //var weight = new double[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 100, 0.001, 1000, 1, 1, 1, 1, 1, 1, 1, 1};
@@ -207,38 +181,37 @@ namespace Manager.MTCore
             //var weight = new double[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1000000, 100, 0, 1, 1, 1, 1, 1, 1, 1, 1 };
             var weight = new double[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 
-
             kohonen.SetWeight(weight);
-            List<Thread> threads = new List<Thread>();
-            List<MtSingleDaemon> daemons = new List<MtSingleDaemon>();
-            List<BlockingCollection<KohonenUpdate>> kohonenUpdateQueues = new List<BlockingCollection<KohonenUpdate>>();
-            List<KohonenUpdate> kohonenUpdatesToProcess = new List<KohonenUpdate>();
+            var threads = new List<Thread>();
+            var daemons = new List<MtSingleDaemon>();
+            var kohonenUpdateQueues = new List<BlockingCollection<KohonenUpdate>>();
+            var kohonenUpdatesToProcess = new List<KohonenUpdate>();
 
             int won = 0;
             int lost = 0;
             int counter = 0;
 
-            Console.WriteLine(DateTime.Now.ToString());
+            Console.WriteLine(DateTime.Now);
 
             //init threads
-            MtSingleDaemon singleDaemon;
-            for (int i = 0; i < ThreadsNum; i++)
+            for (int i = 0; i < THREADS_NUM; i++)
             {
-                var queue = new BlockingCollection<KohonenUpdate>(QueueMaxCapactity);
+                var queue = new BlockingCollection<KohonenUpdate>(QUEUE_MAX_CAPACTITY);
+                MtSingleDaemon singleDaemon;
                 if (i < _numOfType2)
                 {
-                    Console.WriteLine("map1");
+                    Console.WriteLine(@"map1");
                     singleDaemon = new MtSingleDaemon(kohonen, qLearning, queue, Properties.Resources.Map1, Properties.Resources.Levels1, 1, HeuristicActive, CosDistActive)
                     {
-                        IterationStartLearning = IterationOfSingleThreadStartLearning
+                        IterationStartLearning = ITERATION_OF_SINGLE_THREAD_START_LEARNING
                     };
                 }
                 else
                 {
-                    Console.WriteLine("map");
+                    Console.WriteLine(@"map");
                     singleDaemon = new MtSingleDaemon(kohonen, qLearning, queue, Properties.Resources.Map, Properties.Resources.Levels, 0, HeuristicActive, CosDistActive)
                     {
-                        IterationStartLearning = IterationOfSingleThreadStartLearning
+                        IterationStartLearning = ITERATION_OF_SINGLE_THREAD_START_LEARNING
                     };
                 }
                 var thread = new Thread(singleDaemon.ProcessLearning);
@@ -251,44 +224,39 @@ namespace Manager.MTCore
             foreach (var thread in threads)
             {
                 thread.Start();
-                while (!thread.IsAlive) ;
+                while (!thread.IsAlive) { }
             }
 
             //init stopwatch
-            Stopwatch stopWatch = new Stopwatch();
+            var stopWatch = new Stopwatch();
             stopWatch.Start();
 
             //Core cycle
             //execute level -> update kohonen -> repeat
-            for (int i = 0; i < Iterations; i++)
+            for (int i = 0; i < ITERATIONS; i++)
             {
-
                 won = 0;
                 lost = 0;
 
                 //collect kohonen updates
-                KohonenUpdate up;
-
                 foreach (var queue in kohonenUpdateQueues)
                 {
-
-                    up = queue.Take();
+                    KohonenUpdate up = queue.Take();
                     kohonenUpdatesToProcess.Add(up);
-
                 }
 
                 //wait for threads to stop
                 foreach (var queue in kohonenUpdateQueues)
                 {
-                    while (queue.Count != QueueMaxCapactity) ;
+                    while (queue.Count != QUEUE_MAX_CAPACTITY) { }
                 }
 
                 //update kohonen
                 foreach (var update in kohonenUpdatesToProcess)
                 {
-                    if (IterationStopKohonenUpdate > i) kohonen.ReArrange(update.Row, update.Col, update.Vector);
+                    if (ITERATION_STOP_KOHONEN_UPDATE > i) kohonen.ReArrange(update.Row, update.Col, update.Vector);
                 }
-                if (IterationStopKohonenUpdate == i)
+                if (ITERATION_STOP_KOHONEN_UPDATE == i)
                 {
                     kohonen.ResetAccesses();
                 }
@@ -296,26 +264,18 @@ namespace Manager.MTCore
 
                 foreach (var mtSingleDaemon in daemons)
                 {
-
                     won += mtSingleDaemon.Won;
                     lost += mtSingleDaemon.Lost;
-
                 }
-
-
             }
 
             // stop watch and displ time elapsed
-
             stopWatch.Stop();
 
             TimeSpan ts = stopWatch.Elapsed;
-            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
-            Console.WriteLine("RunTime " + elapsedTime);
+            Console.WriteLine(@"RunTime {0:hh\:mm\:ss\.ff}", ts);
             MtStats.PrintLevelsOfEnding();
             MtStats.PrintTotalScore();
-
-       
 
             //Dispose threads in inhuman manner
             foreach (var thread in threads)
@@ -327,33 +287,30 @@ namespace Manager.MTCore
         // run 6 types of maps from one kohonen and qlearning
         public void ExperimentRun1()
         {
-            /*
-            TODO: interationstart learning in MTSingleDaemon
-            */
+            // TODO: interationstart learning in MTSingleDaemon
 
             // create qlearning and kohonen and init other very important things...
-
             var qLearning = new QLearning<KohonenAiState>(0.3, 1, 0.5);
-            var kohonen = new KohonenCore<StateVector>(30, 30, 2, 0.5, 1, 1, 0.5, nonEmptyModeCohonenActive);
+            var kohonen = new KohonenCore<StateVector>(30, 30, 2, 0.5, 1, 1, 0.5, _nonEmptyModeCohonenActive);
             var weight = new double[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
             kohonen.SetWeight(weight);
-            List<Thread> threads = new List<Thread>();
-            List<MtSingleDaemon> daemons = new List<MtSingleDaemon>();
-            List<BlockingCollection<KohonenUpdate>> kohonenUpdateQueues = new List<BlockingCollection<KohonenUpdate>>();
-            List<KohonenUpdate> kohonenUpdatesToProcess = new List<KohonenUpdate>();
+            var threads = new List<Thread>();
+            var daemons = new List<MtSingleDaemon>();
+            var kohonenUpdateQueues = new List<BlockingCollection<KohonenUpdate>>();
+            var kohonenUpdatesToProcess = new List<KohonenUpdate>();
 
             // init threads
-            CreateMTDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map,  Properties.Resources.Levels,  0, threads, daemons, kohonenUpdateQueues);
-            CreateMTDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map1, Properties.Resources.Levels1, 1, threads, daemons, kohonenUpdateQueues);
-            CreateMTDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map2, Properties.Resources.Levels2, 2, threads, daemons, kohonenUpdateQueues);
-            CreateMTDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map3, Properties.Resources.Levels3, 3, threads, daemons, kohonenUpdateQueues);
-            CreateMTDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map4, Properties.Resources.Levels4, 4, threads, daemons, kohonenUpdateQueues);
-            CreateMTDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map5, Properties.Resources.Levels5, 5, threads, daemons, kohonenUpdateQueues);
+            CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map, Properties.Resources.Levels, 0, threads, daemons, kohonenUpdateQueues);
+            CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map1, Properties.Resources.Levels1, 1, threads, daemons, kohonenUpdateQueues);
+            CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map2, Properties.Resources.Levels2, 2, threads, daemons, kohonenUpdateQueues);
+            CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map3, Properties.Resources.Levels3, 3, threads, daemons, kohonenUpdateQueues);
+            CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map4, Properties.Resources.Levels4, 4, threads, daemons, kohonenUpdateQueues);
+            CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map5, Properties.Resources.Levels5, 5, threads, daemons, kohonenUpdateQueues);
 
-            StartMAGIC(kohonen, 10000, 3500, threads, daemons, kohonenUpdateQueues, kohonenUpdatesToProcess);
+            StartMagic(kohonen, 10000, 3500, threads, daemons, kohonenUpdateQueues, kohonenUpdatesToProcess);
         }
 
-        public void StartMAGIC(KohonenCore<StateVector> kohonen, int numOfIterationsPerThread, int numOfIterationsWithKohonenLearningPerThread, List<Thread> threads, List<MtSingleDaemon> daemons, List<BlockingCollection<KohonenUpdate>> kohonenUpdateQueues, List<KohonenUpdate> kohonenUpdatesToProcess)
+        public void StartMagic(KohonenCore<StateVector> kohonen, int numOfIterationsPerThread, int numOfIterationsWithKohonenLearningPerThread, List<Thread> threads, List<MtSingleDaemon> daemons, List<BlockingCollection<KohonenUpdate>> kohonenUpdateQueues, List<KohonenUpdate> kohonenUpdatesToProcess)
         {
             int won = 0;
             int lost = 0;
@@ -363,36 +320,31 @@ namespace Manager.MTCore
             foreach (var thread in threads)
             {
                 thread.Start();
-                while (!thread.IsAlive) ;
+                while (!thread.IsAlive) { }
             }
 
             //init stopwatch
-            Stopwatch stopWatch = new Stopwatch();
+            var stopWatch = new Stopwatch();
             stopWatch.Start();
 
             //Core cycle
             //execute level -> update kohonen -> repeat
             for (int i = 0; i < numOfIterationsPerThread; i++)
             {
-
                 won = 0;
                 lost = 0;
 
                 //collect kohonen updates
-                KohonenUpdate up;
-
                 foreach (var queue in kohonenUpdateQueues)
                 {
-
-                    up = queue.Take();
+                    KohonenUpdate up = queue.Take();
                     kohonenUpdatesToProcess.Add(up);
-
                 }
 
                 //wait for threads to stop
                 foreach (var queue in kohonenUpdateQueues)
                 {
-                    while (queue.Count != QueueMaxCapactity) ;
+                    while (queue.Count != QUEUE_MAX_CAPACTITY) { }
                 }
 
                 //update kohonen
@@ -410,23 +362,16 @@ namespace Manager.MTCore
                 {
                     won += mtSingleDaemon.Won;
                     lost += mtSingleDaemon.Lost;
-
                 }
-
-
             }
 
             // stop watch and displ time elapsed
-
             stopWatch.Stop();
 
             TimeSpan ts = stopWatch.Elapsed;
-            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
-            Console.WriteLine("RunTime " + elapsedTime);
+            Console.WriteLine(@"RunTime {0:hh\:mm\:ss\.ff}", ts);
             MtStats.PrintLevelsOfEnding();
             MtStats.PrintTotalScore();
-
-
 
             //Dispose threads in inhuman manner
             foreach (var thread in threads)
@@ -435,14 +380,13 @@ namespace Manager.MTCore
             }
         }
 
-        public void CreateMTDaemonAndAddItToSomeCollections(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState> qLearning, string map, string level, int mapNumber, List<Thread> threads, List<MtSingleDaemon> daemons, List<BlockingCollection<KohonenUpdate>> kohonenUpdateQueues)
+        public void CreateMtDaemonAndAddItToSomeCollections(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState> qLearning, string map, string level, int mapNumber, List<Thread> threads, List<MtSingleDaemon> daemons, List<BlockingCollection<KohonenUpdate>> kohonenUpdateQueues)
         {
-            var queue = new BlockingCollection<KohonenUpdate>(QueueMaxCapactity);
-            MtSingleDaemon mapSingleDaemon = new MtSingleDaemon(kohonen, qLearning, queue, map, level, 0, HeuristicActive, CosDistActive, mapNumber) { IterationStartLearning = IterationOfSingleThreadStartLearning };
+            var queue = new BlockingCollection<KohonenUpdate>(QUEUE_MAX_CAPACTITY);
+            var mapSingleDaemon = new MtSingleDaemon(kohonen, qLearning, queue, map, level, 0, HeuristicActive, CosDistActive, mapNumber) { IterationStartLearning = ITERATION_OF_SINGLE_THREAD_START_LEARNING };
             threads.Add(new Thread(mapSingleDaemon.ProcessLearning));
             daemons.Add(mapSingleDaemon);
             kohonenUpdateQueues.Add(queue);
         }
-
     }
 }
