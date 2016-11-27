@@ -1,13 +1,12 @@
 ﻿using System.Collections.Concurrent;
 using Manager.Kohonen;
 using Manager.MTCore.Adapters;
-using Manager.MTCore.Core;
 using Manager.MTCore.KohonenUtils;
 using Manager.QLearning;
 using TD.Core;
 using TD.Enums;
 
-namespace Manager.MTCore
+namespace Manager.MTCore.Core
 {
     public class MtSingleDaemon
     {
@@ -18,13 +17,13 @@ namespace Manager.MTCore
         public int Won { get; set; }
         public int IterationStartLearning { get; set; }
         private TDGame _game;
-        private string _map;
-        private int _mapNumber;
+        private readonly string _map;
+        private readonly int _mapNumber;
         private MtAiAdapter _aiAdapter;
-        private string _levels;
-        private int _type;
-        private bool _heuristicActive;
-        private bool _cosinusDistActive;
+        private readonly string _levels;
+        private readonly int _type;
+        private readonly bool _heuristicActive;
+        private readonly bool _cosinusDistActive;
 
         public MtSingleDaemon(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState> qLearning,
             BlockingCollection<KohonenUpdate> updatesQueue, string map)
@@ -35,8 +34,6 @@ namespace Manager.MTCore
             Won = 0;
             Lost = 0;
             _map = map;
-
-
         }
 
         public MtSingleDaemon(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState> qLearning, BlockingCollection<KohonenUpdate> updatesQueue, string map, string levels1, int type, bool heuristicActive, bool cosinusDistActive, int mapNumber = 0) : this(kohonen, qLearning, updatesQueue, map)
@@ -52,33 +49,30 @@ namespace Manager.MTCore
         {
             //_aiAdapter = new MtAiAdapter(QLearning, Kohonen, new SimpleStateEncodern());
             _aiAdapter = new MtAiAdapter(QLearning, Kohonen, new AdaptiveStateEncoder(), _heuristicActive, _cosinusDistActive);
-            _aiAdapter.SetRewardMultiplier(1.0/10000);
-            KohonenUpdate update;
+            _aiAdapter.SetRewardMultiplier(1.0 / 10000);
             var iteration = 0;
-            
+
             while (true)
             {
                 iteration++;
-                if (iteration==IterationStartLearning)
+                if (iteration == IterationStartLearning)
                     _aiAdapter.SetRewardMultiplier(1);
 
                 if (GameState.Won == RunIteration())
                 {
                     Won++;
-                    MtStats.IncWL(1, _game.GameStateImage().Level, _type, _mapNumber);
+                    MtStats.IncWl(1, _game.GameStateImage().Level, _type, _mapNumber);
                 }
                 else
                 {
                     Lost++;
-                    MtStats.IncWL(0, _game.GameStateImage().Level, _type, _mapNumber);
+                    MtStats.IncWl(0, _game.GameStateImage().Level, _type, _mapNumber);
                 }
 
-                update = _aiAdapter.KohonenUpdate;
-                
+                var update = _aiAdapter.KohonenUpdate;
                 UpdatesQueue.Add(update);
             }
         }
-
 
         private GameState RunIteration()
         {
@@ -89,12 +83,10 @@ namespace Manager.MTCore
             return _game.State;
         }
 
-
         public void PrepareGame()
         {
             _game = new TDGame();
-            _game.InitGame(Properties.Resources.Towers, _map, Properties.Resources.Enemies,
-                _levels);
+            _game.InitGame(Properties.Resources.Towers, _map, Properties.Resources.Enemies, _levels);
         }
 
         public void StartAiDrivenTurn()
