@@ -4,7 +4,6 @@ namespace TD.Core
 {
     class EnemyBuilder
     {
-
         public string Template { get; }
         public PathSquare WayPoint { get; set; }
         public PathSquare Spawn { get; set; }
@@ -12,7 +11,7 @@ namespace TD.Core
 
         private int _cd;
         private int _remainingCd;
-       
+
         public EnemyBuilder(string template, PathSquare wayPoint, PathSquare spawn)
         {
             Spawn = spawn;
@@ -23,7 +22,6 @@ namespace TD.Core
 
             var temp = Template.Split(',');
             HpCost = int.Parse(temp[5]);
-
         }
 
         public Enemy Build()
@@ -34,12 +32,12 @@ namespace TD.Core
                 return null;
             }
 
-            var temp =Template.Split(',');
+            var temp = Template.Split(',');
             _cd = int.Parse(temp[8]);
             _remainingCd = _cd;
             HpCost = int.Parse(temp[5]);
 
-            return new Enemy()
+            return new Enemy
             {
                 Hp = int.Parse(temp[2]),
                 MaxHp = int.Parse(temp[2]),
@@ -52,25 +50,19 @@ namespace TD.Core
                 SquareWayPoint = WayPoint,
                 X = Spawn.X,
                 Y = Spawn.Y
-
             };
-
-
         }
-
 
         public string EnemyType()
         {
             var temp = Template.Split(',');
             return temp[9];
-
         }
 
         public int EnemyHp()
         {
             var temp = Template.Split(',');
             return int.Parse(temp[2]);
-
         }
     }
 }

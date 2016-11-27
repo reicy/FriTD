@@ -6,7 +6,5 @@
         public int Y { get; set; }
         public PathSquare Next { get; set; }
         public PathSquare Previous { get; set; }
-
-        
     }
 }

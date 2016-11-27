@@ -63,7 +63,7 @@ namespace Manager.MTCore.KohonenUtils
             vector[pointer++] = typeOfWave / image.MaxType;
 
             //wave size // how dangerous it is
-            vector[pointer++] = EncodeWaveSize(image.NextWaveNumberOfEnemies, image.NextWaveEnemiesID) / _normWaveEncode;
+            vector[pointer++] = EncodeWaveSize(image.NextWaveNumberOfEnemies, image.NextWaveEnemiesId) / _normWaveEncode;
 
             vector[pointer/*++*/] = hpPoolOfWave / image.MaxNextWaveHpPool;
             //vector[pointer++] = image.Level;

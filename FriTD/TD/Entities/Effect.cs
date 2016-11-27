@@ -1,11 +1,9 @@
-﻿using TD.Core;
-using TD.Enums;
+﻿using TD.Enums;
 
 namespace TD.Entities
 {
     public class Effect
     {
-
         public int RemainingTurns { get; set; }
         public double PrimaryDmg { get; set; }
         public DmgType DmgType { get; set; }
@@ -17,20 +15,17 @@ namespace TD.Entities
 
         public double Dmg(int armor, int magicResist)
         {
-           
             var dmg = PrimaryDmgUsed ? SecondaryDmg : PrimaryDmg;
             PrimaryDmgUsed = true;
             var decrease = DmgType == DmgType.Magical ? magicResist : armor;
 
-            return dmg*((100 - decrease)*1.0/100);
-
+            return dmg * ((100 - decrease) * 1.0 / 100);
         }
 
         public void ReduceTtl()
         {
             RemainingTurns--;
         }
-
 
         public bool IsSplash()
         {

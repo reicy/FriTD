@@ -1,7 +1,6 @@
-﻿namespace Manager.AIUtils
+﻿namespace TD.Core
 {
     public interface GameStateImg
     {
-         
     }
 }

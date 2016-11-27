@@ -21,34 +21,26 @@ namespace TD.Core
             _cdCounter = 0;
         }
 
-       
-
         public Effect Create()
         {
-
             if (_cdCounter > 0)
             {
                 _cdCounter--;
                 return null;
             }
-            else
+
+            _cdCounter = Cd;
+            return new Effect
             {
-                _cdCounter = Cd;
-                return new Effect()
-                {
-                    DmgType = DmgType,
-                    PrimaryDmgUsed = PrimaryDmgUsed,
-                    PrimaryDmg = PrimaryDmg,
-                    RemainingTurns = RemainingTurns,
-                    SecondaryDmg = SecondaryDmg,
-                    Slow = Slow,
-                    Splash = Splash,
-                    SplashRadius = SplashRadius
-                };
-            }
-
-            
+                DmgType = DmgType,
+                PrimaryDmgUsed = PrimaryDmgUsed,
+                PrimaryDmg = PrimaryDmg,
+                RemainingTurns = RemainingTurns,
+                SecondaryDmg = SecondaryDmg,
+                Slow = Slow,
+                Splash = Splash,
+                SplashRadius = SplashRadius
+            };
         }
-
     }
 }

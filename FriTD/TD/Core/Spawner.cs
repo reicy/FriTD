@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TD.Entities;
@@ -20,6 +19,7 @@ namespace TD.Core
             _levelTemplates = new LinkedList<string>();
             _type = 0;
             _remaining = 0;
+
             using (var reader = new StringReader(levels))
             {
                 string line;
@@ -27,12 +27,8 @@ namespace TD.Core
                 {
                     _levelTemplates.AddLast(line);
                 }
-
             }
-
         }
-
-
 
         public void LoadNextWave()
         {
@@ -49,7 +45,6 @@ namespace TD.Core
             var enemy = _enemyFactory.CreateEnemy(_type);
             if (enemy != null) _remaining--;
             return enemy;
-            
         }
 
         public bool HasNoMoreInThisWave()
@@ -65,33 +60,31 @@ namespace TD.Core
         public int NextWaveHpCost()
         {
             if (_levelTemplates.Count == 0)
-            {
                 return 0;
-            }
+
             string current = _levelTemplates.ElementAt(0);
             var arr = current.Split(':');
             int type = int.Parse(arr[0]);
             int count = int.Parse(arr[1]);
-            return count*_enemyFactory.HpCost(type);
+            return count * _enemyFactory.HpCost(type);
         }
 
         public EnemyType NextWaveType()
         {
             if (_levelTemplates.Count == 0)
-            {
                 return EnemyType.Unknown;
-            }
+
             string current = _levelTemplates.ElementAt(0);
             var arr = current.Split(':');
             int id = int.Parse(arr[0]);
 
             string type = _enemyFactory.EnemyType(id);
-            
             switch (type)
             {
                 case "heavy": return EnemyType.Heavy;
                 case "swarm": return EnemyType.Swarm;
             }
+
             return EnemyType.Unknown;
         }
 
@@ -104,8 +97,8 @@ namespace TD.Core
             int id = int.Parse(arr[0]);
             int count = int.Parse(arr[1]);
             int hp = _enemyFactory.EnemyHp(id);
-            
-            return count*hp;
+
+            return count * hp;
         }
 
         public int NextWaveEnemiesNum()
@@ -114,22 +107,19 @@ namespace TD.Core
             string current = _levelTemplates.ElementAt(0);
 
             var arr = current.Split(':');
-            int id = int.Parse(arr[0]);
             int count = int.Parse(arr[1]);
             return count;
-
         }
 
-        public int NextWaveEnemiesID()
+        public int NextWaveEnemiesId()
         {
             if (_levelTemplates.Count == 0) return 0;
             string current = _levelTemplates.ElementAt(0);
 
             var arr = current.Split(':');
             int id = int.Parse(arr[0]);
-           
-            return id;
 
+            return id;
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using Manager.AIUtils;
-using TD.Enums;
-
+﻿using TD.Enums;
 
 namespace TD.Core
 {
@@ -19,16 +16,14 @@ namespace TD.Core
         public EnemyType NextWaveType { get; set; }
         public int NextWaveHpPool { get; set; }
         public int NextWaveNumberOfEnemies { get; set; }
-        public int NextWaveEnemiesID { get; set; }
-
+        public int NextWaveEnemiesId { get; set; }
         public double MaxTowers { get; set; }
         public double MaxNextWaveHpPool { get; set; }
         public double MaxType { get; set; }
 
         public GameStateImage CloneThis()
         {
-
-            return new GameStateImage()
+            return new GameStateImage
             {
                 Hp = Hp,
                 NextWaveHpCost = NextWaveHpCost,
@@ -39,9 +34,5 @@ namespace TD.Core
                 TowerCost = TowerCost
             };
         }
-
-
-
-
     }
 }

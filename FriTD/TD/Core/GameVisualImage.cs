@@ -11,11 +11,9 @@ namespace TD.Core
         public int TowerRefundCost { get; set; }
         public int TowerCost { get; set; }
         public GameState State { get; set; }
-
         public List<IDisplayableObject> Towers { get; set; }
         public List<IDisplayableObject> Projectiles { get; set; }
         public List<IDisplayableObject> Enemies { get; set; }
         public char[,] Map { get; set; }
-
     }
 }

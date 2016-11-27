@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.IO;
 using TD.Entities;
 
@@ -8,17 +6,14 @@ namespace TD.Core
 {
     public class EnemyFactory
     {
-
         private readonly List<EnemyBuilder> _builders;
         private int _nextSeqId;
-
 
         public EnemyFactory()
         {
             _builders = new List<EnemyBuilder>();
             _nextSeqId = 0;
         }
-
 
         public void InitBuilders(string enemiesFile, PathSquare wayPoing, PathSquare spawn)
         {
@@ -30,13 +25,11 @@ namespace TD.Core
                     //Debug.WriteLine(line);
                     _builders.Add(new EnemyBuilder(line, wayPoing, spawn));
                 }
-
             }
         }
 
         public Enemy CreateEnemy(int id)
         {
-
             var enemy = _builders[id].Build();
             if (enemy != null)
             {
@@ -45,7 +38,6 @@ namespace TD.Core
             }
             return enemy;
         }
-
 
         public int HpCost(int id)
         {

@@ -1,14 +1,12 @@
-﻿using System.Net.Mail;
-
-namespace TD.Entities
+﻿namespace TD.Entities
 {
     public class TowerPlace
     {
+        private readonly int[] _fieldsInRangePerTowerType;
+        private Tower _tower;
+
         public int X { get; set; }
         public int Y { get; set; }
-        private int[] _fieldsInRangePerTowerType;
-
-        private Tower _tower;
 
         public TowerPlace()
         {
@@ -24,7 +22,7 @@ namespace TD.Entities
         {
             tower.X = X;
             tower.Y = Y;
-            this._tower = tower;
+            _tower = tower;
         }
 
         public void DestroyTower()
@@ -36,7 +34,6 @@ namespace TD.Entities
         {
             return _tower;
         }
-
 
         public void TypePathFieldInRange(int id)
         {

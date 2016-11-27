@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using TD.Core;
 using TD.Enums;
 using TD.Helpers;
@@ -8,6 +7,8 @@ namespace TD.Entities
 {
     public class Enemy : IDisplayableObject
     {
+        private readonly LinkedList<Effect> _effects;
+
         public string Name { get; set; }
         public EnemyCategory Category { get; set; }
         public double Hp { get; set; }
@@ -20,9 +21,7 @@ namespace TD.Entities
         public int MagicResist { get; set; }
         public int SpawnCd { get; set; }
         public EnemyState State { get; set; }
-        private readonly LinkedList<Effect> _effects;
         public PathSquare SquareWayPoint { get; set; }
-
         public int X { get; set; }
         public int Y { get; set; }
         public int Id { get; set; }
@@ -31,7 +30,7 @@ namespace TD.Entities
         public double Perc
         {
             get { return Hp / MaxHp; }
-            set { Perc = value; }
+            set { }
         }
 
         public int WX
@@ -51,7 +50,6 @@ namespace TD.Entities
             _effects = new LinkedList<Effect>();
         }
 
-
         public void Move()
         {
             //Debug.WriteLine("Enemy hp: " + Hp + " id " + SeqId + " moved from " + Y + " " + X + " " + Speed);
@@ -66,13 +64,13 @@ namespace TD.Entities
                 Hp -= effect.Dmg(Armor, MagicResist);
                 effect.ReduceTtl();
                 if (effect.RemainingTurns <= 0) expiredEffects.AddLast(effect);
-
             }
+
             if (Hp <= 0)
             {
                 State = EnemyState.Dead;
-
             }
+
             foreach (var effect in expiredEffects)
             {
                 _effects.Remove(effect);
@@ -80,13 +78,11 @@ namespace TD.Entities
 
             if (State == EnemyState.Dead) return;
 
-
             if (SquareWayPoint == null)
             {
                 State = EnemyState.Victorious;
                 return;
             }
-
 
             int nextX, nextY;
 
@@ -105,6 +101,7 @@ namespace TD.Entities
             {
                 nextX = X;
             }
+
             if (SquareWayPoint.Y != Y)
             {
                 if (SquareWayPoint.Y < Y)
@@ -120,42 +117,33 @@ namespace TD.Entities
             {
                 nextY = Y;
             }
+
             //  Debug.WriteLine("Enemy hp: " + Hp + " type " + Id + " moved to " + Y + " " + X);
             //   Debug.WriteLine("Way point " + SquareWayPoint.X + " " + SquareWayPoint.Y);
+
             //MCH
             if (MathHelper.DistanceBetweenPoints(nextX, nextY, SquareWayPoint.X, SquareWayPoint.Y) < 2 * Speed)
             {
                 SquareWayPoint = SquareWayPoint.Next;
-
             }
 
             X = nextX;
             Y = nextY;
-
         }
 
         public bool IsDead()
         {
-
             return State == EnemyState.Dead;
         }
-
 
         public bool IsVictorious()
         {
             return State == EnemyState.Victorious;
         }
 
-
-
-
-
-
         public void ApplyEffect(Effect effect)
         {
             _effects.AddLast(effect);
         }
-
-
     }
 }

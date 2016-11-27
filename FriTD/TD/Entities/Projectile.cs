@@ -4,10 +4,13 @@ using TD.Helpers;
 
 namespace TD.Entities
 {
-    public class Projectile:IDisplayableObject
+    public class Projectile : IDisplayableObject
     {
+        private static int _nextSeqId; // is zero by default
 
-        private static int _nextSeqId = 0;
+        private readonly int _speed;
+        private readonly Enemy _target;
+        private Effect _effect;
 
         public int X { get; set; }
         public int Y { get; set; }
@@ -17,9 +20,6 @@ namespace TD.Entities
         public int WX { get; set; }
         public int WY { get; set; }
         public ProjectileState State { get; private set; }
-        private readonly int _speed;
-        private readonly Enemy _target;
-        private Effect _effect;
         public TDGame Game { get; set; }
 
         public Projectile(int speed, Enemy target, Effect effect)
@@ -56,6 +56,7 @@ namespace TD.Entities
             {
                 nextX = X;
             }
+
             if (_target.Y != Y)
             {
                 if (_target.Y < Y)
@@ -76,23 +77,21 @@ namespace TD.Entities
             if (MathHelper.DistanceBetweenPoints(X, Y, _target.X, _target.Y) < _speed)
             {
                 _target.ApplyEffect(_effect);
+
                 if (_effect.IsSplash())
                 {
                     GlobalEventHandler.AreaOfDmg(_target.X, _target.Y, _effect.PrimaryDmg, _effect.DmgType, _effect.SplashRadius, Game);
                 }
+
                 _effect = null;
                 State = ProjectileState.NonActive;
                 X = 0;
                 Y = 0;
                 return;
-
-            };
+            }
 
             X = nextX;
             Y = nextY;
-
         }
-
-      
     }
 }

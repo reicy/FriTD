@@ -1,4 +1,6 @@
-﻿namespace Manager.AIUtils
+﻿using TD.Core;
+
+namespace Manager.AIUtils
 {
     interface IAiAdapter
     {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using TD.Entities;
 using TD.Enums;
@@ -9,7 +8,6 @@ namespace TD.Core
 {
     public class TDGame
     {
-
         private Spawner _spawner;
         private MapBuilder _mapBuilder;
         private EnemyFactory _enemyFactory;
@@ -20,19 +18,9 @@ namespace TD.Core
         private List<Projectile> _projectiles;
         private PathSquare _spawn;
         private int _level;
-
-        public int Money
-        {
-            get { return _money; }
-            private set
-            {
-                _money = value;
-               
-            }
-        }
-
         private int _life;
-        private int _money;
+
+        public int Money { get; private set; }
 
         public void InitGame(string towers, string map, string enemies, string levels)
         {
@@ -42,17 +30,15 @@ namespace TD.Core
             _mapBuilder.Info(out _spawn, out _map, out _towerPlaces);
             _enemyFactory = new EnemyFactory();
             _enemyFactory.InitBuilders(enemies, _spawn.Next, _spawn);
-            _towerFactory = new TowerFactory() {Game = this};
+            _towerFactory = new TowerFactory() { Game = this };
             _towerFactory.InitBuilders(towers);
-            _towerFactory.EvalTowerPlaces(_towerPlaces,_map);
-            _spawner = new Spawner(levels,_enemyFactory);
+            _towerFactory.EvalTowerPlaces(_towerPlaces, _map);
+            _spawner = new Spawner(levels, _enemyFactory);
             _life = 10000;
             Money = 30;
             Enemies = new List<Enemy>();
             Projectiles = new List<Projectile>();
             State = GameState.Waiting;
-           
-
         }
 
         public void StartLevel()
@@ -63,12 +49,10 @@ namespace TD.Core
                 _spawner.LoadNextWave();
                 _level++;
             }
-            
         }
 
         public void Tic()
         {
-            Projectile proj;
             var emptyOnes = new List<Projectile>();
             var fallenOnes = new List<Enemy>();
             var victoriousOnes = new List<Enemy>();
@@ -79,62 +63,49 @@ namespace TD.Core
                 Enemies.Add(enemy);
             }
 
-
-
             foreach (var towerPlace in _towerPlaces)
             {
                 if (towerPlace.HasTower())
                 {
-                    proj = towerPlace.Tower().TryToFireAtFirstEnemyInSight(Enemies);
+                    var proj = towerPlace.Tower().TryToFireAtFirstEnemyInSight(Enemies);
                     if (proj != null) _projectiles.Add(proj);
                 }
-
             }
 
-
-            foreach (Projectile projectile in _projectiles)
+            foreach (var projectile in _projectiles)
             {
                 projectile.Move();
                 if (projectile.IsEmpty()) emptyOnes.Add(projectile);
             }
 
-
-            foreach (Enemy foe in _enemies)
+            foreach (var foe in _enemies)
             {
                 foe.Move();
                 if (foe.IsDead()) fallenOnes.Add(foe);
                 if (foe.IsVictorious()) victoriousOnes.Add(foe);
             }
 
-
-
-            foreach (Enemy foe in fallenOnes)
+            foreach (var foe in fallenOnes)
             {
                 Enemies.Remove(foe);
                 Money += foe.Gold;
             }
 
-
-            foreach (Projectile projectile in emptyOnes)
+            foreach (var projectile in emptyOnes)
             {
                 _projectiles.Remove(projectile);
             }
 
-            foreach (Enemy foe in victoriousOnes)
+            foreach (var foe in victoriousOnes)
             {
-                
                 int moneyDmgBonus = (int)Math.Round((1.0 - foe.Hp / foe.MaxHp) * foe.Gold);
-                int lifeReduction = (int)Math.Round((foe.Hp / foe.MaxHp) * foe.HpCost);
+                int lifeReduction = (int)Math.Round(foe.Hp / foe.MaxHp * foe.HpCost);
                 Money += moneyDmgBonus;
                 _life -= lifeReduction;
                 _enemies.Remove(foe);
             }
 
-
-
             CheckWhetherGameStateChanged();
-
-
         }
 
         private void CheckWhetherGameStateChanged()
@@ -144,9 +115,9 @@ namespace TD.Core
                 State = GameState.Lost;
                 return;
             }
+
             if (_spawner.HasNoMoreInThisWave() && Enemies.Count == 0)
             {
-
                 State = GameState.Waiting;
                 if (_spawner.HasNoMore())
                 {
@@ -154,9 +125,7 @@ namespace TD.Core
                 }
                 Projectiles.Clear();
             }
-
         }
-
 
         public void BuildTower(int placeId, int towerId)
         {
@@ -216,7 +185,8 @@ namespace TD.Core
         {
             var towers = new int[TowerPlaces.Count];
             var ranges = new int[TowerPlaces.Count, _towerFactory.TowerTypesCount()];
-            //-1 no tower placed, 0 - 2 tower ids
+
+            // -1 no tower placed, 0 - 2 tower ids
             for (int i = 0; i < TowerPlaces.Count; i++)
             {
                 towers[i] = -1;
@@ -230,7 +200,7 @@ namespace TD.Core
                 }
             }
 
-            var img = new GameStateImage()
+            return new GameStateImage
             {
                 Gold = Money,
                 Hp = _life,
@@ -244,16 +214,12 @@ namespace TD.Core
                 NextWaveHpPool = _spawner.NextWaveHpPool(),
                 NextWaveType = _spawner.NextWaveType(),
                 NextWaveNumberOfEnemies = _spawner.NextWaveEnemiesNum(),
-                NextWaveEnemiesID = _spawner.NextWaveEnemiesID(),
+                NextWaveEnemiesId = _spawner.NextWaveEnemiesId(),
                 //TODO do this by program
                 MaxTowers = 30,
                 MaxNextWaveHpPool = 200000,
                 MaxType = 4
-                
-
             };
-
-            return img;
         }
 
         public GameVisualImage GameVisualImage()
@@ -262,8 +228,7 @@ namespace TD.Core
             var shots = Projectiles.Cast<IDisplayableObject>().ToList();
             var towers = (from towerPlace in TowerPlaces where towerPlace.HasTower() select towerPlace.Tower()).Cast<IDisplayableObject>().ToList();
 
-
-            var img = new GameVisualImage()
+            return new GameVisualImage
             {
                 Gold = Money,
                 Hp = _life,
@@ -276,14 +241,6 @@ namespace TD.Core
                 Projectiles = shots,
                 State = State
             };
-
-
-
-            return img;
         }
-
-
     }
-
-    
 }
