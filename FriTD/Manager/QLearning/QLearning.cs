@@ -11,20 +11,22 @@ namespace Manager.QLearning
     //class QLearning<State> where State : IVector<State>/*, new()*/
     public class QLearning<TState> where TState : QState/*, new()*/
     {
-        readonly double _epsilon, _gamma, _alpha;
+        public double Epsilon { get; set; }
+        public double Gamma { get; set; }
+        public double Alpha { get; set; }
         //int iterationCounter = 0;
         //int iterationsToSave = 100;
         readonly Dictionary<TState, Dictionary<QAction, double>> _qValues;
         readonly Random _explorationGen = new Random();
 
-        /// <param name="epsilon">pravdebodobnost, ci vykonam spravnu akciu</param>
+        /// <param name="epsilon">pravdebodobnost, ci vykonam random akciu</param>
         /// <param name="gamma">discount factor</param>
         /// <param name="alpha">learning rate</param>
         public QLearning(double epsilon, double gamma, double alpha)
         {
-            _alpha = alpha;
-            _epsilon = epsilon;
-            _gamma = gamma;
+            Alpha = alpha;
+            Epsilon = epsilon;
+            Gamma = gamma;
             _qValues = new Dictionary<TState, Dictionary<QAction, double>>();
         }
 
@@ -46,17 +48,17 @@ namespace Manager.QLearning
                         maxNextActionValue = entry.Value;
                     }
                 }
-                double sample = reward + _gamma * maxNextActionValue;
+                double sample = reward + Gamma * maxNextActionValue;
                 //Console.WriteLine(@"r {0} {1} {2}", sample, reward, _gamma * maxNextStateValue);
                 double prevQValue = _qValues[prevState][action];
-                _qValues[prevState][action] = (1 - _alpha) * prevQValue + _alpha * sample;
+                _qValues[prevState][action] = (1 - Alpha) * prevQValue + Alpha * sample;
             }
             else
             {
-                double sample = reward + _gamma * 0;
+                double sample = reward + Gamma * 0;
                 //Console.WriteLine(@"r {0} {1} {2}", sample, reward, _gamma * maxNextStateValue);
                 double prevQValue = _qValues[prevState][action];
-                _qValues[prevState][action] = (1 - _alpha) * prevQValue + _alpha * sample;
+                _qValues[prevState][action] = (1 - Alpha) * prevQValue + Alpha * sample;
             }
         }
 
@@ -133,7 +135,7 @@ namespace Manager.QLearning
             double randomDouble = _explorationGen.NextDouble();
 
             if (!_qValues.TryGetValue(state, out actionsFromAState)) return GetNextRandomAction(state, possibleActions);
-            if (randomDouble <= _epsilon) return GetNextRandomAction(state, possibleActions);
+            if (randomDouble <= Epsilon) return GetNextRandomAction(state, possibleActions);
 
             QAction optAction = GetNextOptimalAction(state, possibleActions);
             if (optAction == null) return GetNextRandomAction(state, possibleActions);

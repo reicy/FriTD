@@ -41,8 +41,8 @@ namespace Manager.MTCore
 
         public MtSingleDaemon(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState> qLearning, BlockingCollection<KohonenUpdate> updatesQueue, string map, string levels1, int type, bool heuristicActive, bool cosinusDistActive, int mapNumber = 0) : this(kohonen, qLearning, updatesQueue, map)
         {
-            this._levels = levels1;
-            this._type = type;
+            _levels = levels1;
+            _type = type;
             _heuristicActive = heuristicActive;
             _cosinusDistActive = cosinusDistActive;
             _mapNumber = mapNumber;
@@ -54,15 +54,13 @@ namespace Manager.MTCore
             _aiAdapter = new MtAiAdapter(QLearning, Kohonen, new AdaptiveStateEncoder(), _heuristicActive, _cosinusDistActive);
             _aiAdapter.SetRewardMultiplier(1.0/10000);
             KohonenUpdate update;
-            int iteration = 0;
+            var iteration = 0;
             
             while (true)
             {
                 iteration++;
                 if (iteration==IterationStartLearning)
-                {
                     _aiAdapter.SetRewardMultiplier(1);
-                }
 
                 if (GameState.Won == RunIteration())
                 {
@@ -87,9 +85,7 @@ namespace Manager.MTCore
             PrepareGame();
 
             while (_game.State == GameState.Waiting)
-            {
                 StartAiDrivenTurn();
-            }
             return _game.State;
         }
 
@@ -109,9 +105,7 @@ namespace Manager.MTCore
             //process ai commands
             var arr = decisionResult.Split(' ');
             foreach (var cmd in arr)
-            {
                 if (cmd.Length > 0) ExecuteCmd(cmd);
-            }
 
             //start level
             _game.StartLevel();
@@ -124,9 +118,7 @@ namespace Manager.MTCore
         private void ExecuteLevel()
         {
             while (_game.State == GameState.InProgress)
-            {
                 _game.Tic();
-            }
         }
 
         public void ExecuteCmd(string cmd)

@@ -20,6 +20,8 @@ namespace Manager.MTCore
         // TODO: refactor
         public static int[] wPerMap = new int[10];
         public static int[] lPerMap = new int[10];
+        public static int[] wPerMapTotal = new int[10];
+        public static int[] lPerMapTotal = new int[10];
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void IncWL(int wl, int level, int mapNumber = 0)
@@ -31,12 +33,14 @@ namespace Manager.MTCore
                 Lost++;
                 TLost++;
                 lPerMap[mapNumber]++;
+                lPerMapTotal[mapNumber]++;
             }
             else
             {
                 Won++;
                 TWon++;
                 wPerMap[mapNumber]++;
+                wPerMapTotal[mapNumber]++;
             }
             if ((Lost + Won)%1000 == 0)
             {
@@ -46,7 +50,19 @@ namespace Manager.MTCore
                 string perMap = "\tW/L per map type: ";
                 for (int i = 0; i < wPerMap.Length; i++)
                 {
-                    perMap += i + ":(" + wPerMap[i] + ":" + lPerMap[i] + "); ";
+                    if (!(wPerMap[i] == 0 && lPerMap[i] == 0))
+                    {
+                        perMap += i + ":(" + wPerMap[i] + ":" + lPerMap[i] + "); ";
+                    }
+                }
+                Console.WriteLine(perMap);
+                perMap = "\tW/L per map type (total): ";
+                for (int i = 0; i < wPerMapTotal.Length; i++)
+                {
+                    if (!(wPerMapTotal[i] == 0 && lPerMapTotal[i] == 0))
+                    {
+                        perMap += i + ":(" + wPerMapTotal[i] + ":" + lPerMapTotal[i] + "); ";
+                    }
                 }
                 Console.WriteLine(perMap);
                 Reset();
@@ -71,6 +87,8 @@ namespace Manager.MTCore
             Lost = 0;
             TypeW = new[] {0, 0};
             TypeL = new[] { 0, 0 };
+            wPerMap = new int[10];
+            lPerMap = new int[10];
         }
 
         public static void ResetAll()
@@ -78,8 +96,8 @@ namespace Manager.MTCore
             Console.WriteLine("########################## RESETTING STATISTICS ##########################");
             Reset();
             Level = new int[20];
-            wPerMap = new int[10];
-            lPerMap = new int[10];
+            wPerMapTotal = new int[10];
+            lPerMapTotal = new int[10];
         }
 
         internal static void IncWL(int v, int level, int type, int mapNumber = 0)
