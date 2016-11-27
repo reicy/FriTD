@@ -3,24 +3,20 @@ using Manager.QLearning;
 
 namespace Manager.AI
 {
-    public class State:QState
+    public class State : QState
     {
-        public Int16 IntState { get; }
+        public short IntState { get; }
         public static State InitialState = new State(0);
 
-        public State(Int16 intState)
+        public State(short intState)
         {
-            this.IntState = intState;
+            IntState = intState;
         }
 
         public override string ToString()
         {
-            string result = "";
-            string converted = Convert.ToString(IntState, 2);
-            for (int i = 0; i < 15 - converted.Length; i++)
-            {
-                result += "0";
-            }
+            var converted = Convert.ToString(IntState, 2);
+            var result = new string('0', 15 - converted.Length);
             result += converted;
 
             return result;
@@ -36,16 +32,12 @@ namespace Manager.AI
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((State) obj);
+            return Equals((State)obj);
         }
 
         public override int GetHashCode()
         {
             return IntState.GetHashCode();
         }
-
     }
-
-
-    
 }

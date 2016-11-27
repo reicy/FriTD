@@ -1,6 +1,6 @@
 ﻿using Manager.Kohonen;
 
-namespace Manager.MTCore
+namespace Manager.MTCore.Core
 {
     public class KohonenUpdate
     {

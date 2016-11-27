@@ -1,32 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Manager.QLearning;
+﻿using Manager.QLearning;
 
 namespace Manager.AI
 {
-    class Action:QAction
+    class Action : QAction
     {
-
         public int IntState { get; }
         public static State InitialState = new State(0);
 
         public Action(int intState)
         {
-            this.IntState = intState;
+            IntState = intState;
         }
 
         public override string ToString()
         {
-            string result = "";
-         /*   string converted = Convert.ToString(IntState, 2);
-            for (int i = 0; i < 15 - converted.Length; i++)
-            {
-                result += "0";
-            }
+            /*string converted = Convert.ToString(IntState, 2);
+            var result = new string('0', 15 - converted.Length);
             result += converted;*/
-            result = "" + IntState;
+            var result = "" + IntState;
 
             return result;
         }
@@ -48,7 +39,5 @@ namespace Manager.AI
         {
             return IntState.GetHashCode();
         }
-
-      
     }
 }

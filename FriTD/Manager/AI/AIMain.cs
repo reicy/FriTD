@@ -1,7 +1,6 @@
-﻿
-namespace Manager.AI
+﻿namespace Manager.AI
 {
-    class AIMain
+    class AiMain
     {
     }
 }

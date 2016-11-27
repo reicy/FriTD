@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-namespace Manager.Core.Delayers
+﻿namespace Manager.Delayers
 {
     public interface IDelayer
     {

@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
-using System.Net.Configuration;
-using System.Runtime.InteropServices;
 using Manager.AI;
 using Manager.AIUtils;
-using Manager.Core.Delayers;
+using Manager.Delayers;
 using Manager.GameStates;
 using Manager.Kohonen;
 using Manager.QLearning;
 using TD.Core;
 using TD.Enums;
-
 
 namespace Manager.Core
 {
@@ -21,20 +16,18 @@ namespace Manager.Core
     {
         private TDGame _game;
         private IAiAdapter _aiAdapter;
-        private AICore _ai;
+        private AiCore _ai;
         private KohonenCore<StateVector> _kohonen;
         private int _iteration;
 
         private QLearning<KohonenAiState> _qLearning;
 
-
         private int _firstGameWonLevel;
         private int _won;
         private int _numOfStates;
 
-
-        //private DataStore _store;
-        public DataStore _store { get; set; }
+        private readonly DataStore _store;
+        //public DataStore _store { get; set; }
         private readonly IDelayer _delayer;
 
         public Manager()
@@ -48,34 +41,34 @@ namespace Manager.Core
         {
             for (int i = 0; i < 100; i++)
             {
-                Console.WriteLine("run num: " + i);
+                Console.WriteLine(@"run num: {0}", i);
                 _firstGameWonLevel = -1;
                 _won = 0;
 
-                this.InsertAi();
+                InsertAi();
                 AiLearningRun();
                 _numOfStates = _ai.StatCount();
-                Statistics.counter++;
-                Statistics.endgameStatesNum += _numOfStates;
+                Statistics.Counter++;
+                Statistics.EndgameStatesNum += _numOfStates;
                 if (_firstGameWonLevel > 0)
                 {
-                    Statistics.firstWonRound += _firstGameWonLevel;
-                    Statistics.gamesWithVictory++;
+                    Statistics.FirstWonRound += _firstGameWonLevel;
+                    Statistics.GamesWithVictory++;
                 }
 
-                Statistics.gamesWon += _won;
-                Statistics.gamesLost += 1000 - _won;
+                Statistics.GamesWon += _won;
+                Statistics.GamesLost += 1000 - _won;
             }
 
-            Console.WriteLine("count: {0} states: {1} first game won: {2} won: {3} lost: {4}", Statistics.counter,
-                Statistics.endgameStatesNum * 1.0 / Statistics.counter,
-                Statistics.firstWonRound * 1.0 / Statistics.gamesWithVictory, Statistics.gamesWon * 1.0 / Statistics.counter,
-                Statistics.gamesLost * 1.0 / Statistics.counter);
+            Console.WriteLine(@"count: {0} states: {1} first game won: {2} won: {3} lost: {4}", Statistics.Counter,
+                Statistics.EndgameStatesNum * 1.0 / Statistics.Counter,
+                Statistics.FirstWonRound * 1.0 / Statistics.GamesWithVictory, Statistics.GamesWon * 1.0 / Statistics.Counter,
+                Statistics.GamesLost * 1.0 / Statistics.Counter);
         }
 
         internal void InsertAi(StreamReader reader)
         {
-            _ai = new AICore(0.1, 1, 0.5, reader);
+            _ai = new AiCore(0.1, 1, 0.5, reader);
             _aiAdapter = new GameStateManager(_ai);
         }
 
@@ -103,19 +96,17 @@ namespace Manager.Core
             ExecuteLevel();
         }
 
-
         public void InsertAi()
         {
-            _ai = new AICore(0.1, 1, 0.5);
+            _ai = new AiCore(0.1, 1, 0.5);
             // _aiAdapter = new GameStateManager(_ai);
-            Console.WriteLine("AI inserted");
+            Console.WriteLine(@"AI inserted");
             _qLearning = new QLearning<KohonenAiState>(0.3, 1, 0.5);
             // _aiAdapter = new NewGameStateManager(_qLearning);
             _kohonen = new KohonenCore<StateVector>(30, 30, 2, 0.5, 1, 1, 0.5, false);
             //_aiAdapter = new KohonenGameStateManager(_qLearning,_kohonen);
             _aiAdapter = new KohonenGameStateManagerSemiInteligentActions(_qLearning, _kohonen);
         }
-
 
         // ----------- unity hack begin ------------
         public void UnityStartLevel()
@@ -167,7 +158,6 @@ namespace Manager.Core
 
         // ----------- unity hack end -------------
 
-
         private void ExecuteLevel()
         {
             while (_game.State == GameState.InProgress)
@@ -200,7 +190,7 @@ namespace Manager.Core
             if (_iteration > limit)
             {
                 Console.WriteLine(decisionResult);
-                Console.WriteLine("from");
+                Console.WriteLine(@"from");
                 GameStateImage img = _game.GameStateImage();
                 Console.WriteLine(img.Gold);
                 foreach (int tower in img.Towers)
@@ -221,7 +211,7 @@ namespace Manager.Core
             if (_iteration > limit)
             {
 
-                Console.WriteLine("to");
+                Console.WriteLine(@"to");
                 GameStateImage img = _game.GameStateImage();
                 foreach (int tower in img.Towers)
                 {
@@ -238,11 +228,11 @@ namespace Manager.Core
 
         public void AiLearningRun()
         {
-            int won = 0;
-            int lost = 0;
-            Console.WriteLine(DateTime.Now.ToString());
-            int innerInterval = 100;
-            int iterations = 40;
+            var won = 0;
+            var lost = 0;
+            Console.WriteLine(DateTime.Now);
+            const int innerInterval = 100;
+            const int iterations = 40;
             //_kohonen.Displ();
             var aiAdapter = (KohonenGameStateManagerSemiInteligentActions)_aiAdapter;
             aiAdapter.SetRewardMultiplier(1.0 / 10000);
@@ -252,7 +242,7 @@ namespace Manager.Core
                 //TODO remove
                 if (i == 150)
                 {
-                    aiAdapter.disableLearning();
+                    aiAdapter.DisableLearning();
                     aiAdapter.SetRewardMultiplier(1);
                 }
 
@@ -270,37 +260,36 @@ namespace Manager.Core
                     }
 
                     {
-                        /*  if (i > 2)
-                          {
-                              int counter = 0;
-                              GameStateImage img = _game.GameStateImage();
-                              foreach (int tower in img.Towers)
-                              {
-                                  if (tower > -1) counter++;
-                              }
+                        /*if (i > 2)
+                        {
+                            int counter = 0;
+                            GameStateImage img = _game.GameStateImage();
+                            foreach (int tower in img.Towers)
+                            {
+                                if (tower > -1) counter++;
+                            }
 
-                              if (counter > 2)
-                              {
-                                  Console.WriteLine(counter);
-                                  foreach (int tower in img.Towers)
-                                  {
-                                      Console.Write(tower+" ");
-                                  }
-                                  Console.WriteLine();
-                              }
-                              if (img.Level > 3) Console.WriteLine(img.Level);
-                          }*/
-
+                            if (counter > 2)
+                            {
+                                Console.WriteLine(counter);
+                                foreach (int tower in img.Towers)
+                                {
+                                    Console.Write(@"{0} ", tower);
+                                }
+                                Console.WriteLine();
+                            }
+                            if (img.Level > 3) Console.WriteLine(img.Level);
+                        }*/
                     }
                 }
-                // _ai.saveQ_valuesToFile(@"C:\Users\Tomas\Desktop\copy\"+i);
+                //_ai.saveQ_valuesToFile(@"C:\Users\Tomas\Desktop\copy\" + i);
                 _won += won;
-                Console.WriteLine("Iteration: {0} won: {1} lost: {2}", i, won, lost);
+                Console.WriteLine(@"Iteration: {0} won: {1} lost: {2}", i, won, lost);
                 won = 0;
                 lost = 0;
             }
-            Console.WriteLine(DateTime.Now.ToString());
-            Console.WriteLine("--------------------------------------------------------------");
+            Console.WriteLine(DateTime.Now);
+            Console.WriteLine(@"--------------------------------------------------------------");
             // _kohonen.Displ();
 
             // _ai.QValDisp();
@@ -328,7 +317,7 @@ namespace Manager.Core
 
             foreach (var mapLevel in mapLevelPairs)
             {
-                Console.WriteLine("Running with map '{0}' (start time: {1})", mapLevel.Key, DateTime.Now);
+                Console.WriteLine(@"Running with map '{0}' (start time: {1})", mapLevel.Key, DateTime.Now);
                 for (var i = 1; i <= iterations; ++i)
                 {
                     _iteration = i;
@@ -336,7 +325,7 @@ namespace Manager.Core
                     var gamesLost = 0;
 
                     // TODO edit learning rate
-                    
+
                     for (var j = 0; j < innerInterval; ++j)
                     {
                         if (GameState.Won == SingleAiLongRunIteration(mapLevel.Key, mapLevel.Value))
@@ -352,9 +341,9 @@ namespace Manager.Core
                     }
 
                     _won += gamesWon;
-                    Console.WriteLine("  Iteration {0}: won {1}, lost {2}", i, gamesWon, gamesLost);
+                    Console.WriteLine(@"  Iteration {0}: won {1}, lost {2}", i, gamesWon, gamesLost);
                 }
-                Console.WriteLine("Running with map '{0}' (finish time: {1})", mapLevel.Key, DateTime.Now);
+                Console.WriteLine(@"Running with map '{0}' (finish time: {1})", mapLevel.Key, DateTime.Now);
             }
 
             _qLearning.Save("qlearning.dat");

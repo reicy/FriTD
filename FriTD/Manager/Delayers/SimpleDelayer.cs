@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 
-namespace Manager.Core.Delayers
+namespace Manager.Delayers
 {
-    public class SimpleDelayer:IDelayer
+    public class SimpleDelayer : IDelayer
     {
         public void Delay()
         {

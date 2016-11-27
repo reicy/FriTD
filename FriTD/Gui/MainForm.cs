@@ -7,6 +7,7 @@ using System.Windows.Forms.VisualStyles;
 using Manager.Core;
 using Manager.Kohonen;
 using Manager.MTCore;
+using Manager.MTCore.Core;
 
 namespace Gui
 {

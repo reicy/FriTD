@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Runtime.Remoting.Messaging;
 
 namespace Manager.Core
 {
@@ -7,7 +6,6 @@ namespace Manager.Core
     {
         public static Manager BuildPlayerManager()
         {
-
             return null;
         }
 

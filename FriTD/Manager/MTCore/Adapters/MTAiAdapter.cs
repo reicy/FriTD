@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using Manager.AIUtils;
+﻿using System.Collections.Generic;
 using Manager.Core;
-using Manager.GameStates;
 using Manager.Kohonen;
+using Manager.MTCore.Core;
 using Manager.MTCore.KohonenUtils;
 using Manager.QLearning;
 using TD.Core;
 using TD.Enums;
 using Action = Manager.AI.Action;
 
-namespace Manager.MTCore
+namespace Manager.MTCore.Adapters
 {
     public class MtAiAdapter
     {
@@ -20,32 +18,30 @@ namespace Manager.MTCore
         private readonly QLearning<KohonenAiState> _qLearning;
         private QAction _chosenAction;
         private double _rewardMultiplier;
-        private bool learningEnabled;
-        private GameStateImage previousImage;
-        private KohonenAiState previousState;
-        public KohonenUpdate KohonenUpdate { get; set; }
-        private bool _heuristicActive;
-        private bool _cosinusDistActive;
-        
+        private bool _learningEnabled;
+        private GameStateImage _previousImage;
+        private KohonenAiState _previousState;
+        private readonly bool _heuristicActive;
+        private readonly bool _cosinusDistActive;
 
-        public MtAiAdapter(QLearning<KohonenAiState> q_learning,
+        public KohonenUpdate KohonenUpdate { get; set; }
+
+        public MtAiAdapter(QLearning<KohonenAiState> qLearning,
             KohonenCore<StateVector> kohonen, IStateEncoder stateEncoder, bool heuristicActive, bool cosinusDistActive)
         {
-            _qLearning = q_learning;
-            previousState = null;
+            _qLearning = qLearning;
+            _previousState = null;
             _kohonen = kohonen;
             _stateEncoder = stateEncoder;
-            learningEnabled = true;
+            _learningEnabled = true;
             _rewardMultiplier = 1;
             _intelligentActionInterpreter = new IntelligentActionInterpreter();
             _heuristicActive = heuristicActive;
             _cosinusDistActive = cosinusDistActive;
         }
 
-
         public string ExecuteDecision(GameStateImage img)
         {
-           
             int[] dim;
             var state = _stateEncoder.TranslateGameImage(img);
 
@@ -59,7 +55,6 @@ namespace Manager.MTCore
                 {
                     dim = _kohonen.WinnerHeuristic(state, _kohonen.DistEuclidean);
                 }
-                
             }
             else
             {
@@ -72,23 +67,21 @@ namespace Manager.MTCore
                     dim = _kohonen.Winner(state, _kohonen.DistEuclidean, true);
                 }
             }
-           
-            previousState = new KohonenAiState(dim);
 
-            KohonenUpdate = new KohonenUpdate()
+            _previousState = new KohonenAiState(dim);
+
+            KohonenUpdate = new KohonenUpdate
             {
-                Col = dim[0], Row = dim[1], Vector = state
+                Col = dim[0],
+                Row = dim[1],
+                Vector = state
             };
 
-
-            previousImage = img;
-            //   Console.WriteLine("som v stave"+EncodeState(img).toString()+" goldy: "+img.Gold);
-
+            _previousImage = img;
+            //Console.WriteLine(@"som v stave {0} goldy: {1}", EncodeState(img), img.Gold);
 
             var actions = new List<QAction>();
             var predpona = "2";
-            var sellPart = "";
-            var buyPart = "";
 
             //no action
             actions.Add(new Action(1000000));
@@ -101,17 +94,17 @@ namespace Manager.MTCore
             for (var i = 0; i < img.Ranges.GetLength(0); i++)
             {
                 //check this, should skip not empty tower places
-                if (img.Towers[i]!=-1)continue;
-                
+                if (img.Towers[i] != -1) continue;
+
                 for (var j = 0; j < img.Ranges.GetLength(1); j++)
                 {
-                    if (img.Ranges[i, j] < IntelligentActionInterpreter.SmallRangePathCoverage)
+                    if (img.Ranges[i, j] < IntelligentActionInterpreter.SMALL_RANGE_PATH_COVERAGE)
                     {
                         availableCombinations[j, 0]++;
                     }
                     else
                     {
-                        if (img.Ranges[i, j] < IntelligentActionInterpreter.MediumRangeCoverage)
+                        if (img.Ranges[i, j] < IntelligentActionInterpreter.MEDIUM_RANGE_COVERAGE)
                         {
                             availableCombinations[j, 1]++;
                         }
@@ -124,10 +117,10 @@ namespace Manager.MTCore
             }
 
             //nothing sold
-            sellPart = "000";
-            var maxTowersToBuild = img.Gold/img.TowerCost;
-            //  Console.WriteLine(img.Gold +" "+ img.TowerCost+" "+maxTowersToBuild);
-            for (var i = 0; i < 3; i++) 
+            var sellPart = "000";
+            var maxTowersToBuild = img.Gold / img.TowerCost;
+            //Console.WriteLine(@"{0} {1} {2}", img.Gold, img.TowerCost, maxTowersToBuild);
+            for (var i = 0; i < 3; i++)
             {
                 for (var j = 0; j < 3; j++)
                 {
@@ -141,21 +134,18 @@ namespace Manager.MTCore
 
             //TODO predaj
 
-            /*       foreach(AI.Action action in actions)
-                   {
-                       Console.WriteLine(action.IntState);
-                   }*/
+            /*foreach (var action in actions)
+            {
+                Console.WriteLine(action.IntState);
+            }*/
 
-            var result = _qLearning.getNextAction(previousState, actions);
-            return TransformActionToCommand((Action) result);
+            var result = _qLearning.GetNextAction(_previousState, actions);
+            return TransformActionToCommand((Action)result);
         }
-
-        
 
         public void ExecuteReward(GameStateImage image)
         {
-            
-            var prev = previousState;
+            var prev = _previousState;
             var curr = EncodeState(image);
             var action = _chosenAction;
 
@@ -169,17 +159,14 @@ namespace Manager.MTCore
                 _qLearning.updateQ_values(prev, action, curr, -1000);
                 return;
             }
-            
 
-            double expectedHpCost = previousImage.NextWaveHpCost;
-            double actualHpCost = previousImage.Hp - image.Hp;
-            var reward = (actualHpCost/expectedHpCost)*2 - 1;
-           
-            reward = reward*_rewardMultiplier;
+            double expectedHpCost = _previousImage.NextWaveHpCost;
+            double actualHpCost = _previousImage.Hp - image.Hp;
+            var reward = (actualHpCost / expectedHpCost) * 2 - 1;
+
+            reward = reward * _rewardMultiplier;
             _qLearning.updateQ_values(prev, action, curr, reward);
         }
-
-
 
         //x type
         //y num
@@ -189,22 +176,20 @@ namespace Manager.MTCore
         {
             //TODO ak sa predava
 
-
             if (buyNum == 0)
             {
                 if (maxTowersToBuild == 0) return false;
                 return /*availableCombinations[buyType, buyCoverage] >= 0 && */
-                    availableCombinations[buyType, buyCoverage] >= IntelligentActionInterpreter.FewTowers;
+                    availableCombinations[buyType, buyCoverage] >= IntelligentActionInterpreter.FEW_TOWERS;
             }
             if (buyNum == 1)
             {
-                if (IntelligentActionInterpreter.FewTowers >= maxTowersToBuild) return false;
-                return availableCombinations[buyType, buyCoverage] >= IntelligentActionInterpreter.MoreTowers;
+                if (IntelligentActionInterpreter.FEW_TOWERS >= maxTowersToBuild) return false;
+                return availableCombinations[buyType, buyCoverage] >= IntelligentActionInterpreter.MORE_TOWERS;
             }
-            if (IntelligentActionInterpreter.MoreTowers >= maxTowersToBuild) return false;
-            return availableCombinations[buyType, buyCoverage] >= IntelligentActionInterpreter.MaxTowers;
+            if (IntelligentActionInterpreter.MORE_TOWERS >= maxTowersToBuild) return false;
+            return availableCombinations[buyType, buyCoverage] >= IntelligentActionInterpreter.MAX_TOWERS;
         }
-
 
         private KohonenAiState EncodeState(GameStateImage img)
         {
@@ -221,7 +206,6 @@ namespace Manager.MTCore
                 {
                     dim = _kohonen.WinnerHeuristic(state, _kohonen.DistEuclidean);
                 }
-
             }
             else
             {
@@ -237,11 +221,11 @@ namespace Manager.MTCore
             //dim = _kohonen.Winner(state);
             return new KohonenAiState(dim);
         }
-        
+
         private string TransformActionToCommand(Action action)
         {
             _chosenAction = action;
-            return _intelligentActionInterpreter.InterpretAction(previousImage, "" + (action.IntState));
+            return _intelligentActionInterpreter.InterpretAction(_previousImage, "" + action.IntState);
         }
 
         public void SetRewardMultiplier(double d)

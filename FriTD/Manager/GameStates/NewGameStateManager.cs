@@ -2,168 +2,156 @@
 using System.Collections.Generic;
 using Manager.QLearning;
 using TD.Core;
-using System.Linq;
-using System.Text;
 using Manager.AI;
 using Manager.AIUtils;
 using TD.Enums;
 
 namespace Manager.GameStates
 {
-    class NewGameStateManager:IAiAdapter
+    class NewGameStateManager : IAiAdapter
     {
-        private QLearning<State> q_learning;
-        private GameStateImage previousImage;
+        private readonly QLearning<State> _qLearning;
+        private GameStateImage _previousImage;
 
-        public NewGameStateManager(QLearning<State> q_learning)
+        public NewGameStateManager(QLearning<State> qLearning)
         {
-            this.q_learning = q_learning ;
-            this.previousImage = null;
+            _qLearning = qLearning;
+            _previousImage = null;
         }
 
-        /*   public string ExecuteDecision(GameStateImage image)
-           {
-               previousImage = image;
+        /*public string ExecuteDecision(GameStateImage image)
+        {
+            _previousImage = image;
 
-               List<State> states = new List<State>();
+            var states = new List<State>();
 
-               State state = EncodeState(image);
+            var state = EncodeState(image);
 
-               if (image.GameState != TD.Enums.GameState.Lost && image.GameState != TD.Enums.GameState.Won)
-               {
-                   // stavy - mozne operacie - postavenie max. 2 vezi, zburanie max. 1 veze
-                   states.Add(state);
+            if (image.GameState != GameState.Lost && image.GameState != GameState.Won)
+            {
+                // stavy - mozne operacie - postavenie max. 2 vezi, zburanie max. 1 veze
+                states.Add(state);
 
-                   int numTowers = image.Towers.Length;
+                int numTowers = image.Towers.Length;
 
-                   List<int> nepostavene = new List<int>();
-                   List<int> postavene = new List<int>();
-                   for (int i = 0; i < numTowers; ++i)
-                   {
-                       if (image.Towers[i] == -1)
-                           nepostavene.Add(i);
-                       else
-                           postavene.Add(i);
-                   }
+                var nepostavene = new List<int>();
+                var postavene = new List<int>();
+                for (int i = 0; i < numTowers; ++i)
+                {
+                    if (image.Towers[i] == -1)
+                        nepostavene.Add(i);
+                    else
+                        postavene.Add(i);
+                }
 
-                   // iba buranie
-                   GameStateImage tmpImage = image.CloneThis();
-                   tmpImage.Gold += tmpImage.TowerRefundCost;
-                   int pom;
-                   for (int z = 0; z < postavene.Count; ++z)
-                   {
-                       pom = tmpImage.Towers[postavene[z]];
-                       tmpImage.Towers[postavene[z]] = -1;
-                       states.Add(EncodeState(tmpImage));
-                       tmpImage.Towers[postavene[z]] = pom;
-                   }
+                // iba buranie
+                GameStateImage tmpImage = image.CloneThis();
+                tmpImage.Gold += tmpImage.TowerRefundCost;
+                for (int z = 0; z < postavene.Count; ++z)
+                {
+                    var pom = tmpImage.Towers[postavene[z]];
+                    tmpImage.Towers[postavene[z]] = -1;
+                    states.Add(EncodeState(tmpImage));
+                    tmpImage.Towers[postavene[z]] = pom;
+                }
 
-                   if (nepostavene.Count > 0) // ak je aspon jedna nepostavena, mozeme aj stavat, inak len burat
-                   {
-                       if (postavene.Count == 0) // ak nie je ziadna postavena, mozeme len stavat
-                       {
-                           for (int p1 = 0; p1 < nepostavene.Count; ++p1)
-                           {
-                               for (int p2 = p1; p2 < nepostavene.Count; ++p2)
-                               {
-                                   states.AddRange(StatesHelper(nepostavene, postavene, -1, p1, p2));
-                               }
-                           }
-                       }
-                       else // mozeme stavat aj burat
-                       {
-                           for (int z = 0; z < postavene.Count; ++z) // zburat
-                           {
-                               for (int p1 = 0; p1 < nepostavene.Count; ++p1)
-                               {
-                                   for (int p2 = p1; p2 < nepostavene.Count; ++p2)
-                                   {
-                                       states.AddRange(StatesHelper(nepostavene, postavene, z, p1, p2));
-                                   }
-                               }
-                           }
-                       }
-                   }
-               }
+                if (nepostavene.Count > 0) // ak je aspon jedna nepostavena, mozeme aj stavat, inak len burat
+                {
+                    if (postavene.Count == 0) // ak nie je ziadna postavena, mozeme len stavat
+                    {
+                        for (int p1 = 0; p1 < nepostavene.Count; ++p1)
+                        {
+                            for (int p2 = p1; p2 < nepostavene.Count; ++p2)
+                            {
+                                states.AddRange(StatesHelper(nepostavene, postavene, -1, p1, p2));
+                            }
+                        }
+                    }
+                    else // mozeme stavat aj burat
+                    {
+                        for (int z = 0; z < postavene.Count; ++z) // zburat
+                        {
+                            for (int p1 = 0; p1 < nepostavene.Count; ++p1)
+                            {
+                                for (int p2 = p1; p2 < nepostavene.Count; ++p2)
+                                {
+                                    states.AddRange(StatesHelper(nepostavene, postavene, z, p1, p2));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
-               State s = core.getNextState(state, states);
+            State s = core.getNextState(state, states);
 
-               return TransformStateToCommand(s);
-           }
+            return TransformStateToCommand(s);
+        }
 
-           // p - postavene veze, n - nepostavene veze
-           private List<State> StatesHelper(List<int> n, List<int> p, int z, int p1, int p2)
-           {
-               List<State> states = new List<State>();
+        // p - postavene veze, n - nepostavene veze
+        private List<State> StatesHelper(List<int> n, List<int> p, int z, int p1, int p2)
+        {
+            var states = new List<State>();
 
-               GameStateImage tmpImage;
+            int steps = z == -1 ? 1 : 2;
 
-               int canAffordTowers;
+            for (int k = 0; k < steps; ++k)
+            {
+                GameStateImage tmpImage = _previousImage.CloneThis();
 
-               int steps = z == -1 ? 1 : 2;
+                // zburanie
+                if (k == 1)
+                {
+                    tmpImage.Towers[p[z]] = -1;
+                    tmpImage.Gold += tmpImage.TowerRefundCost;
+                }
 
-               for (int k = 0; k < steps; ++k)
-               {
+                var canAffordTowers = tmpImage.Gold / tmpImage.TowerCost;
 
-                   tmpImage = previousImage.CloneThis();
+                // postavenie prvej
+                if (canAffordTowers > 0)
+                {
+                    tmpImage.Gold -= tmpImage.TowerCost;
+                    for (int i = 0; i < 3; ++i)
+                    {
+                        tmpImage.Towers[n[p1]] = i;
+                        states.Add(EncodeState(tmpImage));
+                    }
 
-                   // zburanie
-                   if (k == 1)
-                   {
-                       tmpImage.Towers[p[z]] = -1;
-                       tmpImage.Gold += tmpImage.TowerRefundCost;
-                   }
+                    // postavenie druhej
+                    if (p1 != p2 && canAffordTowers > 1)
+                    {
+                        tmpImage.Gold -= tmpImage.TowerCost;
+                        for (int i = 0; i < 3; ++i)
+                        {
+                            tmpImage.Towers[n[p1]] = i;
 
-                   canAffordTowers = tmpImage.Gold / tmpImage.TowerCost;
+                            for (int j = 0; j < 3; ++j)
+                            {
+                                tmpImage.Towers[n[p2]] = j;
+                                states.Add(EncodeState(tmpImage));
+                            }
+                        }
+                    }
+                }
+            }
 
-                   // postavenie prvej
-                   if (canAffordTowers > 0)
-                   {
-                       tmpImage.Gold -= tmpImage.TowerCost;
-                       for (int i = 0; i < 3; ++i)
-                       {
-                           tmpImage.Towers[n[p1]] = i;
-                           states.Add(EncodeState(tmpImage));
-                       }
+            return states;
+        }*/
 
-                       // postavenie druhej
-                       if (p1 != p2 && canAffordTowers > 1)
-                       {
-                           tmpImage.Gold -= tmpImage.TowerCost;
-                           for (int i = 0; i < 3; ++i)
-                           {
-                               tmpImage.Towers[n[p1]] = i;
+        /*public string ExecuteDecision1(GameStateImage img)
+        {
+            _previousImage = img;
 
-                               for (int j = 0; j < 3; ++j)
-                               {
-                                   tmpImage.Towers[n[p2]] = j;
-                                   states.Add(EncodeState(tmpImage));
-                               }
-                           }
-                       }
-                   }
+            // otrimovany stav do q learningu a zaroven kohonena
+            var gameState = EncodeState(img);
+            double golds = img.Gold;
 
-               }
-
-               return states;
-           }
-           */
-
-        /*  public string ExecuteDecision1(GameStateImage img)
-          {
-              previousImage = img;
-
-              // otrimovany stav do q learningu a zaroven kohonena
-              TDGameState gameState = EncodeState(img);
-              double golds = img.Gold;
-
-              //q learning vyberie najlepsiu akciu
-              var nextAction = q_learning.getNextAction(gameState, TDActionFactory.getPossibleActions(golds).Cast<QAction>().ToList());
-
-
-              return TransformStateToCommand(result);
-          }*/
-
+            //q learning vyberie najlepsiu akciu
+            var nextAction = _qLearning.getNextAction(gameState, TDActionFactory.getPossibleActions(golds).Cast<QAction>().ToList());
+            
+            return TransformStateToCommand(result);
+        }*/
 
         private AI.Action EncodeAction(GameStateImage img)
         {
@@ -171,39 +159,35 @@ namespace Manager.GameStates
             foreach (var tower in img.Towers)
             {
                 str += EncodeNumberTo2LengthStr(tower + 1);
-
             }
             str += "000";
 
             return new AI.Action(Convert.ToInt16(str, 2));
         }
 
-
         public void ExecuteReward1(GameStateImage image)
         {
-            var prev = EncodeState(previousImage);
+            var prev = EncodeState(_previousImage);
             var currS = EncodeState(image);
             var action = EncodeAction(image);
 
             if (image.GameState == GameState.Won)
             {
-
-                q_learning.updateQ_values(prev, action, currS, 1000);
+                _qLearning.updateQ_values(prev, action, currS, 1000);
                 return;
             }
             if (image.GameState == GameState.Lost)
             {
-                q_learning.updateQ_values(prev, action, currS, -500);
+                _qLearning.updateQ_values(prev, action, currS, -500);
                 return;
             }
 
-
-            double expectedHpCost = previousImage.NextWaveHpCost;
-            double actualHpCost = previousImage.Hp - image.Hp;
+            double expectedHpCost = _previousImage.NextWaveHpCost;
+            double actualHpCost = _previousImage.Hp - image.Hp;
             double reward = (actualHpCost / expectedHpCost) * 2 - 1;
-           // Console.WriteLine(reward);
+            //Console.WriteLine(reward);
 
-            q_learning.updateQ_values(prev, action, currS, reward);
+            _qLearning.updateQ_values(prev, action, currS, reward);
         }
 
         private State EncodeState(GameStateImage img)
@@ -212,21 +196,17 @@ namespace Manager.GameStates
             foreach (var tower in img.Towers)
             {
                 str += EncodeNumberTo2LengthStr(tower + 1);
-
             }
+
             str += EncodeNumberTo2LengthStr(img.Gold / img.TowerCost);
             if (img.Hp <= img.NextWaveHpCost)
-            {
                 str += "1";
-            }
             else
-            {
                 str += "0";
-            }
+
             // Debug.WriteLine(str);
             return new State(Convert.ToInt16(str, 2));
         }
-
 
         /*private State EncodeAction(GameStateImage img)
         {
@@ -234,14 +214,11 @@ namespace Manager.GameStates
             foreach (var tower in img.Towers)
             {
                 str += EncodeNumberTo2LengthStr(tower + 1);
-
             }
             str += "000";
 
             return new State(Convert.ToInt16(str, 2));
         }*/
-
-
 
         private string EncodeNumberTo2LengthStr(int num)
         {
@@ -256,24 +233,19 @@ namespace Manager.GameStates
         {
             var response = "";
             var str = state.ToString();
-            var prevStr = EncodeState(previousImage).ToString();
-            var towerPlace = "";
-            string lastTowerPlace = "";
-            //  Console.WriteLine("from "+EncodeState(previousImage).toString());
-            //   Console.WriteLine("transform: "+str);
+            var prevStr = EncodeState(_previousImage).ToString();
+            string towerPlace;
+            //Console.WriteLine(@"from {0}", EncodeState(_previousImage));
+            //Console.WriteLine(@"transform: {0}", str);
 
             for (int i = 0; i < 6; i++)
             {
                 towerPlace = str.Substring(i * 2, 2);
-                lastTowerPlace = prevStr.Substring(i * 2, 2);
+                var lastTowerPlace = prevStr.Substring(i * 2, 2);
                 if (towerPlace != lastTowerPlace)
                 {
                     response += "s_" + i;
                 }
-
-
-
-
                 response += " ";
             }
 
@@ -291,12 +263,8 @@ namespace Manager.GameStates
                     response += "b_" + i + "_" + typId;
                     //response = "b_" + i + "_" + typId;
                 }
-
-
-
                 response += " ";
             }
-
 
             //Console.WriteLine(response);
 
@@ -313,21 +281,17 @@ namespace Manager.GameStates
             ExecuteReward1((GameStateImage)gameStateImage);
         }
 
-
         public string ExecuteDecision1(GameStateImage img)
         {
-            previousImage = img;
-            //   Console.WriteLine("som v stave"+EncodeState(img).toString()+" goldy: "+img.Gold);
-            List<AI.Action> relevantStates = new List<AI.Action>();
-
+            _previousImage = img;
+            //Console.WriteLine(@"som v stave {0} goldy: {1}", EncodeState(img), img.Gold);
+            var relevantStates = new List<AI.Action>();
 
             var tempImg = img.CloneThis();
-            var seccImg = img.CloneThis();
-            var preImg = img.CloneThis();
+            GameStateImage seccImg;
 
             //no action
             relevantStates.Add(EncodeAction(tempImg));
-
 
             // no tower sold
 
@@ -337,7 +301,6 @@ namespace Manager.GameStates
                 tempImg = img.CloneThis();
                 if (tempImg.Towers[i] == -1 && tempImg.TowerCost <= tempImg.Gold)
                 {
-
                     for (int j = 0; j < 3; j++)
                     {
                         tempImg = img.CloneThis();
@@ -356,19 +319,11 @@ namespace Manager.GameStates
                                     seccImg.Gold -= seccImg.TowerCost;
                                     relevantStates.Add(EncodeAction(seccImg));
                                 }
-
-
                             }
                         }
                     }
-
                 }
-
-
-
             }
-
-
 
             // 1 tower sold
 
@@ -376,7 +331,7 @@ namespace Manager.GameStates
             {
                 if (img.Towers[t] >= 0)
                 {
-                    preImg = img.CloneThis();
+                    var preImg = img.CloneThis();
                     preImg.Towers[t] = -1;
                     preImg.Gold += preImg.TowerRefundCost;
                     if (preImg.Gold > preImg.TowerCost * 3) preImg.Gold = preImg.TowerCost * 3;
@@ -386,7 +341,6 @@ namespace Manager.GameStates
                         tempImg = preImg.CloneThis();
                         if (tempImg.Towers[i] == -1 && tempImg.TowerCost <= tempImg.Gold)
                         {
-
                             for (int j = 0; j < 3; j++)
                             {
                                 tempImg = preImg.CloneThis();
@@ -405,44 +359,33 @@ namespace Manager.GameStates
                                             seccImg.Gold -= seccImg.TowerCost;
                                             relevantStates.Add(EncodeAction(seccImg));
                                         }
-
-
                                     }
                                 }
                             }
-
                         }
-
-
-
                     }
-
                 }
-
-
             }
 
-            foreach (var state in relevantStates)
+            /*foreach (var state in relevantStates)
             {
-                // if(state.toString().Length >0 ) Console.WriteLine(state.toString());
-                //Console.WriteLine(state.toString());
-            }
-
+                if (state.ToString().Length > 0) Console.WriteLine(state);
+                Console.WriteLine(state);
+            }*/
 
             if (relevantStates.Count > 1)
             {
                 relevantStates.RemoveAt(0);
             }
-            List<QAction>actions = new List<QAction>();
+
+            var actions = new List<QAction>();
             foreach (var item in relevantStates)
             {
                 actions.Add(item);
             }
-            var result = q_learning.getNextAction(EncodeState(img), actions);
+
+            var result = _qLearning.GetNextAction(EncodeState(img), actions);
             return TransformStateToCommand((AI.Action)result);
         }
-
     }
-
 }
-

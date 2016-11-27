@@ -1,52 +1,50 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 
 namespace Manager.AI
 {
-    class AICore
+    class AiCore
     {
-        double epsilon, gamma, alpha;
-        int iterationCounter = 0;
-        int iterationsToSave = 100;
-        Dictionary<State, Dictionary<State, double>> q_values; 
+        readonly double _epsilon, _gamma, _alpha;
+        int _iterationCounter;
+        int _iterationsToSave = 100;
+        readonly Dictionary<State, Dictionary<State, double>> _qValues;
 
-        public AICore(double e,double  g,double a)
+        public AiCore(double epsilon, double gamma, double alpha)
         {
-            alpha = a;
-            epsilon = e;
-            gamma = g;
-            q_values = new Dictionary<State, Dictionary<State, double>>();
+            _alpha = alpha;
+            _epsilon = epsilon;
+            _gamma = gamma;
+            _qValues = new Dictionary<State, Dictionary<State, double>>();
+            _iterationCounter = 0;
         }
 
-        public AICore(double e, double g, double a,StreamReader sr)
-
+        public AiCore(double epsilon, double gamma, double alpha, StreamReader sr)
         {
-            alpha = a;
-            epsilon = e;
-            gamma = g;
-            q_values = new Dictionary<State, Dictionary<State, double>>();
+            _alpha = alpha;
+            _epsilon = epsilon;
+            _gamma = gamma;
+            _qValues = new Dictionary<State, Dictionary<State, double>>();
+            _iterationCounter = 0;
 
-        //    readQ_valuesFromFile(sr);
+            //readQ_valuesFromFile(sr);
 
-            //TODO    
-
+            //TODO
         }
-
 
         public void QValDisp()
         {
             //Console.WriteLine("hej");
-            Console.WriteLine(q_values.Keys.Count);
-            foreach (var key in q_values.Keys)
+            Console.WriteLine(_qValues.Keys.Count);
+            foreach (var key in _qValues.Keys)
             {
-                Console.Write(key.ToString()+" - ");
-                foreach (var innerKey in q_values[key].Keys)
+                Console.Write(@"{0} - ", key);
+                foreach (var innerKey in _qValues[key].Keys)
                 {
-                    //Console.WriteLine(q_values[key].Keys.Count);
-                   // Console.Write(" {0} v:{1}",innerKey.toString(),(q_values[key])[innerKey]);
-                    Console.Write(innerKey.ToString()+"    "+q_values[key][innerKey]);
+                    //Console.WriteLine(_qValues[key].Keys.Count);
+                    //Console.Write(" {0} v:{1}", innerKey, _qValues[key][innerKey]);
+                    Console.Write(@"{0}    {1}", innerKey, _qValues[key][innerKey]);
                 }
                 Console.WriteLine();
             }
@@ -55,118 +53,103 @@ namespace Manager.AI
         }
 
         //update q_Value of a pair state-state(action) after executing and getting the reward
-        public void updateQ_values1(State prevState,State nextState,State action,double reward)
+        public void updateQ_values1(State prevState, State nextState, State action, double reward)
         {
-
             double maxNextStateValue = int.MinValue;
-            State maxNextState;
-            createAction(prevState, nextState);
-            Dictionary<State, double> StatesFromAState;// = q_values[prevState];
-            if (q_values.TryGetValue(prevState, out StatesFromAState))
-            {
+            CreateAction(prevState, nextState);
+            Dictionary<State, double> statesFromAState; // = _qValues[prevState];
 
-                foreach (KeyValuePair<State, double> entry in StatesFromAState)
+            if (_qValues.TryGetValue(prevState, out statesFromAState))
+            {
+                foreach (KeyValuePair<State, double> entry in statesFromAState)
                 {
                     if (entry.Value >= maxNextStateValue)
                     {
                         maxNextStateValue = entry.Value;
-                        maxNextState = entry.Key;
                     }
                 }
-                double sample = reward + gamma*maxNextStateValue;
-              //  Console.WriteLine("r "+sample+ " "+reward +" "+gamma*maxNextStateValue);
-                double prevQ_value = q_values[prevState][nextState];
-                q_values[prevState][nextState] = (1 - alpha)*prevQ_value + alpha*sample;
+                double sample = reward + _gamma * maxNextStateValue;
+                //Console.WriteLine(@"r {0} {1} {2}", sample, reward, gamma * maxNextStateValue);
+                double prevQValue = _qValues[prevState][nextState];
+                _qValues[prevState][nextState] = (1 - _alpha) * prevQValue + _alpha * sample;
             }
 
-
-
-
-       //     Console.WriteLine(" ------ ");
-       //     QValDisp();
-
+            //Console.WriteLine(" ------ ");
+            //QValDisp();
         }
 
         public void updateQ_values(State prevState, State nextState, State action, double reward)
         {
-            if (prevState.Equals(State.InitialState)) iterationCounter++;
-            if (iterationCounter % iterationsToSave == 0)
+            if (prevState.Equals(State.InitialState)) _iterationCounter++;
+            if (_iterationCounter % _iterationsToSave == 0)
             {
-                  // saveQ_valuesToFile(""+iterationCounter+".txt");
+                //saveQ_valuesToFile(string.Format("{0}.txt", _iterationCounter));
             }
 
             double maxNextStateValue = int.MinValue;
-            State maxNextState;
-            createAction(prevState, action);
-            Dictionary<State, double> StatesFromAState;// = q_values[prevState];
-            if (q_values.TryGetValue(nextState, out StatesFromAState))
+            CreateAction(prevState, action);
+            Dictionary<State, double> statesFromAState; // = _qValues[prevState];
+            if (_qValues.TryGetValue(nextState, out statesFromAState))
             {
-
-                foreach (KeyValuePair<State, double> entry in StatesFromAState)
+                foreach (KeyValuePair<State, double> entry in statesFromAState)
                 {
                     if (entry.Value >= maxNextStateValue)
                     {
                         maxNextStateValue = entry.Value;
-                        maxNextState = entry.Key;
                     }
                 }
-                double sample = reward + gamma*maxNextStateValue;
-                //  Console.WriteLine("r "+sample+ " "+reward +" "+gamma*maxNextStateValue);
-                double prevQ_value = q_values[prevState][action];
-                q_values[prevState][action] = (1 - alpha)*prevQ_value + alpha*sample;
+                double sample = reward + _gamma * maxNextStateValue;
+                //Console.WriteLine(@"r {0} {1} {2}", sample, reward, gamma * maxNextStateValue);
+                double prevQValue = _qValues[prevState][action];
+                _qValues[prevState][action] = (1 - _alpha) * prevQValue + _alpha * sample;
             }
             else
             {
-                double sample = reward + gamma * 0;
-                //  Console.WriteLine("r "+sample+ " "+reward +" "+gamma*maxNextStateValue);
-                double prevQ_value = q_values[prevState][action];
-                q_values[prevState][action] = (1 - alpha) * prevQ_value + alpha * sample;
+                double sample = reward + _gamma * 0;
+                //Console.WriteLine(@"r {0} {1} {2}", sample, reward, gamma * maxNextStateValue);
+                double prevQValue = _qValues[prevState][action];
+                _qValues[prevState][action] = (1 - _alpha) * prevQValue + _alpha * sample;
             }
 
-
-
-
-            //     Console.WriteLine(" ------ ");
-            //     QValDisp();
-
+            //Console.WriteLine(" ------ ");
+            //QValDisp();
         }
 
         //dynamicaly create Pair state-state if not already created
-        public void createAction(State prevState, State nextState)
+        public void CreateAction(State prevState, State nextState)
         {
-            Dictionary<State, double> StatesFromAState; 
-            double tempReward;
+            Dictionary<State, double> statesFromAState;
 
-            if (q_values.TryGetValue(prevState, out StatesFromAState))
+            if (_qValues.TryGetValue(prevState, out statesFromAState))
             {
-                if (!StatesFromAState.TryGetValue(nextState, out tempReward)) {
-                    StatesFromAState.Add(nextState, 0);
+                double tempReward;
+                if (!statesFromAState.TryGetValue(nextState, out tempReward))
+                {
+                    statesFromAState.Add(nextState, 0);
                 }
             }
             else
             {
-                StatesFromAState = new Dictionary<State, double>();
-                StatesFromAState.Add(nextState, 0);
-                q_values.Add(prevState, StatesFromAState);
+                statesFromAState = new Dictionary<State, double> { { nextState, 0 } };
+                _qValues.Add(prevState, statesFromAState);
             }
         }
 
-
         //get action with max q_value
         //!!!!! if only negative q_values it still chooses from them
-        public State getNextOptimalState(State state,List<State> relevantStates)
+        public State GetNextOptimalState(State state, List<State> relevantStates)
         {
-            Dictionary<State, double> StatesFromAState;
-            q_values.TryGetValue(state, out StatesFromAState);
-            double maxValue=double.MinValue;
+            Dictionary<State, double> statesFromAState;
+            _qValues.TryGetValue(state, out statesFromAState);
+            double maxValue = double.MinValue;
             State maxState = state;
-            double tempValue;
 
-            if (StatesFromAState == null) Console.Write("Something is ***** wrong");
+            if (statesFromAState == null) Console.Write(@"Something is ***** wrong");
 
             foreach (State s in relevantStates)
             {
-                if(StatesFromAState.TryGetValue(s,out tempValue))
+                double tempValue;
+                if (statesFromAState != null && statesFromAState.TryGetValue(s, out tempValue))
                 {
                     if (maxValue <= tempValue)
                     {
@@ -175,47 +158,47 @@ namespace Manager.AI
                     }
                 }
             }
-           // if(maxValue > 0) Console.WriteLine(maxValue);
+            //if (maxValue > 0) Console.WriteLine(maxValue);
             return maxState;
         }
 
         //get random q_state
-        public State getNextRandomState(State state, List<State> relevantStates)
+        public State GetNextRandomState(State state, List<State> relevantStates)
         {
             Random rnd = new Random();
             int randomIndex = rnd.Next(relevantStates.Count);
             State nextState = relevantStates[randomIndex];
-            createAction(state,nextState);
+            CreateAction(state, nextState);
 
             return nextState;
         }
 
         //get the next action by the rules of q_learning (alpha,gamma,eps)
-        public State getNextState(State state, List<State> relevantStates)
+        public State GetNextState(State state, List<State> relevantStates)
         {
-            if (relevantStates == null) Console.Write("Something is ***** wrong");
+            if (relevantStates == null) Console.Write(@"Something is ***** wrong");
 
-            Dictionary<State, double> StatesFromAState;
+            Dictionary<State, double> statesFromAState;
             Random rnd = new Random();
             double randomDouble = rnd.NextDouble();
 
-            if (!q_values.TryGetValue(state, out StatesFromAState)) return getNextRandomState(state, relevantStates);
-            else if (randomDouble <= epsilon) return getNextRandomState(state, relevantStates);
-            else return  getNextOptimalState(state, relevantStates);
+            if (!_qValues.TryGetValue(state, out statesFromAState)) return GetNextRandomState(state, relevantStates);
+            if (randomDouble <= _epsilon) return GetNextRandomState(state, relevantStates);
+            return GetNextOptimalState(state, relevantStates);
         }
 
-    /*    public void saveQ_valuesToFile(string fileName)
+        /*public void saveQ_valuesToFile(string fileName)
         {
             string s = "";
 
-            foreach (var key in q_values.Keys)
+            foreach (var key in _qValues.Keys)
             {
-                s+=key.IntState + " ";
-                foreach (var innerKey in q_values[key].Keys)
+                s += key.IntState + " ";
+                foreach (var innerKey in _qValues[key].Keys)
                 {
-                    //Console.WriteLine(q_values[key].Keys.Count);
-                    // Console.Write(" {0} v:{1}",innerKey.toString(),(q_values[key])[innerKey]);
-                    s+=innerKey.IntState + ":" + q_values[key][innerKey]+" ";
+                    //Console.WriteLine(_qValues[key].Keys.Count);
+                    //Console.Write(@" {0} v:{1}", innerKey, _qValues[key][innerKey]);
+                    s += innerKey.IntState + ":" + _qValues[key][innerKey] + " ";
                 }
                 s += Environment.NewLine;
             }
@@ -225,43 +208,32 @@ namespace Manager.AI
 
         public void readQ_valuesFromFile(StreamReader sr)
         {
-           // string readText = File.ReadAllText("q_values.txt");
+            // string readText = File.ReadAllText("q_values.txt");
 
-            char[] delimiterChars1 = {' '};
+            char[] delimiterChars1 = { ' ' };
             char[] delimiterChars2 = { ':' };
             string line;
-            string[] data;
-            string[] data2;
-            State state;
-            State state1;
-            double q_value;
-            Dictionary<State, double> states;
 
             while ((line = sr.ReadLine()) != null)
             {
                 line = line.Trim();
-                states = new Dictionary<State, double>();
-                data = line.Split(delimiterChars1);
-                state1= new State(Int16.Parse(data[0]));
+                var states = new Dictionary<State, double>();
+                var data = line.Split(delimiterChars1);
+                var state1 = new State(short.Parse(data[0]));
                 for (int i = 1; i < data.Length; i++)
                 {
-                    data2 = data[i].Split(delimiterChars2);
-                    state = new State(Int16.Parse(data2[0]));
-                    q_value = Double.Parse(data2[1]);
-                    states.Add(state, q_value);
+                    var data2 = data[i].Split(delimiterChars2);
+                    var state = new State(short.Parse(data2[0]));
+                    var qValue = double.Parse(data2[1]);
+                    states.Add(state, qValue);
                 }
-                q_values.Add(state1, states);
+                _qValues.Add(state1, states);
             }
-
-
-        }
-
-
-    */
+        }*/
 
         public int StatCount()
         {
-            return q_values.Keys.Count;
+            return _qValues.Keys.Count;
         }
     }
 }

@@ -1,13 +1,6 @@
-﻿using Manager.QLearning;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Manager.QLearning
+﻿namespace Manager.QLearning
 {
-    public interface QState 
+    public interface QState
     {
-        
     }
 }

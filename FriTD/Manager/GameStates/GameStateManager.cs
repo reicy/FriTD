@@ -9,31 +9,26 @@ namespace Manager.GameStates
 {
     class GameStateManager : IAiAdapter
     {
-        private AICore core;
-        private GameStateImage previousImage;
+        private readonly AiCore _core;
+        private GameStateImage _previousImage;
 
-        public GameStateManager(AICore core)
+        public GameStateManager(AiCore core)
         {
-            this.core = core;
-            this.previousImage = null;
+            _core = core;
+            _previousImage = null;
         }
-
-    
 
         public string ExecuteDecision1(GameStateImage img)
         {
-            previousImage = img;
-         //   Console.WriteLine("som v stave"+EncodeState(img).toString()+" goldy: "+img.Gold);
-            List<State> relevantStates = new List<State>();
-            
-            
+            _previousImage = img;
+            //Console.WriteLine(@"som v stave {0} goldy: {1}", EncodeState(img), img.Gold);
+            var relevantStates = new List<State>();
+
             var tempImg = img.CloneThis();
-            var seccImg = img.CloneThis();
-            var preImg = img.CloneThis();
+            GameStateImage seccImg;
 
             //no action
             relevantStates.Add(EncodeAction(tempImg));
-
 
             // no tower sold
 
@@ -62,19 +57,11 @@ namespace Manager.GameStates
                                     seccImg.Gold -= seccImg.TowerCost;
                                     relevantStates.Add(EncodeAction(seccImg));
                                 }
-                                
-
                             }
                         }
                     }
-                    
                 }
-
-                
-
             }
-
-
 
             // 1 tower sold
 
@@ -82,17 +69,16 @@ namespace Manager.GameStates
             {
                 if (img.Towers[t] >= 0)
                 {
-                    preImg = img.CloneThis();
+                    var preImg = img.CloneThis();
                     preImg.Towers[t] = -1;
                     preImg.Gold += preImg.TowerRefundCost;
-                    if (preImg.Gold > preImg.TowerCost*3) preImg.Gold = preImg.TowerCost*3;
+                    if (preImg.Gold > preImg.TowerCost * 3) preImg.Gold = preImg.TowerCost * 3;
 
                     for (int i = 0; i < 6; i++)
                     {
                         tempImg = preImg.CloneThis();
                         if (tempImg.Towers[i] == -1 && tempImg.TowerCost <= tempImg.Gold)
                         {
-
                             for (int j = 0; j < 3; j++)
                             {
                                 tempImg = preImg.CloneThis();
@@ -111,64 +97,52 @@ namespace Manager.GameStates
                                             seccImg.Gold -= seccImg.TowerCost;
                                             relevantStates.Add(EncodeAction(seccImg));
                                         }
-
-
                                     }
                                 }
                             }
-
                         }
-
-
-
                     }
-
                 }
-
-                
             }
 
-            foreach (var state in relevantStates)
+            /*foreach (var state in relevantStates)
             {
-               // if(state.toString().Length >0 ) Console.WriteLine(state.toString());
-                //Console.WriteLine(state.toString());
-            }
-
+                if (state.ToString().Length > 0) Console.WriteLine(state);
+                Console.WriteLine(state);
+            }*/
 
             if (relevantStates.Count > 1)
             {
                 relevantStates.RemoveAt(0);
             }
 
-            var result = core.getNextState(EncodeState(img), relevantStates);
+            var result = _core.GetNextState(EncodeState(img), relevantStates);
             return TransformStateToCommand(result);
         }
 
         public void ExecuteReward1(GameStateImage image)
         {
-            var prev = EncodeState(previousImage);
+            var prev = EncodeState(_previousImage);
             var currS = EncodeState(image);
             var curr = EncodeAction(image);
 
             if (image.GameState == GameState.Won)
             {
-
-                core.updateQ_values(prev, currS, curr, 1000);
+                _core.updateQ_values(prev, currS, curr, 1000);
                 return;
             }
             if (image.GameState == GameState.Lost)
             {
-                core.updateQ_values(prev, currS, curr, -500);
+                _core.updateQ_values(prev, currS, curr, -500);
                 return;
             }
 
-
-            double expectedHpCost = previousImage.NextWaveHpCost;
-            double actualHpCost = previousImage.Hp - image.Hp;
-            double reward = (actualHpCost / expectedHpCost)*2-1;
+            double expectedHpCost = _previousImage.NextWaveHpCost;
+            double actualHpCost = _previousImage.Hp - image.Hp;
+            double reward = (actualHpCost / expectedHpCost) * 2 - 1;
             //Console.WriteLine(reward);
 
-            core.updateQ_values(prev,currS, curr, reward);
+            _core.updateQ_values(prev, currS, curr, reward);
         }
 
         private State EncodeState(GameStateImage img)
@@ -177,21 +151,17 @@ namespace Manager.GameStates
             foreach (var tower in img.Towers)
             {
                 str += EncodeNumberTo2LengthStr(tower + 1);
-
             }
+
             str += EncodeNumberTo2LengthStr(img.Gold / img.TowerCost);
             if (img.Hp <= img.NextWaveHpCost)
-            {
                 str += "1";
-            }
             else
-            {
                 str += "0";
-            }
+
             // Debug.WriteLine(str);
             return new State(Convert.ToInt16(str, 2));
         }
-
 
         private State EncodeAction(GameStateImage img)
         {
@@ -199,14 +169,11 @@ namespace Manager.GameStates
             foreach (var tower in img.Towers)
             {
                 str += EncodeNumberTo2LengthStr(tower + 1);
-
             }
             str += "000";
-            
+
             return new State(Convert.ToInt16(str, 2));
         }
-
-
 
         private string EncodeNumberTo2LengthStr(int num)
         {
@@ -221,24 +188,19 @@ namespace Manager.GameStates
         {
             var response = "";
             var str = state.ToString();
-            var prevStr = EncodeState(previousImage).ToString();
-            var towerPlace = "";
-            string lastTowerPlace = "";
-          //  Console.WriteLine("from "+EncodeState(previousImage).toString());
-         //   Console.WriteLine("transform: "+str);
+            var prevStr = EncodeState(_previousImage).ToString();
+            string towerPlace;
+            //Console.WriteLine(@"from {0}", EncodeState(_previousImage));
+            //Console.WriteLine(@"transform: {0}", str);
 
             for (int i = 0; i < 6; i++)
             {
                 towerPlace = str.Substring(i * 2, 2);
-                lastTowerPlace = prevStr.Substring(i*2, 2);
+                var lastTowerPlace = prevStr.Substring(i * 2, 2);
                 if (towerPlace != lastTowerPlace)
                 {
                     response += "s_" + i;
                 }
-
-                
-
-
                 response += " ";
             }
 
@@ -247,7 +209,7 @@ namespace Manager.GameStates
                 towerPlace = str.Substring(i * 2, 2);
                 if (towerPlace.Equals("00"))
                 {
-                
+
                 }
                 else
                 {
@@ -256,12 +218,8 @@ namespace Manager.GameStates
                     response += "b_" + i + "_" + typId;
                     //response = "b_" + i + "_" + typId;
                 }
-
-
-
                 response += " ";
             }
-
 
             //Console.WriteLine(response);
 
@@ -270,7 +228,7 @@ namespace Manager.GameStates
 
         public string ExecuteDecision(GameStateImg gameStateImage)
         {
-            return ExecuteDecision1((GameStateImage) gameStateImage);
+            return ExecuteDecision1((GameStateImage)gameStateImage);
         }
 
         public void ExecuteReward(GameStateImg gameStateImage)

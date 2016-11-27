@@ -7,16 +7,18 @@ namespace Manager.MTCore.KohonenUtils
     {
         public StateVector TranslateGameImage(GameStateImage image)
         {
-            StateVector vector = new StateVector();
+            var vector = new StateVector();
             int counter = 0;
+
             foreach (var tower in image.Towers)
             {
                 vector[counter] = tower + 1;
                 counter++;
-
             }
-            vector[counter] = (image.Gold / image.TowerCost);
+
+            vector[counter] = image.Gold / image.TowerCost;
             counter++;
+
             if (image.Hp <= image.NextWaveHpCost)
             {
                 vector[counter] = 1;
@@ -25,6 +27,7 @@ namespace Manager.MTCore.KohonenUtils
             {
                 vector[counter] = 0;
             }
+
             return vector;
         }
     }
