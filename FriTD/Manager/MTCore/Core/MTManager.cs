@@ -146,7 +146,7 @@ namespace Manager.MTCore.Core
             stopWatch.Stop();
 
             TimeSpan ts = stopWatch.Elapsed;
-            Console.WriteLine(@"RunTime {0:hh\\:mm\\:ss\\.ff}", ts);
+            Console.WriteLine(@"RunTime {0:hh\:mm\:ss\.ff}", ts);
             MtStats.PrintLevelsOfEnding();
             MtStats.PrintTotalScore();
 
@@ -278,7 +278,7 @@ namespace Manager.MTCore.Core
             stopWatch.Stop();
 
             TimeSpan ts = stopWatch.Elapsed;
-            Console.WriteLine(@"RunTime {0:hh\\:mm\\:ss\\.ff}", ts);
+            Console.WriteLine(@"RunTime {0:hh\:mm\:ss\.ff}", ts);
             MtStats.PrintLevelsOfEnding();
             MtStats.PrintTotalScore();
 
