@@ -2,10 +2,14 @@
 
 namespace Manager.AI
 {
-    class Action : QAction
+    public class Action : QAction
     {
-        public int IntState { get; }
+        public int IntState { get; private set; }
         public static State InitialState = new State(0);
+
+        public Action() : this(0)
+        {
+        }
 
         public Action(int intState)
         {
@@ -20,6 +24,11 @@ namespace Manager.AI
             var result = "" + IntState;
 
             return result;
+        }
+
+        public void FromString(string str)
+        {
+            IntState = int.Parse(str);
         }
 
         protected bool Equals(Action other)

@@ -1,6 +1,6 @@
 ﻿namespace Manager.Kohonen
 {
-    public interface IVector<V>
+    public interface IVector<V> : IStringConstructible
     {
         double Difference(V vector);
         double Difference(V vector, double[] weight);
@@ -11,7 +11,6 @@
         double Dot(V vector);
         double Norm();
         void Print();
-        void Load(string v);
         bool IsEmpty();
     }
 }

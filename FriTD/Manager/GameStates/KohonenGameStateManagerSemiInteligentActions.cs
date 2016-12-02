@@ -12,17 +12,17 @@ namespace Manager.GameStates
 {
     public class KohonenGameStateManagerSemiInteligentActions : IAiAdapter
     {
-        private QAction _chosenAction;
+        private Action _chosenAction;
         private readonly IntelligentActionInterpreter _intelligentActionInterpreter;
         private readonly GameStateProcessor _gameStateProcessor;
         private readonly KohonenCore<StateVector> _kohonen;
-        private readonly QLearning<KohonenAiState> _qLearning;
+        private readonly QLearning<KohonenAiState, Action> _qLearning;
         private double _rewardMultiplier;
         private bool _learningEnabled;
         private GameStateImage _previousImage;
         private KohonenAiState _previousState;
 
-        public KohonenGameStateManagerSemiInteligentActions(QLearning<KohonenAiState> qLearning, KohonenCore<StateVector> kohonen)
+        public KohonenGameStateManagerSemiInteligentActions(QLearning<KohonenAiState, Action> qLearning, KohonenCore<StateVector> kohonen)
         {
             _qLearning = qLearning;
             _previousState = null;
@@ -38,14 +38,14 @@ namespace Manager.GameStates
             var img = (GameStateImage)gameStateImage;
             //TODO zatial predava len max 1 - oprav na viac
             var state = _gameStateProcessor.ProcessGameState(img);
-            var dim = _kohonen.Winner(state);
+            var dim = _kohonen.Winner(state, _kohonen.DistCosine);
             _previousState = new KohonenAiState(dim);
             if (_learningEnabled) _kohonen.ReArrange(dim[0], dim[1], state);
 
             _previousImage = img;
             //Console.WriteLine(@"som v stave {0} goldy: {1}", EncodeState(img), img.Gold);
 
-            var actions = new List<QAction>();
+            var actions = new List<Action>();
             var predpona = "2";
 
             //no action
@@ -102,7 +102,7 @@ namespace Manager.GameStates
             }*/
 
             var result = _qLearning.GetNextAction(_previousState, actions);
-            return TransformActionToCommand((Action)result);
+            return TransformActionToCommand(result);
         }
 
         public void ExecuteReward(GameStateImg gameStateImage)
@@ -162,7 +162,7 @@ namespace Manager.GameStates
         private KohonenAiState EncodeState(GameStateImage img)
         {
             var state = _gameStateProcessor.ProcessGameState(img);
-            var dim = _kohonen.Winner(state);
+            var dim = _kohonen.Winner(state, _kohonen.DistCosine);
             // kohonen.ReArrange(dim[0], dim[1], state);
             return new KohonenAiState(dim);
         }
@@ -185,6 +185,12 @@ namespace Manager.GameStates
         public void SetRewardMultiplier(double d)
         {
             _rewardMultiplier = d;
+        }
+
+        public void DecreaseLearningRateBy(double percentage)
+        {
+            _kohonen.DecreaseLearningRateBy(percentage);
+            _qLearning.DecreaseLearningRateBy(percentage);
         }
     }
 }

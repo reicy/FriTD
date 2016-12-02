@@ -9,14 +9,14 @@ namespace Manager.QLearning
 {
     [Synchronization]
     //class QLearning<State> where State : IVector<State>/*, new()*/
-    public class QLearning<TState> where TState : QState/*, new()*/
+    public class QLearning<TState, TAction> where TState : QState, new() where TAction : class, QAction, new()
     {
         public double Epsilon { get; set; }
         public double Gamma { get; set; }
         public double Alpha { get; set; }
         //int iterationCounter = 0;
         //int iterationsToSave = 100;
-        readonly Dictionary<TState, Dictionary<QAction, double>> _qValues;
+        readonly Dictionary<TState, Dictionary<TAction, double>> _qValues;
         readonly Random _explorationGen = new Random();
 
         /// <param name="epsilon">pravdebodobnost, ci vykonam random akciu</param>
@@ -27,21 +27,21 @@ namespace Manager.QLearning
             Alpha = alpha;
             Epsilon = epsilon;
             Gamma = gamma;
-            _qValues = new Dictionary<TState, Dictionary<QAction, double>>();
+            _qValues = new Dictionary<TState, Dictionary<TAction, double>>();
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void updateQ_values(TState prevState, QAction action, TState nextState, double reward)
+        public void updateQ_values(TState prevState, TAction action, TState nextState, double reward)
         {
             //Console.WriteLine(reward);
             double maxNextActionValue = double.MinValue;
 
             // createAction(state, action); //?????? needed?
 
-            Dictionary<QAction, double> actionsFromNextState;// = _qValues[nextState];
+            Dictionary<TAction, double> actionsFromNextState;// = _qValues[nextState];
             if (_qValues.TryGetValue(nextState, out actionsFromNextState))
             {
-                foreach (KeyValuePair<QAction, double> entry in actionsFromNextState)
+                foreach (KeyValuePair<TAction, double> entry in actionsFromNextState)
                 {
                     if (entry.Value >= maxNextActionValue)
                     {
@@ -65,9 +65,9 @@ namespace Manager.QLearning
         //dynamicaly create Pair state-state if not already created
         //if already in q tree nothing happens
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void CreateAction(TState state, QAction newAction)
+        public void CreateAction(TState state, TAction newAction)
         {
-            Dictionary<QAction, double> actionsFromAState;
+            Dictionary<TAction, double> actionsFromAState;
 
             if (_qValues.TryGetValue(state, out actionsFromAState))
             {
@@ -79,7 +79,7 @@ namespace Manager.QLearning
             }
             else
             {
-                actionsFromAState = new Dictionary<QAction, double> { { newAction, 0 } };
+                actionsFromAState = new Dictionary<TAction, double> { { newAction, 0 } };
                 _qValues.Add(state, actionsFromAState);
             }
         }
@@ -87,12 +87,12 @@ namespace Manager.QLearning
         //get action with max q_value
         //!!!!! if only negative q_values it still chooses from them
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public QAction GetNextOptimalAction(TState state, List<QAction> possibleActions)
+        public TAction GetNextOptimalAction(TState state, List<TAction> possibleActions)
         {
-            Dictionary<QAction, double> actionsFromAState;
+            Dictionary<TAction, double> actionsFromAState;
             _qValues.TryGetValue(state, out actionsFromAState);
             double maxValue = double.MinValue;
-            QAction bestAction = null;
+            TAction bestAction = null;
 
             if (actionsFromAState == null) Console.Write(@"Something is ***** wrong in getNextOptimalAction1");
 
@@ -115,11 +115,11 @@ namespace Manager.QLearning
 
         //get random q_state
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public QAction GetNextRandomAction(TState state, List<QAction> possibleActions)
+        public TAction GetNextRandomAction(TState state, List<TAction> possibleActions)
         {
             if (possibleActions.Count == 0) Console.Write(@"Something is ***** wrong in getNextRandomAction-- no possible actions");
             int randomIndex = _explorationGen.Next(possibleActions.Count);
-            QAction nextAction = possibleActions[randomIndex];
+            TAction nextAction = possibleActions[randomIndex];
             CreateAction(state, nextAction);
 
             return nextAction;
@@ -127,17 +127,17 @@ namespace Manager.QLearning
 
         //get the next action by the rules of q_learning (alpha,gamma,eps)
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public QAction GetNextAction(TState state, List<QAction> possibleActions)
+        public TAction GetNextAction(TState state, List<TAction> possibleActions)
         {
             if (possibleActions == null) Console.Write(@"Something is ***** wrong in getNextAction --- no possible actions");
 
-            Dictionary<QAction, double> actionsFromAState;
+            Dictionary<TAction, double> actionsFromAState;
             double randomDouble = _explorationGen.NextDouble();
 
             if (!_qValues.TryGetValue(state, out actionsFromAState)) return GetNextRandomAction(state, possibleActions);
             if (randomDouble <= Epsilon) return GetNextRandomAction(state, possibleActions);
 
-            QAction optAction = GetNextOptimalAction(state, possibleActions);
+            TAction optAction = GetNextOptimalAction(state, possibleActions);
             if (optAction == null) return GetNextRandomAction(state, possibleActions);
             return optAction;
         }
@@ -162,6 +162,18 @@ namespace Manager.QLearning
             //Console.WriteLine();
         }
 
+        /// <param name="percentage">Percentage in interval [0.0, 1.0]</param>
+        public void DecreaseLearningRateBy(double percentage)
+        {
+            Alpha -= percentage * Alpha;
+        }
+
+        /// <param name="percentage">Percentage in interval [0.0, 1.0]</param>
+        public void DecreaseEpsilonBy(double percentage)
+        {
+            Epsilon -= percentage * Epsilon;
+        }
+
         public void Save(string filename)
         {
             var sb = new StringBuilder();
@@ -179,6 +191,39 @@ namespace Manager.QLearning
             sb.Append(Environment.NewLine);
 
             File.WriteAllText(filename, sb.ToString());
+        }
+
+        public void Load(string filename)
+        {
+            _qValues.Clear();
+
+            using (var reader = new StreamReader(new FileStream(filename, FileMode.Open)))
+            {
+                reader.ReadLine();
+                while (true)
+                {
+                    var line = reader.ReadLine();
+                    if (string.IsNullOrEmpty(line))
+                        break;
+                    line = line.Trim();
+                    var data = line.Split(new[] {" - "}, StringSplitOptions.RemoveEmptyEntries);
+                    var state = new TState();
+                    state.FromString(data[0]);
+                    var actionValueDict = new Dictionary<TAction, double>();
+                    var actionValues = data[1].Split(new[] {'(', ')'}, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var actionValue in actionValues)
+                    {
+                        var tmp = actionValue.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+                        var action = new TAction();
+                        action.FromString(tmp[0]);
+                        var d = double.Parse(tmp[1]);
+                        actionValueDict.Add(action, d);
+                    }
+                    _qValues.Add(state, actionValueDict);
+                }
+            }
+
+            Console.WriteLine(@"Successfully loaded QLearning from '{0}'", filename);
         }
 
         //update q_Value of a pair state-state(action) after executing and getting the reward

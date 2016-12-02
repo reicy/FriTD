@@ -20,9 +20,9 @@ namespace Manager.Kohonen
             _count = Size;
         }
 
-        public void Load(string template)
+        public void FromString(string str)
         {
-            var temp = template.Split(' ');
+            var temp = str.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < _vector.Length; i++)
             {
                 _vector[i] = double.Parse(temp[i]); // _rnd.NextDouble();

@@ -11,7 +11,6 @@ namespace Manager.Kohonen
         private readonly V[,] _arr;
         private readonly int[,] _accesses;
         private readonly double _radius;
-        private double _learningRate;
         private double[] _weight;
         private double _distFactor;
         private readonly int _rows;
@@ -20,6 +19,8 @@ namespace Manager.Kohonen
         private double _rAHN;
         private readonly bool _nonEmptyModeActive;
         private readonly SortCandidatesHeuristicG _candidatesHeuristic = new SortCandidatesHeuristicG();
+
+        public double LearningRate { get; set; }
 
         public delegate double DistanceDelegate(V v1, V v2);
 
@@ -70,7 +71,7 @@ namespace Manager.Kohonen
         {
             _arr = new V[rows, cols];
             _radius = radius;
-            _learningRate = learningRate;
+            LearningRate = learningRate;
             _distFactor = distFactor;
             _rows = rows;
             _cols = cols;
@@ -90,7 +91,7 @@ namespace Manager.Kohonen
 
         public int[] Winner(V input)
         {
-            int[] result = { 0, 0 };
+            /*int[] result = { 0, 0 };
             double minDiff = input.Difference(_arr[0, 0]);
 
             for (int i = 0; i < _rows; i++)
@@ -110,13 +111,40 @@ namespace Manager.Kohonen
             }
 
             _accesses[result[0], result[1]]++;
+            return result;*/
+
+            return Winner(input, DistEuclidean);
+        }
+
+        public int[] Winner(V input, DistanceDelegate distFunc)
+        {
+            int[] result = { 0, 0 };
+            double minDiff = distFunc(input, _arr[0, 0]);
+
+            for (int i = 0; i < _rows; i++)
+            {
+                for (int j = 0; j < _cols; j++)
+                {
+                    if (_nonEmptyModeActive) if ((i > 0 || j > 0) && _arr[i, j].IsEmpty()) continue;
+                    var temp = distFunc(input, _arr[i, j]);
+
+                    if (temp < minDiff)
+                    {
+                        minDiff = temp;
+                        result[0] = i;
+                        result[1] = j;
+                    }
+                }
+            }
+
+            _accesses[result[0], result[1]]++;
             return result;
         }
 
         /// <param name="percentage">Percentage in interval [0.0, 1.0]</param>
         internal void DecreaseLearningRateBy(double percentage)
         {
-            _learningRate -= percentage * _learningRate;
+            LearningRate -= percentage * LearningRate;
         }
 
         internal int[] Winner(V input, DistanceDelegate distFun, bool weightenedFunction)
@@ -310,7 +338,7 @@ namespace Manager.Kohonen
             _arr[i, j] =
                 _arr[i, j].Add(
                     value.Diff(_arr[i, j])
-                        .Multiply(_learningRate)
+                        .Multiply(LearningRate)
                         .Multiply(NFunction(new[] { i, j }, new[] { row, col })));
             /*Console.Write(@"po ");
             _arr[i, j].Print();
@@ -343,6 +371,31 @@ namespace Manager.Kohonen
             sb.Append($"{_radius}{Environment.NewLine}");
 
             File.WriteAllText(filename, sb.ToString());
+        }
+
+        public void Load(string filename)
+        {
+            using (var reader = new StreamReader(new FileStream(filename, FileMode.Open)))
+            {
+                var rows = _arr.GetLength(0);
+                var cols = _arr.GetLength(1);
+                string[] separator = { "  ---|" };
+
+                for (int i = 0; i < rows; i++)
+                {
+                    var line = reader.ReadLine();
+                    if (line != null)
+                    {
+                        var temp = line.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                        for (int j = 0; j < cols; j++)
+                        {
+                            _arr[i, j].FromString(temp[j]);
+                        }
+                    }
+                }
+            }
+
+            Console.WriteLine(@"Successfully loaded Kohonen from '{0}'", filename);
         }
 
         private double Dist(int[] dim1, int[] dim2)
@@ -389,30 +442,6 @@ namespace Manager.Kohonen
         public void SetWeight(double[] weight)
         {
             _weight = weight;
-        }
-
-        public void Load(string location)
-        {
-            string text = File.ReadAllText(location);
-            using (var reader = new StringReader(text))
-            {
-                var rows = _arr.GetLength(0);
-                var cols = _arr.GetLength(1);
-                string[] separator = { "  ---|" };
-
-                for (int i = 0; i < rows; i++)
-                {
-                    var line = reader.ReadLine();
-                    if (line != null)
-                    {
-                        var temp = line.Split(separator, StringSplitOptions.None);
-                        for (int j = 0; j < cols; j++)
-                        {
-                            _arr[i, j].Load(temp[j]);
-                        }
-                    }
-                }
-            }
         }
     }
 }

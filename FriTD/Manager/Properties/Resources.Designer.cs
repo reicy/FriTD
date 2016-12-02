@@ -103,14 +103,13 @@ namespace Manager.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to 0:5
-        ///1:20
-        ///0:10
-        ///1:100
+        ///1:40
         ///0:30
-        ///1:300
-        ///0:50
-        ///1:500
-        ///.
+        ///1:250
+        ///0:100
+        ///1:550
+        ///0:150
+        ///1:1200.
         /// </summary>
         internal static string Levels2 {
             get {
@@ -119,7 +118,14 @@ namespace Manager.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to 0:5
+        ///0:30
+        ///0:70
+        ///1:250
+        ///0:100
+        ///1:400
+        ///0:200
+        ///1:2000.
         /// </summary>
         internal static string Levels3 {
             get {
@@ -128,7 +134,13 @@ namespace Manager.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to 1:10
+        ///1:30
+        ///0:5
+        ///0:15
+        ///1:150
+        ///0:15
+        ///1:200.
         /// </summary>
         internal static string Levels4 {
             get {
@@ -137,7 +149,16 @@ namespace Manager.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TODO.
+        ///   Looks up a localized string similar to 1:10
+        ///0:5
+        ///0:25
+        ///1:100
+        ///0:50
+        ///1:400
+        ///0:100
+        ///1:1000
+        ///1:2000
+        ///0:300.
         /// </summary>
         internal static string Levels5 {
             get {
@@ -251,12 +272,29 @@ namespace Manager.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 5
-        ///GGGGGGGGGGGGGGG
-        ///GGGGGGGGTGTGTGG
-        ///GSPPPPPPPPPPPEG
-        ///GGGGGGGTGTGTGGG
-        ///GGGGGGGGGGGGGGG.
+        ///   Looks up a localized string similar to 22
+        ///GGGGG
+        ///GGSGG
+        ///GGPGG
+        ///GGPPG
+        ///GGTPG
+        ///GGPPG
+        ///GGPGG
+        ///GTPTG
+        ///GGPGG
+        ///GPPGG
+        ///GPTGG
+        ///GPPGG
+        ///GGPGG
+        ///GTPTG
+        ///GGPGG
+        ///GGPPG
+        ///GGTPG
+        ///GGPPG
+        ///GGPGG
+        ///GGPGG
+        ///GGEGG
+        ///GGGGG.
         /// </summary>
         internal static string Map4 {
             get {
@@ -265,13 +303,24 @@ namespace Manager.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 6
-        ///GGGGGGGGGGGGGGGGG
-        ///GGPPPPPGGGPPPPPGG
-        ///GGPGGGPPPPPGGGPGG
-        ///GGPGGTGTTTGTGGPGG
-        ///GGPPPPPEGSPPPPPGG
-        ///GGGGGGGGGGGGGGGGG.
+        ///   Looks up a localized string similar to 17
+        ///GGGGGGGGGGGGGGG
+        ///GGGGGGGGGGGGGGG
+        ///GGGGGGGGGGGGGGG
+        ///GGGGGGGTGGGGGGG
+        ///GGPPPPGTGPPPPGG
+        ///GGPTGPPPPPGTPGG
+        ///GGPGGGTGTGGGPGG
+        ///GGPPPPPGPPPPPGG
+        ///GGGGGGPGPGGGGGG
+        ///GGGGPPPGPPPGGGG
+        ///GTGGPTGGGTPGGTG
+        ///GGGGPPSGEPPGGGG
+        ///GGGGGGGGGGGGGGG
+        ///GGGGGGGTGGGGGGG
+        ///GGGGGGGGGGGGGGG
+        ///GGGGGGGGGGGGGGG
+        ///GGGGGGGGGGGGGGG.
         /// </summary>
         internal static string Map5 {
             get {

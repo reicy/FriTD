@@ -11,7 +11,7 @@ namespace Manager.MTCore.Core
     public class MtSingleDaemon
     {
         public KohonenCore<StateVector> Kohonen { get; }
-        public QLearning<KohonenAiState> QLearning { get; }
+        public QLearning<KohonenAiState, AI.Action> QLearning { get; }
         public BlockingCollection<KohonenUpdate> UpdatesQueue { get; }
         public int Lost { get; set; }
         public int Won { get; set; }
@@ -25,7 +25,7 @@ namespace Manager.MTCore.Core
         private readonly bool _heuristicActive;
         private readonly bool _cosinusDistActive;
 
-        public MtSingleDaemon(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState> qLearning,
+        public MtSingleDaemon(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState, AI.Action> qLearning,
             BlockingCollection<KohonenUpdate> updatesQueue, string map)
         {
             Kohonen = kohonen;
@@ -36,7 +36,7 @@ namespace Manager.MTCore.Core
             _map = map;
         }
 
-        public MtSingleDaemon(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState> qLearning, BlockingCollection<KohonenUpdate> updatesQueue, string map, string levels1, int type, bool heuristicActive, bool cosinusDistActive, int mapNumber = 0) : this(kohonen, qLearning, updatesQueue, map)
+        public MtSingleDaemon(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState, AI.Action> qLearning, BlockingCollection<KohonenUpdate> updatesQueue, string map, string levels1, int type, bool heuristicActive, bool cosinusDistActive, int mapNumber = 0) : this(kohonen, qLearning, updatesQueue, map)
         {
             _levels = levels1;
             _type = type;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Manager.AI;
 using Manager.AIUtils;
@@ -20,7 +21,7 @@ namespace Manager.Core
         private KohonenCore<StateVector> _kohonen;
         private int _iteration;
 
-        private QLearning<KohonenAiState> _qLearning;
+        private QLearning<KohonenAiState, AI.Action> _qLearning;
 
         private int _firstGameWonLevel;
         private int _won;
@@ -101,7 +102,7 @@ namespace Manager.Core
             _ai = new AiCore(0.1, 1, 0.5);
             // _aiAdapter = new GameStateManager(_ai);
             Console.WriteLine(@"AI inserted");
-            _qLearning = new QLearning<KohonenAiState>(0.3, 1, 0.5);
+            _qLearning = new QLearning<KohonenAiState, AI.Action>(0.3, 1, 0.5);
             // _aiAdapter = new NewGameStateManager(_qLearning);
             _kohonen = new KohonenCore<StateVector>(30, 30, 2, 0.5, 1, 1, 0.5, false);
             //_aiAdapter = new KohonenGameStateManager(_qLearning,_kohonen);
@@ -348,6 +349,99 @@ namespace Manager.Core
 
             _qLearning.Save("qlearning.dat");
             _kohonen.Save("kohonen.dat");
+        }
+
+        public void AiLearningRunTwoMaps(int iters, int gamesPerIter, string firstMap, string secondMap, bool changeLearningRate, int decreaseLearningRateAfter,
+            double decreaseLearningRatePercent, double initialLearningRate, double initialRandomActionP, string kohonenOut1, string kohonenOut2, string qLearningOut1, string qLearningOut2)
+        {
+            var maps = new Dictionary<string, KeyValuePair<string, string>>
+            {
+                { "Map", new KeyValuePair<string, string>(Properties.Resources.Map, Properties.Resources.Levels) },
+                { "Map1", new KeyValuePair<string, string>(Properties.Resources.Map1, Properties.Resources.Levels1) },
+                { "Map2", new KeyValuePair<string, string>(Properties.Resources.Map2, Properties.Resources.Levels2) },
+                { "Map3", new KeyValuePair<string, string>(Properties.Resources.Map3, Properties.Resources.Levels3) },
+                { "Map4", new KeyValuePair<string, string>(Properties.Resources.Map4, Properties.Resources.Levels4) },
+                { "Map5", new KeyValuePair<string, string>(Properties.Resources.Map5, Properties.Resources.Levels5) }
+            };
+            if (!maps.ContainsKey(firstMap))
+            {
+                Console.WriteLine(@"ERROR - map '{0}' does not exist!", firstMap);
+                return;
+            }
+            if (!maps.ContainsKey(secondMap))
+            {
+                Console.WriteLine(@"ERROR - map '{0}' does not exist!", secondMap);
+                return;
+            }
+
+            // BEGIN preparation
+            var aiAdapter = (KohonenGameStateManagerSemiInteligentActions)_aiAdapter;
+            aiAdapter.SetRewardMultiplier(1.0 / 10000);
+            // END preparation
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var mapLevelPairs = new List<string> { firstMap, secondMap };
+            foreach (var map in mapLevelPairs)
+            {
+                Console.WriteLine(@"Running with map '{0}' (start time: {1})", map, DateTime.Now);
+                _qLearning.Alpha = initialLearningRate;
+                _qLearning.Epsilon = initialRandomActionP;
+                _kohonen.LearningRate = initialLearningRate;
+
+                for (var i = 1; i <= iters; ++i)
+                {
+                    _iteration = i;
+                    var gamesWon = 0;
+                    var gamesLost = 0;
+
+                    // TODO edit learning rate
+
+                    for (var j = 0; j < gamesPerIter; ++j)
+                    {
+                        if (GameState.Won == SingleAiLongRunIteration(maps[map].Key, maps[map].Value))
+                        {
+                            if (_firstGameWonLevel == -1)
+                                _firstGameWonLevel = i * gamesPerIter + j;
+                            ++gamesWon;
+                        }
+                        else
+                        {
+                            ++gamesLost;
+                        }
+                    }
+
+                    _won += gamesWon;
+                    Console.WriteLine(@"  Iteration {0}: won {1}, lost {2}", i, gamesWon, gamesLost);
+
+                    if (changeLearningRate && i % decreaseLearningRateAfter == 0)
+                    {
+                        _qLearning.DecreaseLearningRateBy(decreaseLearningRatePercent);
+                        _qLearning.DecreaseEpsilonBy(decreaseLearningRatePercent);
+                        _kohonen.DecreaseLearningRateBy(decreaseLearningRatePercent);
+                        Console.WriteLine(@"Decreasing parameters by {0:0.00}%...", decreaseLearningRatePercent * 100);
+                        Console.WriteLine(@"QLearning's learning rate is {0:0.0000}", _qLearning.Alpha);
+                        Console.WriteLine(@"Kohonen's learning rate is {0:0.0000}", _kohonen.LearningRate);
+                        Console.WriteLine(@"QLearning's random action probability is {0:0.0000}", _qLearning.Epsilon);
+                    }
+                }
+
+                if (map == firstMap)
+                {
+                    if (!string.IsNullOrWhiteSpace(kohonenOut1)) _kohonen.Save(kohonenOut1);
+                    if (!string.IsNullOrWhiteSpace(qLearningOut1)) _qLearning.Save(qLearningOut1);
+                }
+                else
+                {
+                    if (!string.IsNullOrWhiteSpace(kohonenOut2)) _kohonen.Save(kohonenOut2);
+                    if (!string.IsNullOrWhiteSpace(qLearningOut2)) _qLearning.Save(qLearningOut2);
+                }
+
+                Console.WriteLine(@"Running with map '{0}' (finish time: {1})", map, DateTime.Now);
+            }
+
+            stopwatch.Stop();
+            Console.WriteLine(@"Duration: {0:hh\:mm\:ss\.ff}", stopwatch.Elapsed);
         }
 
         private GameState SingleAiLongRunIteration()

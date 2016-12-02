@@ -10,7 +10,7 @@ namespace Manager.GameStates
 {
     public class KohonenGameStateManager : IAiAdapter
     {
-        private readonly QLearning<KohonenAiState> _qLearning;
+        private readonly QLearning<KohonenAiState, AI.Action> _qLearning;
         private readonly KohonenCore<StateVector> _kohonen;
         private readonly GameStateProcessor _gameStateProcessor;
         private KohonenAiState _previousState;
@@ -18,7 +18,7 @@ namespace Manager.GameStates
         private bool _learningEnabled;
         private double _rewardMultiplier;
 
-        public KohonenGameStateManager(QLearning<KohonenAiState> qLearning, KohonenCore<StateVector> kohonen)
+        public KohonenGameStateManager(QLearning<KohonenAiState, AI.Action> qLearning, KohonenCore<StateVector> kohonen)
         {
             _qLearning = qLearning;
             _previousState = null;
@@ -131,14 +131,14 @@ namespace Manager.GameStates
                 relevantStates.RemoveAt(0);
             }
 
-            var actions = new List<QAction>();
+            var actions = new List<AI.Action>();
             foreach (var item in relevantStates)
             {
                 actions.Add(item);
             }
 
             var result = _qLearning.GetNextAction(_previousState, actions);
-            return TransformActionToCommand((AI.Action)result);
+            return TransformActionToCommand(result);
         }
 
         private KohonenAiState EncodeState(GameStateImage img)

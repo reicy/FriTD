@@ -5,8 +5,12 @@ namespace Manager.AI
 {
     public class State : QState
     {
-        public short IntState { get; }
+        public short IntState { get; private set; }
         public static State InitialState = new State(0);
+
+        public State() : this(0)
+        {
+        }
 
         public State(short intState)
         {
@@ -20,6 +24,11 @@ namespace Manager.AI
             result += converted;
 
             return result;
+        }
+
+        public void FromString(string str)
+        {
+            IntState = Convert.ToInt16(str, 2);
         }
 
         protected bool Equals(State other)

@@ -1,4 +1,5 @@
-﻿using Manager.QLearning;
+﻿using System;
+using Manager.QLearning;
 
 namespace Manager.Kohonen
 {
@@ -13,7 +14,7 @@ namespace Manager.Kohonen
 
         public KohonenAiState()
         {
-
+            _dim = new[] { 0, 0 };
         }
 
         protected bool Equals(KohonenAiState other)
@@ -38,6 +39,13 @@ namespace Manager.Kohonen
         public override string ToString()
         {
             return _dim[0] + " " + _dim[1] + "     ";
+        }
+
+        public void FromString(string str)
+        {
+            var tmp = str.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            _dim[0] = int.Parse(tmp[0]);
+            _dim[1] = int.Parse(tmp[1]);
         }
     }
 }

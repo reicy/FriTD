@@ -1,6 +1,6 @@
 ﻿namespace Manager.QLearning
 {
-    public interface QState
+    public interface QState : IStringConstructible
     {
     }
 }

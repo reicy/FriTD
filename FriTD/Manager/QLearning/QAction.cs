@@ -1,6 +1,6 @@
 ﻿namespace Manager.QLearning
 {
-    public interface QAction
+    public interface QAction : IStringConstructible
     {
     }
 }

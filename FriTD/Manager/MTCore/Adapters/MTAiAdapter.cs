@@ -15,10 +15,10 @@ namespace Manager.MTCore.Adapters
         private readonly IntelligentActionInterpreter _intelligentActionInterpreter;
         private readonly IStateEncoder _stateEncoder;
         private readonly KohonenCore<StateVector> _kohonen;
-        private readonly QLearning<KohonenAiState> _qLearning;
-        private QAction _chosenAction;
+        private readonly QLearning<KohonenAiState, Action> _qLearning;
+        private Action _chosenAction;
         private double _rewardMultiplier;
-        private bool _learningEnabled;
+        //private bool _learningEnabled;
         private GameStateImage _previousImage;
         private KohonenAiState _previousState;
         private readonly bool _heuristicActive;
@@ -26,14 +26,14 @@ namespace Manager.MTCore.Adapters
 
         public KohonenUpdate KohonenUpdate { get; set; }
 
-        public MtAiAdapter(QLearning<KohonenAiState> qLearning,
+        public MtAiAdapter(QLearning<KohonenAiState, Action> qLearning,
             KohonenCore<StateVector> kohonen, IStateEncoder stateEncoder, bool heuristicActive, bool cosinusDistActive)
         {
             _qLearning = qLearning;
             _previousState = null;
             _kohonen = kohonen;
             _stateEncoder = stateEncoder;
-            _learningEnabled = true;
+            //_learningEnabled = true;
             _rewardMultiplier = 1;
             _intelligentActionInterpreter = new IntelligentActionInterpreter();
             _heuristicActive = heuristicActive;
@@ -80,7 +80,7 @@ namespace Manager.MTCore.Adapters
             _previousImage = img;
             //Console.WriteLine(@"som v stave {0} goldy: {1}", EncodeState(img), img.Gold);
 
-            var actions = new List<QAction>();
+            var actions = new List<Action>();
             var predpona = "2";
 
             //no action
@@ -140,7 +140,7 @@ namespace Manager.MTCore.Adapters
             }*/
 
             var result = _qLearning.GetNextAction(_previousState, actions);
-            return TransformActionToCommand((Action)result);
+            return TransformActionToCommand(result);
         }
 
         public void ExecuteReward(GameStateImage image)

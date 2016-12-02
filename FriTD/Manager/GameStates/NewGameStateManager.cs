@@ -10,10 +10,10 @@ namespace Manager.GameStates
 {
     class NewGameStateManager : IAiAdapter
     {
-        private readonly QLearning<State> _qLearning;
+        private readonly QLearning<State, AI.Action> _qLearning;
         private GameStateImage _previousImage;
 
-        public NewGameStateManager(QLearning<State> qLearning)
+        public NewGameStateManager(QLearning<State, AI.Action> qLearning)
         {
             _qLearning = qLearning;
             _previousImage = null;
@@ -378,14 +378,14 @@ namespace Manager.GameStates
                 relevantStates.RemoveAt(0);
             }
 
-            var actions = new List<QAction>();
+            var actions = new List<AI.Action>();
             foreach (var item in relevantStates)
             {
                 actions.Add(item);
             }
 
             var result = _qLearning.GetNextAction(EncodeState(img), actions);
-            return TransformStateToCommand((AI.Action)result);
+            return TransformStateToCommand(result);
         }
     }
 }

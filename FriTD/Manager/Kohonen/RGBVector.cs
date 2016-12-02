@@ -89,7 +89,7 @@ namespace Manager.Kohonen
             Console.Write(@"({0}  {1}  {2})", _rgb[0], _rgb[1], _rgb[2]);
         }
 
-        public void Load(string v)
+        public void FromString(string str)
         {
             throw new NotImplementedException();
         }

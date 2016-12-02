@@ -34,7 +34,7 @@ namespace Manager.MTCore.Core
                 SingleRun();
 
             //init core
-            var qLearning = new QLearning<KohonenAiState>(0.3, 1, 0.5);
+            var qLearning = new QLearning<KohonenAiState, AI.Action>(0.3, 1, 0.5);
             var kohonen = new KohonenCore<StateVector>(30, 30, 2, 0.5, 1, 1, 0.5, _nonEmptyModeCohonenActive);
 
             //load kohonen
@@ -54,7 +54,7 @@ namespace Manager.MTCore.Core
 
             var won = 0;
             var lost = 0;
-            var counter = 0;
+            //var counter = 0;
 
             Console.WriteLine(DateTime.Now);
 
@@ -155,7 +155,7 @@ namespace Manager.MTCore.Core
         public void SingleRun()
         {
             //init core
-            var qLearning = new QLearning<KohonenAiState>(0.3, 1, 0.5);
+            var qLearning = new QLearning<KohonenAiState, AI.Action>(0.3, 1, 0.5);
             var kohonen = new KohonenCore<StateVector>(30, 30, 2, 0.5, 1, 1, 0.5, _nonEmptyModeCohonenActive);
 
             //load kohonen
@@ -175,7 +175,7 @@ namespace Manager.MTCore.Core
 
             var won = 0;
             var lost = 0;
-            var counter = 0;
+            //var counter = 0;
 
             Console.WriteLine(DateTime.Now);
 
@@ -270,7 +270,7 @@ namespace Manager.MTCore.Core
             // TODO: interationstart learning in MTSingleDaemon
 
             // create qlearning and kohonen and init other very important things...
-            var qLearning = new QLearning<KohonenAiState>(0.3, 1, 0.5);
+            var qLearning = new QLearning<KohonenAiState, AI.Action>(0.3, 1, 0.5);
             var kohonen = new KohonenCore<StateVector>(30, 30, 2, 0.5, 1, 1, 0.5, _nonEmptyModeCohonenActive);
             var weight = new double[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
             kohonen.SetWeight(weight);
@@ -317,7 +317,7 @@ namespace Manager.MTCore.Core
         {
             var won = 0;
             var lost = 0;
-            var counter = 0;
+            //var counter = 0;
 
             //start threads
             foreach (var thread in threads)
@@ -373,7 +373,7 @@ namespace Manager.MTCore.Core
                 thread.Abort();
         }
 
-        public void CreateMtDaemonAndAddItToSomeCollections(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState> qLearning, string map, string level, int mapNumber, List<Thread> threads, List<MtSingleDaemon> daemons, List<BlockingCollection<KohonenUpdate>> kohonenUpdateQueues)
+        public void CreateMtDaemonAndAddItToSomeCollections(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState, AI.Action> qLearning, string map, string level, int mapNumber, List<Thread> threads, List<MtSingleDaemon> daemons, List<BlockingCollection<KohonenUpdate>> kohonenUpdateQueues)
         {
             var queue = new BlockingCollection<KohonenUpdate>(QUEUE_MAX_CAPACTITY);
             var mapSingleDaemon = new MtSingleDaemon(kohonen, qLearning, queue, map, level, 0, HeuristicActive, CosDistActive, mapNumber) { IterationStartLearning = ITERATION_OF_SINGLE_THREAD_START_LEARNING };
