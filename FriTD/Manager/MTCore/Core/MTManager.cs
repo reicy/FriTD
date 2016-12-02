@@ -377,7 +377,7 @@ namespace Manager.MTCore.Core
         {
             var queue = new BlockingCollection<KohonenUpdate>(QUEUE_MAX_CAPACTITY);
             var mapSingleDaemon = new MtSingleDaemon(kohonen, qLearning, queue, map, level, 0, HeuristicActive, CosDistActive, mapNumber) { IterationStartLearning = ITERATION_OF_SINGLE_THREAD_START_LEARNING };
-            threads.Add(new Thread(mapSingleDaemon.ProcessLearning));
+            threads.Add(new Thread(mapSingleDaemon.ProcessLearning) { IsBackground = true });
             daemons.Add(mapSingleDaemon);
             kohonenUpdateQueues.Add(queue);
         }

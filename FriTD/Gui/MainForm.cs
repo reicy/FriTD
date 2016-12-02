@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using Manager.Core;
 using Manager.Kohonen;
 using Manager.MTCore.Core;
+using TDExperimentLib.Experiments;
+using TDExperimentLib.UI;
 
 namespace Gui
 {
@@ -128,8 +130,8 @@ namespace Gui
 
         private void buttonLongRunMoreMaps_Click(object sender, EventArgs e)
         {
-            _manager = ManagerBuilder.BuildAiLearningManager();
-            _manager.AiLearningRunMultileMaps();
+            var expWin = new ExperimentWindow(new Experiment01());
+            expWin.Show();
         }
 
         private void MTStartButton_Click(object sender, EventArgs e)
@@ -140,9 +142,8 @@ namespace Gui
 
         private void button5_Click(object sender, EventArgs e)
         {
-            Console.WriteLine(@"Zmačkol som MT experimenty");
-            var manager = new MtManager();
-            manager.ExperimentRun1();
+            var expWin = new ExperimentWindow(new Experiment02());
+            expWin.Show();
         }
     }
 }
