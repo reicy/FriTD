@@ -19,6 +19,8 @@ namespace Manager.MTCore.Core
         public static int[] LPerMap = new int[10];
         public static int[] WPerMapTotal = new int[10];
         public static int[] LPerMapTotal = new int[10];
+        public static int[,] LevelPerMapTotal = new int[10,20];
+        public static int[,] LevelPerMap = new int[10,20];
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void IncWl(int wl, int level, int mapNumber = 0)
@@ -32,6 +34,8 @@ namespace Manager.MTCore.Core
                 TotalLost++;
                 LPerMap[mapNumber]++;
                 LPerMapTotal[mapNumber]++;
+                LevelPerMap[mapNumber,level]++;
+                LevelPerMapTotal[mapNumber, level]++;
             }
             else
             {
@@ -67,17 +71,44 @@ namespace Manager.MTCore.Core
                 }
                 Console.WriteLine(perMap);
 
+                Console.WriteLine("Lost in levels: " + LevelPerMap.ToString());
+                Console.WriteLine("Lost in levels (total): " + LevelPerMapTotal.ToString());
+                /*
+                Console.WriteLine("Lost in levels: ");
+                for (int i = 0; i < LevelPerMap.GetLength(0); i++)
+                {
+                    Console.Write("{0}:[",i);
+                    for (int k = 0; k < LevelPerMap.GetLength(1); k++)
+                    {
+                        Console.Write("{0}, ", LevelPerMap[i, k]);
+                    }
+                    Console.WriteLine("]; ");
+                }
+                */
                 Reset();
             }
         }
 
         public static void PrintLevelsOfEnding()
         {
+            /*
             Console.WriteLine(@"levels");
             foreach (int lvlItem in Level)
             {
                 Console.Write(@"{0} ", lvlItem);
             }
+            */
+            Console.WriteLine("Lost in levels: ");
+            for (int i = 0; i < LevelPerMapTotal.GetLength(0); i++)
+            {
+                Console.Write("{0}:[", i);
+                for (int k = 0; k < LevelPerMapTotal.GetLength(1); k++)
+                {
+                    Console.Write("{0}, ", LevelPerMapTotal[i, k]);
+                }
+                Console.WriteLine("]; ");
+            }
+
             Console.WriteLine();
             Console.WriteLine();
         }
@@ -90,15 +121,18 @@ namespace Manager.MTCore.Core
             TypeL = new[] { 0, 0 };
             WPerMap = new int[10];
             LPerMap = new int[10];
+            LevelPerMap = new int[10, 20];
         }
 
         public static void ResetAll()
         {
+            PrintLevelsOfEnding();
             Console.WriteLine(@"########################## RESETTING STATISTICS ##########################");
             Reset();
             Level = new int[20];
             WPerMapTotal = new int[10];
             LPerMapTotal = new int[10];
+            LevelPerMapTotal = new int[10, 20];
         }
 
         internal static void IncWl(int v, int level, int type, int mapNumber = 0)
