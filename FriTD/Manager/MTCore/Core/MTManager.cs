@@ -25,7 +25,7 @@ namespace Manager.MTCore.Core
         private const int ITERATION_OF_SINGLE_THREAD_START_LEARNING = 5;
         private const int QUEUE_MAX_CAPACTITY = 1;
 
-        private static readonly bool CosDistActive = false;
+        private static readonly bool CosDistActive = true;
         private static readonly bool HeuristicActive = true;
 
         public void ProcessLearning()
@@ -264,6 +264,68 @@ namespace Manager.MTCore.Core
                 thread.Abort();
         }
 
+        public void ExperimentRun(List<string> maps, int numberOfIterationsPerMap, int numberOfIterationsPerMapWithKohonen, bool useCosDist = false, double qLearningRandomActionProbability = 0.3,
+            double qLearningDiscountFactor = 1, double qLearningLearningRate = 0.5, int kohonenRows = 30, int kohonenCols = 30, double kohonenRadius = 2, double kohonenLearningRate = 0.5,
+            double kohonenDistFactor = 1, string kohonenLoadFile = null, string qLearningLoadFile = null, string kohonenSaveFile = null, string qLearningSaveFile = null)
+        {
+            var qLearning = new QLearning<KohonenAiState, AI.Action>(qLearningRandomActionProbability, qLearningDiscountFactor, qLearningLearningRate);
+            var kohonen = new KohonenCore<StateVector>(kohonenRows, kohonenCols, kohonenRadius, kohonenLearningRate, kohonenDistFactor, 1, 0.5, _nonEmptyModeCohonenActive);
+            var weight = new double[] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+            kohonen.SetWeight(weight);
+            var threads = new List<Thread>();
+            var daemons = new List<MtSingleDaemon>();
+            var kohonenUpdateQueues = new List<BlockingCollection<KohonenUpdate>>();
+            var kohonenUpdatesToProcess = new List<KohonenUpdate>();
+
+            if (kohonenLoadFile != null)
+            {
+                kohonen.Load(kohonenLoadFile);
+            }
+
+            if (qLearningLoadFile != null)
+            {
+                qLearning.Load(qLearningLoadFile);
+            }
+
+            string mapsString = "";
+            foreach (var map in maps)
+            {
+                mapsString += map + "  ";
+                var mapAndLevel = getMapAndLevel(map);
+                CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, mapAndLevel.Key, mapAndLevel.Value, getnumberOfMap(map), threads, daemons, kohonenUpdateQueues, CosDistActive);
+            }
+
+            Console.WriteLine(@"############ STARTING #############");
+            Console.WriteLine("Maps: " + mapsString);
+            Console.WriteLine("Number of iterations per map: {0}; with kohonen: {1}", numberOfIterationsPerMap, numberOfIterationsPerMapWithKohonen);
+            Console.WriteLine("Total number of iterations per map: {0}; with kohonen: {1}", numberOfIterationsPerMap*maps.Count, numberOfIterationsPerMapWithKohonen*maps.Count);
+            Console.WriteLine("Cos distance: {0}", useCosDist);
+            Console.WriteLine();
+            Console.WriteLine("KOHONEN");
+            Console.WriteLine("rows: {0}; cols: {1}; radius: {2}", kohonenRows, kohonenCols, kohonenRadius);
+            Console.WriteLine("learning rate: {0}; disFactor: {1}", kohonenLearningRate, kohonenDistFactor);
+            Console.WriteLine();
+            Console.WriteLine("QLEARNING");
+            Console.WriteLine("random action prob: {0}; disFactor: {1}; learning rate: {2}", qLearningRandomActionProbability, qLearningDiscountFactor, qLearningLearningRate);
+            Console.WriteLine("####################################");
+
+            StartMagic(kohonen, numberOfIterationsPerMap, numberOfIterationsPerMapWithKohonen, threads, daemons, kohonenUpdateQueues, kohonenUpdatesToProcess);
+
+            MtStats.PrintLevelsOfEnding();
+            MtStats.PrintTotalScore();
+            MtStats.ResetAll();
+
+            if (kohonenSaveFile != null)
+            {
+                kohonen.Save(kohonenSaveFile);
+            }
+
+            if (qLearningSaveFile != null)
+            {
+                qLearning.Save(qLearningSaveFile);
+            }
+        }
+
         // run 6 types of maps from one kohonen and qlearning
         public void ExperimentRun1()
         {
@@ -288,13 +350,14 @@ namespace Manager.MTCore.Core
             CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map5, Properties.Resources.Levels5, 5, threads, daemons, kohonenUpdateQueues);
 
             Console.WriteLine(@"\n\n ########################## \nSTARTING 6 MAPS in 6 THREADS WITH KOHONEN LEARNING TURNED ON\nSettings: QLearning<KohonenAiState>(0.3, 1, 0.5); KohonenCore<StateVector>(30, 30, 2, 0.5, 1, 1, 0.5, nonEmptyModeCohonenActive); \n ########################## ");
-            StartMagic(kohonen, 5000, 5001, threads, daemons, kohonenUpdateQueues, kohonenUpdatesToProcess);
+            StartMagic(kohonen, 2500, 2500, threads, daemons, kohonenUpdateQueues, kohonenUpdatesToProcess);
 
             MtStats.PrintLevelsOfEnding();
             MtStats.PrintTotalScore();
             MtStats.ResetAll();
 
             qLearning.Epsilon = 0.1;
+            kohonen.LearningRate = 0.3;
             threads.Clear();
             daemons.Clear();
             kohonenUpdateQueues.Clear();
@@ -307,10 +370,65 @@ namespace Manager.MTCore.Core
             CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map5, Properties.Resources.Levels5, 5, threads, daemons, kohonenUpdateQueues);
 
             Console.WriteLine(@"\n\n ########################## \nSTARTING 6 MAPS in 6 THREADS WITH KOHONEN LEARNING TURNED OFF\nSettings: QLearning<KohonenAiState>(0.1, 1, 0.5); KohonenCore<StateVector>(30, 30, 2, 0.5, 1, 1, 0.5, nonEmptyModeCohonenActive); \n ########################## ");
-            StartMagic(kohonen, 5000, 0, threads, daemons, kohonenUpdateQueues, kohonenUpdatesToProcess);
+            StartMagic(kohonen, 2500, 1250, threads, daemons, kohonenUpdateQueues, kohonenUpdatesToProcess);
 
             MtStats.PrintLevelsOfEnding();
             MtStats.PrintTotalScore();
+            MtStats.ResetAll();
+
+            qLearning.Alpha = 0.2;
+            threads.Clear();
+            daemons.Clear();
+            kohonenUpdateQueues.Clear();
+
+            CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map, Properties.Resources.Levels, 0, threads, daemons, kohonenUpdateQueues);
+            CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map1, Properties.Resources.Levels1, 1, threads, daemons, kohonenUpdateQueues);
+            CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map2, Properties.Resources.Levels2, 2, threads, daemons, kohonenUpdateQueues);
+            CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map3, Properties.Resources.Levels3, 3, threads, daemons, kohonenUpdateQueues);
+            CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map4, Properties.Resources.Levels4, 4, threads, daemons, kohonenUpdateQueues);
+            CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map5, Properties.Resources.Levels5, 5, threads, daemons, kohonenUpdateQueues);
+
+            Console.WriteLine(@"\n\n ########################## \nSTARTING 6 MAPS in 6 THREADS WITH KOHONEN LEARNING TURNED OFF\nSettings: QLearning<KohonenAiState>(0.1, 1, 0.2); KohonenCore<StateVector>(30, 30, 2, 0.5, 1, 1, 0.5, nonEmptyModeCohonenActive); \n ########################## ");
+            StartMagic(kohonen, 2500, 0, threads, daemons, kohonenUpdateQueues, kohonenUpdatesToProcess);
+
+            MtStats.PrintLevelsOfEnding();
+            MtStats.PrintTotalScore();
+        }
+
+        // run 6 types of maps from one kohonen and qlearning
+        public void ExperimentRun2()
+        {
+            // TODO: interationstart learning in MTSingleDaemon
+
+            // create qlearning and kohonen and init other very important things...
+            var qLearning = new QLearning<KohonenAiState, AI.Action>(0.3, 1, 0.5);
+            var kohonen = new KohonenCore<StateVector>(30, 30, 2, 0.5, 1, 1, 0.5, _nonEmptyModeCohonenActive);
+            var weight = new double[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+            kohonen.SetWeight(weight);
+            var threads = new List<Thread>();
+            var daemons = new List<MtSingleDaemon>();
+            var kohonenUpdateQueues = new List<BlockingCollection<KohonenUpdate>>();
+            var kohonenUpdatesToProcess = new List<KohonenUpdate>();
+            var costDist = true;
+
+            kohonen.Load("kohonenMap1.dat");
+
+            // init threads
+            CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map, Properties.Resources.Levels, 0, threads, daemons, kohonenUpdateQueues, costDist);
+            /*CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map1, Properties.Resources.Levels1, 1, threads, daemons, kohonenUpdateQueues, costDist);
+            CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map2, Properties.Resources.Levels2, 2, threads, daemons, kohonenUpdateQueues, costDist);
+            CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map3, Properties.Resources.Levels3, 3, threads, daemons, kohonenUpdateQueues, costDist);
+            CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map4, Properties.Resources.Levels4, 4, threads, daemons, kohonenUpdateQueues, costDist);
+            CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, Properties.Resources.Map5, Properties.Resources.Levels5, 5, threads, daemons, kohonenUpdateQueues, costDist);*/
+
+            Console.WriteLine(@"\n\n ########################## \nSTARTING 1 MAPS in 1 THREADS WITH KOHONEN LEARNING TURNED ON\nSettings: QLearning<KohonenAiState>(0.3, 1, 0.5); KohonenCore<StateVector>(30, 30, 2, 0.5, 1, 1, 0.5, nonEmptyModeCohonenActive); \n ########################## ");
+            StartMagic(kohonen, 5000, 5001, threads, daemons, kohonenUpdateQueues, kohonenUpdatesToProcess);
+
+            MtStats.PrintLevelsOfEnding();
+            MtStats.PrintTotalScore();
+
+            kohonen.Save("k2");
+            qLearning.Save("q2");
         }
 
         public void StartMagic(KohonenCore<StateVector> kohonen, int numOfIterationsPerThread, int numOfIterationsWithKohonenLearningPerThread, List<Thread> threads, List<MtSingleDaemon> daemons, List<BlockingCollection<KohonenUpdate>> kohonenUpdateQueues, List<KohonenUpdate> kohonenUpdatesToProcess)
@@ -373,13 +491,55 @@ namespace Manager.MTCore.Core
                 thread.Abort();
         }
 
-        public void CreateMtDaemonAndAddItToSomeCollections(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState, AI.Action> qLearning, string map, string level, int mapNumber, List<Thread> threads, List<MtSingleDaemon> daemons, List<BlockingCollection<KohonenUpdate>> kohonenUpdateQueues)
+        public void CreateMtDaemonAndAddItToSomeCollections(KohonenCore<StateVector> kohonen, QLearning<KohonenAiState, AI.Action> qLearning, string map, string level, int mapNumber, List<Thread> threads, List<MtSingleDaemon> daemons, List<BlockingCollection<KohonenUpdate>> kohonenUpdateQueues, bool useCosDist = false)
         {
             var queue = new BlockingCollection<KohonenUpdate>(QUEUE_MAX_CAPACTITY);
-            var mapSingleDaemon = new MtSingleDaemon(kohonen, qLearning, queue, map, level, 0, HeuristicActive, CosDistActive, mapNumber) { IterationStartLearning = ITERATION_OF_SINGLE_THREAD_START_LEARNING };
+            var mapSingleDaemon = new MtSingleDaemon(kohonen, qLearning, queue, map, level, 0, HeuristicActive, useCosDist, mapNumber) { IterationStartLearning = ITERATION_OF_SINGLE_THREAD_START_LEARNING };
             threads.Add(new Thread(mapSingleDaemon.ProcessLearning) { IsBackground = true });
             daemons.Add(mapSingleDaemon);
             kohonenUpdateQueues.Add(queue);
+        }
+
+        public KeyValuePair<string, string> getMapAndLevel(string mapName)
+        {
+            switch (mapName)
+            {
+                case "Map":
+                    return new KeyValuePair<string, string>(Properties.Resources.Map, Properties.Resources.Levels);
+                case "Map1":
+                    return new KeyValuePair<string, string>(Properties.Resources.Map1, Properties.Resources.Levels1);
+                case "Map2":
+                    return new KeyValuePair<string, string>(Properties.Resources.Map2, Properties.Resources.Levels2);
+                case "Map3":
+                    return new KeyValuePair<string, string>(Properties.Resources.Map3, Properties.Resources.Levels3);
+                case "Map4":
+                    return new KeyValuePair<string, string>(Properties.Resources.Map4, Properties.Resources.Levels4);
+                case "Map5":
+                    return new KeyValuePair<string, string>(Properties.Resources.Map5, Properties.Resources.Levels5);
+                default:
+                    return new KeyValuePair<string, string>(null, null);
+            }
+        }
+
+        public int getnumberOfMap(string mapName)
+        {
+            switch (mapName)
+            {
+                case "Map":
+                    return 0;
+                case "Map1":
+                    return 1;
+                case "Map2":
+                    return 2;
+                case "Map3":
+                    return 3;
+                case "Map4":
+                    return 4;
+                case "Map5":
+                    return 5;
+                default:
+                    return 0;
+            }
         }
     }
 }

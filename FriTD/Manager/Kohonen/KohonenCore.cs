@@ -213,25 +213,28 @@ namespace Manager.Kohonen
                 bool found = false;
                 for (int i = 0; i < search; ++i)
                 {
-                    int[] coords = candidates[0].Value;
-                    candidates.RemoveAt(0);
-
-                    for (int j = 0; j < search_candidates; ++j)
+                    if (candidates.Count > 0)
                     {
-                        int r = coords[0] + rnd.Next(-itemh / 2, itemh / 2);
-                        int c = coords[1] + rnd.Next(-itemw / 2, itemw / 2);
-                        if (0 <= r && r < _rows && 0 <= c && c < _cols)
+                        int[] coords = candidates[0].Value;
+                        candidates.RemoveAt(0);
+
+                        for (int j = 0; j < search_candidates; ++j)
                         {
-                            V v = _arr[r, c];
-                            double dist = distFun(v, input);
-                            if (dist < bestDist)
+                            int r = coords[0] + rnd.Next(-itemh/2, itemh/2);
+                            int c = coords[1] + rnd.Next(-itemw/2, itemw/2);
+                            if (0 <= r && r < _rows && 0 <= c && c < _cols)
                             {
-                                bestDist = dist;
-                                best[0] = r;
-                                best[1] = c;
-                                candidates.Add(new KeyValuePair<double, int[]>(dist, new[] { r, c }));
-                                candidates.Sort(_candidatesHeuristic);
-                                found = true;
+                                V v = _arr[r, c];
+                                double dist = distFun(v, input);
+                                if (dist < bestDist)
+                                {
+                                    bestDist = dist;
+                                    best[0] = r;
+                                    best[1] = c;
+                                    candidates.Add(new KeyValuePair<double, int[]>(dist, new[] {r, c}));
+                                    candidates.Sort(_candidatesHeuristic);
+                                    found = true;
+                                }
                             }
                         }
                     }
