@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Threading;
 using Manager.Kohonen;
 using Manager.QLearning;
+using static Manager.Utils.CustomLogger;
 
 namespace Manager.MTCore.Core
 {
@@ -264,12 +265,18 @@ namespace Manager.MTCore.Core
                 thread.Abort();
         }
 
-        public void ExperimentRun(List<string> maps, int numberOfIterationsPerMap, int numberOfIterationsPerMapWithKohonen, bool useCosDist = false, double qLearningRandomActionProbability = 0.3,
-            double qLearningDiscountFactor = 1, double qLearningLearningRate = 0.5, int kohonenRows = 30, int kohonenCols = 30, double kohonenRadius = 2, double kohonenLearningRate = 0.5,
-            double kohonenDistFactor = 1, string kohonenLoadFile = null, string qLearningLoadFile = null, string kohonenSaveFile = null, string qLearningSaveFile = null)
+        public void ExperimentRun(List<string> maps, int numberOfIterationsPerMap,
+            int numberOfIterationsPerMapWithKohonen, bool useCosDist = false,
+            double qLearningRandomActionProbability = 0.3,
+            double qLearningDiscountFactor = 1, double qLearningLearningRate = 0.5, int kohonenRows = 30,
+            int kohonenCols = 30, double kohonenRadius = 2, double kohonenLearningRate = 0.5,
+            double kohonenDistFactor = 1, string kohonenLoadFile = null, string qLearningLoadFile = null,
+            string kohonenSaveFile = null, string qLearningSaveFile = null)
         {
-            var qLearning = new QLearning<KohonenAiState, AI.Action>(qLearningRandomActionProbability, qLearningDiscountFactor, qLearningLearningRate);
-            var kohonen = new KohonenCore<StateVector>(kohonenRows, kohonenCols, kohonenRadius, kohonenLearningRate, kohonenDistFactor, 1, 0.5, _nonEmptyModeCohonenActive);
+            var qLearning = new QLearning<KohonenAiState, AI.Action>(qLearningRandomActionProbability,
+                qLearningDiscountFactor, qLearningLearningRate);
+            var kohonen = new KohonenCore<StateVector>(kohonenRows, kohonenCols, kohonenRadius, kohonenLearningRate,
+                kohonenDistFactor, 1, 0.5, _nonEmptyModeCohonenActive);
             var weight = new double[] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
             kohonen.SetWeight(weight);
             var threads = new List<Thread>();
@@ -292,24 +299,29 @@ namespace Manager.MTCore.Core
             {
                 mapsString += map + "  ";
                 var mapAndLevel = getMapAndLevel(map);
-                CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, mapAndLevel.Key, mapAndLevel.Value, getnumberOfMap(map), threads, daemons, kohonenUpdateQueues, CosDistActive);
+                CreateMtDaemonAndAddItToSomeCollections(kohonen, qLearning, mapAndLevel.Key, mapAndLevel.Value,
+                    getnumberOfMap(map), threads, daemons, kohonenUpdateQueues, CosDistActive);
             }
 
-            Console.WriteLine(@"############ STARTING #############");
-            Console.WriteLine("Maps: " + mapsString);
-            Console.WriteLine("Number of iterations per map: {0}; with kohonen: {1}", numberOfIterationsPerMap, numberOfIterationsPerMapWithKohonen);
-            Console.WriteLine("Total number of iterations per map: {0}; with kohonen: {1}", numberOfIterationsPerMap*maps.Count, numberOfIterationsPerMapWithKohonen*maps.Count);
-            Console.WriteLine("Cos distance: {0}", useCosDist);
-            Console.WriteLine();
-            Console.WriteLine("KOHONEN");
-            Console.WriteLine("rows: {0}; cols: {1}; radius: {2}", kohonenRows, kohonenCols, kohonenRadius);
-            Console.WriteLine("learning rate: {0}; disFactor: {1}", kohonenLearningRate, kohonenDistFactor);
-            Console.WriteLine();
-            Console.WriteLine("QLEARNING");
-            Console.WriteLine("random action prob: {0}; disFactor: {1}; learning rate: {2}", qLearningRandomActionProbability, qLearningDiscountFactor, qLearningLearningRate);
-            Console.WriteLine("####################################");
+            Log(@"############ STARTING #############");
+            Log("Maps: " + mapsString);
+            Log("Number of iterations per map: " + numberOfIterationsPerMap + "; with kohonen: " +
+                numberOfIterationsPerMapWithKohonen);
+            Log("Total number of iterations per map: " + numberOfIterationsPerMap*maps.Count + "; with kohonen: " +
+                numberOfIterationsPerMapWithKohonen*maps.Count);
+            Log("Cos distance: " + useCosDist);
+            Log();
+            Log("KOHONEN");
+            Log("rows: " + kohonenRows + "; cols: " + kohonenCols + "; radius: " + kohonenRadius);
+            Log("learning rate: " + kohonenLearningRate + "; disFactor: " + kohonenDistFactor);
+            Log();
+            Log("QLEARNING");
+            Log("random action prob: " + qLearningRandomActionProbability + "; disFactor: " + qLearningDiscountFactor +
+                "; learning rate: " + qLearningLearningRate);
+            Log("####################################");
 
-            StartMagic(kohonen, numberOfIterationsPerMap, numberOfIterationsPerMapWithKohonen, threads, daemons, kohonenUpdateQueues, kohonenUpdatesToProcess);
+            StartMagic(kohonen, numberOfIterationsPerMap, numberOfIterationsPerMapWithKohonen, threads, daemons,
+                kohonenUpdateQueues, kohonenUpdatesToProcess);
 
             MtStats.PrintLevelsOfEnding();
             MtStats.PrintTotalScore();

@@ -85,6 +85,7 @@
     <Compile Include="QLearning\QState.cs" />
     <Compile Include="QLearning\QAction.cs" />
     <Compile Include="QLearning\QLearning.cs" />
+    <Compile Include="Utils\CustomLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TD\TD.csproj">

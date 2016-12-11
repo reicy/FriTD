@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Experiments\Experiment03.cs" />
+    <Compile Include="Experiments\Experiment04.cs" />
     <Compile Include="UI\ExperimentWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -55,6 +56,10 @@
     <ProjectReference Include="..\Manager\Manager.csproj">
       <Project>{54197270-dad9-4c71-975d-bd99d9309553}</Project>
       <Name>Manager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TD\TD.csproj">
+      <Project>{90591ac3-6908-43ed-b2f3-ae8f6240ff58}</Project>
+      <Name>TD</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
