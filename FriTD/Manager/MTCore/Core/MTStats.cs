@@ -25,58 +25,64 @@ namespace Manager.MTCore.Core
         private static int[,] LevelPerMapTotal = new int[10, 20];
         private static int[,] LevelPerMap = new int[10, 20];
 
+        private static readonly object _lock = new Object();
+
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void IncWl(int wl, int level, int mapNumber = 0)
         {
-            Level[level]++;
-            Total++;
-
-            if (wl == 0)
+            lock (_lock)
             {
-                Lost++;
-                TotalLost++;
-                LPerMap[mapNumber]++;
-                LPerMapTotal[mapNumber]++;
-                LevelPerMap[mapNumber, level]++;
-                LevelPerMapTotal[mapNumber, level]++;
-            }
-            else
-            {
-                Won++;
-                TotalWon++;
-                WPerMap[mapNumber]++;
-                WPerMapTotal[mapNumber]++;
-            }
+                Level[level]++;
+                Total++;
 
-            if ((Lost + Won)%1000 == 0)
-            {
-                Log(@"Iteration: " + Total + " Won: " + Won + " Lost: " + Lost);
-                //Console.WriteLine(@"Iteration: {0} Won: {1} Lost: {2} -W {3}  {4} -L {5}  {6}", Total, Won, Lost, TypeW[0], TypeW[1], TypeL[0], TypeL[1]);
-                //Console.WriteLine(Won);
-
-                var perMap = "\tW/L per map type: ";
-                for (int i = 0; i < WPerMap.Length; i++)
+                if (wl == 0)
                 {
-                    if (!(WPerMap[i] == 0 && LPerMap[i] == 0))
-                    {
-                        perMap += i + ":(" + WPerMap[i] + ":" + LPerMap[i] + "); ";
-                    }
+                    Lost++;
+                    TotalLost++;
+                    LPerMap[mapNumber]++;
+                    LPerMapTotal[mapNumber]++;
+                    LevelPerMap[mapNumber, level]++;
+                    LevelPerMapTotal[mapNumber, level]++;
                 }
-                Log(perMap);
-
-                perMap = "\tW/L per map type (total): ";
-                for (int i = 0; i < WPerMapTotal.Length; i++)
+                else
                 {
-                    if (!(WPerMapTotal[i] == 0 && LPerMapTotal[i] == 0))
-                    {
-                        perMap += i + ":(" + WPerMapTotal[i] + ":" + LPerMapTotal[i] + "); ";
-                    }
+                    Won++;
+                    TotalWon++;
+                    WPerMap[mapNumber]++;
+                    WPerMapTotal[mapNumber]++;
                 }
-                Log(perMap);
-                Reset();
+
+                if ((Lost + Won)%1000 == 0)
+                {
+                    Log(@"Iteration: " + Total + " Won: " + Won + " Lost: " + Lost);
+                    //Console.WriteLine(@"Iteration: {0} Won: {1} Lost: {2} -W {3}  {4} -L {5}  {6}", Total, Won, Lost, TypeW[0], TypeW[1], TypeL[0], TypeL[1]);
+                    //Console.WriteLine(Won);
+
+                    var perMap = "\tW/L per map type: ";
+                    for (int i = 0; i < WPerMap.Length; i++)
+                    {
+                        if (!(WPerMap[i] == 0 && LPerMap[i] == 0))
+                        {
+                            perMap += i + ":(" + WPerMap[i] + ":" + LPerMap[i] + "); ";
+                        }
+                    }
+                    Log(perMap);
+
+                    perMap = "\tW/L per map type (total): ";
+                    for (int i = 0; i < WPerMapTotal.Length; i++)
+                    {
+                        if (!(WPerMapTotal[i] == 0 && LPerMapTotal[i] == 0))
+                        {
+                            perMap += i + ":(" + WPerMapTotal[i] + ":" + LPerMapTotal[i] + "); ";
+                        }
+                    }
+                    Log(perMap);
+                    Reset();
+                }
             }
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void PrintLevelsOfEnding()
         {
             /*
@@ -100,6 +106,7 @@ namespace Manager.MTCore.Core
             Log();
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void Reset()
         {
             Won = 0;
@@ -111,6 +118,7 @@ namespace Manager.MTCore.Core
             LevelPerMap = new int[10, 20];
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void ResetAll()
         {
             PrintLevelsOfEnding();
@@ -122,6 +130,7 @@ namespace Manager.MTCore.Core
             LevelPerMapTotal = new int[10, 20];
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         internal static void IncWl(int v, int level, int type, int mapNumber = 0)
         {
             if (v == 0)
@@ -135,6 +144,7 @@ namespace Manager.MTCore.Core
             IncWl(v, level, mapNumber);
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void PrintTotalScore()
         {
             Log(@"Total score: w " + TotalWon + " l " + TotalLost);
