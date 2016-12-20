@@ -133,15 +133,18 @@ namespace Manager.MTCore.Core
         [MethodImpl(MethodImplOptions.Synchronized)]
         internal static void IncWl(int v, int level, int type, int mapNumber = 0)
         {
-            if (v == 0)
+            lock (_lock)
+            {
+                /*if (v == 0)
             {
                 TypeL[type]++;
             }
             else
             {
                 TypeW[type]++;
+            }*/
+                IncWl(v, level, mapNumber);
             }
-            IncWl(v, level, mapNumber);
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]

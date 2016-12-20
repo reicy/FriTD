@@ -41,16 +41,39 @@ namespace TDExperimentLib.Experiments
 
             CustomLogger.logToFile = true;
 
-            RunMap("Map");
-            RunMap("Map1");
-            RunMap("Map2");
-            RunMap("Map3");
-            RunMap("Map4");
-            RunMap("Map5");
+            var prefix = "6_";
+            RunMap("Map1", prefix: prefix);
+            RunMap("Map2", prefix: prefix);
+            RunMap("Map3", prefix: prefix);
+            RunMap("Map4", prefix: prefix);
+            RunMap("Map5", prefix: prefix);
 
+            prefix = "7_";
+            RunMap("Map", prefix: prefix);
+            RunMap("Map1", prefix: prefix);
+            RunMap("Map2", prefix: prefix);
+            RunMap("Map3", prefix: prefix);
+            RunMap("Map4", prefix: prefix);
+            RunMap("Map5", prefix: prefix);
+
+            prefix = "8_";
+            RunMap("Map", prefix: prefix);
+            RunMap("Map1", prefix: prefix);
+            RunMap("Map2", prefix: prefix);
+            RunMap("Map3", prefix: prefix);
+            RunMap("Map4", prefix: prefix);
+            RunMap("Map5", prefix: prefix);
+
+            prefix = "9_";
+            RunMap("Map", prefix: prefix);
+            RunMap("Map1", prefix: prefix);
+            RunMap("Map2", prefix: prefix);
+            RunMap("Map3", prefix: prefix);
+            RunMap("Map4", prefix: prefix);
+            RunMap("Map5", prefix: prefix);
         }
 
-        private void RunMap(string map, int numOfThreads = 4)
+        private void RunMap(string map, int numOfThreads = 4, string prefix = "")
         {
             SetDefaultValues();
             maps.Clear();
@@ -59,49 +82,49 @@ namespace TDExperimentLib.Experiments
                 maps.Add(map);
             }
 
-            kohonenSaveFile = map + "_koh.txt";
-            qLearningSaveFile = map + "_q.txt";
+            kohonenSaveFile = prefix + map + "_koh.txt";
+            qLearningSaveFile = prefix + map + "_q.txt";
             kohonenLoadFile = null;
             qLearningLoadFile = null;
 
-            CustomLogger.filename = map + "_stats.txt";
+            CustomLogger.filename = prefix + map + "_stats.txt";
             CustomLogger.ClearActualLogFile();
 
-            numberOfIterationsPerMap = 2500;
-            numberOfIterationsPerMapWithKohonen = 2500;
+            numberOfIterationsPerMap = 3000;
+            numberOfIterationsPerMapWithKohonen = 3000;
             kohonenRadius = 3;
             RunExperiment();
 
             kohonenLoadFile = kohonenSaveFile;
             qLearningLoadFile = qLearningSaveFile;
 
-            numberOfIterationsPerMap = 2500;
-            numberOfIterationsPerMapWithKohonen = 2500;
+            numberOfIterationsPerMap = 3000;
+            numberOfIterationsPerMapWithKohonen = 3000;
             kohonenLearningRate = 0.3;
             kohonenRadius = 2;
             RunExperiment();
 
-            numberOfIterationsPerMap = 1500;
-            numberOfIterationsPerMapWithKohonen = 1500;
+            numberOfIterationsPerMap = 3000;
+            numberOfIterationsPerMapWithKohonen = 3000;
             kohonenLearningRate = 0.15;
             RunExperiment();
 
-            numberOfIterationsPerMap = 2500;
+            numberOfIterationsPerMap = 3000;
             numberOfIterationsPerMapWithKohonen = 0;
             RunExperiment();
 
-            numberOfIterationsPerMap = 2500;
+            numberOfIterationsPerMap = 3000;
             numberOfIterationsPerMapWithKohonen = 0;
             qLearningRandomActionProbability = 0.2;
             qLearningLearningRate = 0.35;
             RunExperiment();
 
-            numberOfIterationsPerMap = 2500;
+            numberOfIterationsPerMap = 3000;
             numberOfIterationsPerMapWithKohonen = 0;
             qLearningRandomActionProbability = 0.1;
             RunExperiment();
 
-            numberOfIterationsPerMap = 1500;
+            numberOfIterationsPerMap = 3000;
             numberOfIterationsPerMapWithKohonen = 0;
             qLearningRandomActionProbability = 0.001;
             qLearningLearningRate = 0.01;
