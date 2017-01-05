@@ -32,5 +32,10 @@ namespace Manager.Utils
         {
             if (File.Exists(filename)) File.Delete(filename);
         }
+
+        public static void LogToFile(string log = "", string filename = "", bool newLine = true)
+        {
+            File.AppendAllText(filename, log + (newLine ? "\n" : ""));
+        }
     }
 }

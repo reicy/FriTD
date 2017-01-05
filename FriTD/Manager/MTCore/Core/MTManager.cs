@@ -265,14 +265,34 @@ namespace Manager.MTCore.Core
                 thread.Abort();
         }
 
-        public void ExperimentRun(List<string> maps, int numberOfIterationsPerMap,
-            int numberOfIterationsPerMapWithKohonen, bool useCosDist = false,
-            double qLearningRandomActionProbability = 0.3,
-            double qLearningDiscountFactor = 1, double qLearningLearningRate = 0.5, int kohonenRows = 30,
-            int kohonenCols = 30, double kohonenRadius = 2, double kohonenLearningRate = 0.5,
-            double kohonenDistFactor = 1, string kohonenLoadFile = null, string qLearningLoadFile = null,
-            string kohonenSaveFile = null, string qLearningSaveFile = null)
+        public void ExperimentRun(Settings s)
         {
+            ExperimentRun(s.maps, s.numberOfIterationsPerMap, s.numberOfIterationsPerMapWithKohonen, s.useCosDist,
+                s.qLearningRandomActionProbability, s.qLearningDiscountFactor, s.qLearningLearningRate,
+                s.kohonenRows, s.kohonenCols, s.kohonenRadius, s.kohonenLearningRate, s.kohonenDistFactor,
+                s.kohonenLoadFile,
+                s.qLearningLoadFile, s.kohonenSaveFile, s.qLearningSaveFile);
+        }
+
+        public void ExperimentRun(List<string> maps,
+            int numberOfIterationsPerMap,
+            int numberOfIterationsPerMapWithKohonen,
+            bool useCosDist = false,
+            double qLearningRandomActionProbability = 0.3,
+            double qLearningDiscountFactor = 1, 
+            double qLearningLearningRate = 0.5, 
+            int kohonenRows = 30,
+            int kohonenCols = 30,
+            double kohonenRadius = 2, 
+            double kohonenLearningRate = 0.5,
+            double kohonenDistFactor = 1,
+            string kohonenLoadFile = null,
+            string qLearningLoadFile = null,
+            string kohonenSaveFile = null,
+            string qLearningSaveFile = null)
+        {
+            MtStats.ResetAll();
+
             var qLearning = new QLearning<KohonenAiState, AI.Action>(qLearningRandomActionProbability,
                 qLearningDiscountFactor, qLearningLearningRate);
             var kohonen = new KohonenCore<StateVector>(kohonenRows, kohonenCols, kohonenRadius, kohonenLearningRate,
@@ -325,7 +345,6 @@ namespace Manager.MTCore.Core
 
             MtStats.PrintLevelsOfEnding();
             MtStats.PrintTotalScore();
-            MtStats.ResetAll();
 
             if (kohonenSaveFile != null)
             {

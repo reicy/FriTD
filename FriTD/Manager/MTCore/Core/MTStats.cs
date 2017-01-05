@@ -2,6 +2,7 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.Remoting.Messaging;
+using System.Runtime.Remoting.Proxies;
 using static Manager.Utils.CustomLogger;
 
 namespace Manager.MTCore.Core
@@ -18,6 +19,8 @@ namespace Manager.MTCore.Core
         public static int[] TypeL = new int[2];
 
         // TODO: refactor
+        private static int highestMapNumber = 0;
+        private static int mapCount = 6;
         private static int[] WPerMap = new int[10];
         private static int[] LPerMap = new int[10];
         private static int[] WPerMapTotal = new int[10];
@@ -26,12 +29,14 @@ namespace Manager.MTCore.Core
         private static int[,] LevelPerMap = new int[10, 20];
 
         private static readonly object _lock = new Object();
+        private static readonly object _lock2 = new Object();
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void IncWl(int wl, int level, int mapNumber = 0)
         {
             lock (_lock)
             {
+                if (highestMapNumber < mapNumber) highestMapNumber = mapNumber;
                 Level[level]++;
                 Total++;
 
@@ -59,7 +64,7 @@ namespace Manager.MTCore.Core
                     //Console.WriteLine(Won);
 
                     var perMap = "\tW/L per map type: ";
-                    for (int i = 0; i < WPerMap.Length; i++)
+                    for (int i = 0; i <= highestMapNumber; i++)
                     {
                         if (!(WPerMap[i] == 0 && LPerMap[i] == 0))
                         {
@@ -69,7 +74,7 @@ namespace Manager.MTCore.Core
                     Log(perMap);
 
                     perMap = "\tW/L per map type (total): ";
-                    for (int i = 0; i < WPerMapTotal.Length; i++)
+                    for (int i = 0; i <= highestMapNumber; i++)
                     {
                         if (!(WPerMapTotal[i] == 0 && LPerMapTotal[i] == 0))
                         {
@@ -93,7 +98,7 @@ namespace Manager.MTCore.Core
             }
             */
             Log("Lost in levels: ");
-            for (int i = 0; i < LevelPerMapTotal.GetLength(0); i++)
+            for (int i = 0; i <= highestMapNumber; i++)
             {
                 Log(i + ":[", false);
                 for (int k = 0; k < LevelPerMapTotal.GetLength(1); k++)
@@ -130,10 +135,24 @@ namespace Manager.MTCore.Core
             LevelPerMapTotal = new int[10, 20];
         }
 
+        public static string ToCVSString()
+        {
+            string ret = $"{TotalWon}, {TotalLost}, {((TotalWon*1.0/(TotalWon + TotalLost))*100).ToString("F")}%, ";
+
+            for (int i = 0; i < mapCount; i++)
+            {
+                
+                int total = WPerMapTotal[i] + LPerMapTotal[i];
+                if (total == 0) total = 1;
+                ret += $"{WPerMapTotal[i]}, {LPerMapTotal[i]}, {((WPerMapTotal[i]*1.0/(total))*100).ToString("F")}%, ";
+            }
+            return ret;
+        }
+
         [MethodImpl(MethodImplOptions.Synchronized)]
         internal static void IncWl(int v, int level, int type, int mapNumber = 0)
         {
-            lock (_lock)
+            lock (_lock2)
             {
                 /*if (v == 0)
             {
