@@ -1,84 +1,89 @@
-﻿using System;
-using System.IO;
-using System.Runtime.CompilerServices;
-using System.Runtime.Remoting.Messaging;
-using System.Runtime.Remoting.Proxies;
-using static Manager.Utils.CustomLogger;
+﻿using static Manager.Utils.CustomLogger;
 
 namespace Manager.MTCore.Core
 {
-    public class MtStats
+    public static class MtStats
     {
-        public static int Won { get; set; }
-        public static int Lost { get; set; }
-        public static int Total { get; set; }
-        public static int TotalWon { get; set; }
-        public static int TotalLost { get; set; }
-        public static int[] Level = new int[20];
-        public static int[] TypeW = new int[2];
-        public static int[] TypeL = new int[2];
+        public const int MAP_COUNT = 6;
 
-        // TODO: refactor
-        private static int highestMapNumber = 0;
-        private static int mapCount = 6;
-        private static int[] WPerMap = new int[10];
-        private static int[] LPerMap = new int[10];
-        private static int[] WPerMapTotal = new int[10];
-        private static int[] LPerMapTotal = new int[10];
-        private static int[,] LevelPerMapTotal = new int[10, 20];
-        private static int[,] LevelPerMap = new int[10, 20];
+        public static int Won { get; private set; }
+        public static int Lost { get; private set; }
+        public static int Total { get; private set; }
+        public static int TotalWon { get; private set; }
+        public static int TotalLost { get; private set; }
 
-        private static readonly object _lock = new Object();
-        private static readonly object _lock2 = new Object();
+        private static int _highestMapNumber = 0;
+        private static int[] _level = new int[20];
+        private static int[] _typeW = new int[2];
+        private static int[] _typeL = new int[2];
+        private static int[] _wPerMap = new int[10];
+        private static int[] _lPerMap = new int[10];
+        private static int[] _wPerMapTotal = new int[10];
+        private static int[] _lPerMapTotal = new int[10];
+        private static int[,] _levelPerMapTotal = new int[10, 20];
+        private static int[,] _levelPerMap = new int[10, 20];
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void IncWl(int wl, int level, int mapNumber = 0)
+        private static readonly object Lock = new object();
+
+        public static void IncWl(int wl, int level, int type = -1, int mapNumber = 0)
         {
-            lock (_lock)
+            lock (Lock)
             {
-                if (highestMapNumber < mapNumber) highestMapNumber = mapNumber;
-                Level[level]++;
+                /*if (type >= 0)
+                {
+                    if (wl == 0)
+                    {
+                        _typeL[type]++;
+                    }
+                    else
+                    {
+                        _typeW[type]++;
+                    }
+                }*/
+
+                if (_highestMapNumber < mapNumber) _highestMapNumber = mapNumber;
+                _level[level]++;
                 Total++;
 
                 if (wl == 0)
                 {
                     Lost++;
                     TotalLost++;
-                    LPerMap[mapNumber]++;
-                    LPerMapTotal[mapNumber]++;
-                    LevelPerMap[mapNumber, level]++;
-                    LevelPerMapTotal[mapNumber, level]++;
+                    _lPerMap[mapNumber]++;
+                    _lPerMapTotal[mapNumber]++;
+                    _levelPerMap[mapNumber, level]++;
+                    _levelPerMapTotal[mapNumber, level]++;
                 }
                 else
                 {
                     Won++;
                     TotalWon++;
-                    WPerMap[mapNumber]++;
-                    WPerMapTotal[mapNumber]++;
+                    _wPerMap[mapNumber]++;
+                    _wPerMapTotal[mapNumber]++;
                 }
 
-                if ((Lost + Won)%1000 == 0)
+                if ((Lost + Won) % 1000 == 0)
                 {
-                    Log(@"Iteration: " + Total + " Won: " + Won + " Lost: " + Lost);
-                    //Console.WriteLine(@"Iteration: {0} Won: {1} Lost: {2} -W {3}  {4} -L {5}  {6}", Total, Won, Lost, TypeW[0], TypeW[1], TypeL[0], TypeL[1]);
+                    Log($@"Iteration: {Total} Won: {Won} Lost: {Lost}");
+                    //Console.WriteLine(@"Iteration: {0} Won: {1} Lost: {2} -W {3}  {4} -L {5}  {6}", Total, Won, Lost, _typeW[0], _typeW[1], _typeL[0], _typeL[1]);
                     //Console.WriteLine(Won);
 
                     var perMap = "\tW/L per map type: ";
-                    for (int i = 0; i <= highestMapNumber; i++)
+                    for (int i = 0; i <= _highestMapNumber; i++)
                     {
-                        if (!(WPerMap[i] == 0 && LPerMap[i] == 0))
+                        if (!(_wPerMap[i] == 0 && _lPerMap[i] == 0))
                         {
-                            perMap += i + ":(" + WPerMap[i] + ":" + LPerMap[i] + "); ";
+                            perMap += $"{i}:({_wPerMap[i]}:{_lPerMap[i]}); ";
                         }
                     }
                     Log(perMap);
 
                     perMap = "\tW/L per map type (total): ";
-                    for (int i = 0; i <= highestMapNumber; i++)
+                    for (int i = 0; i <= _highestMapNumber; i++)
                     {
-                        if (!(WPerMapTotal[i] == 0 && LPerMapTotal[i] == 0))
+                        if (!(_wPerMapTotal[i] == 0 && _lPerMapTotal[i] == 0))
                         {
-                            perMap += i + ":(" + WPerMapTotal[i] + ":" + LPerMapTotal[i] + "); ";
+                            perMap += $"{i}:({_wPerMapTotal[i]}:{_lPerMapTotal[i]}); ";
                         }
                     }
                     Log(perMap);
@@ -87,92 +92,89 @@ namespace Manager.MTCore.Core
             }
         }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void PrintLevelsOfEnding()
         {
-            /*
-            Console.WriteLine(@"levels");
-            foreach (int lvlItem in Level)
+            lock (Lock)
             {
-                Console.Write(@"{0} ", lvlItem);
-            }
-            */
-            Log("Lost in levels: ");
-            for (int i = 0; i <= highestMapNumber; i++)
-            {
-                Log(i + ":[", false);
-                for (int k = 0; k < LevelPerMapTotal.GetLength(1); k++)
+                /*
+                Console.WriteLine(@"levels");
+                foreach (int lvlItem in _level)
                 {
-                    Log(LevelPerMapTotal[i, k] + ", ", false);
+                    Console.Write(@"{0} ", lvlItem);
                 }
-                Log("]; ");
+                */
+                Log("Lost in levels: ");
+                for (int i = 0; i <= _highestMapNumber; i++)
+                {
+                    Log($"{i}:[", false);
+                    for (int k = 0; k < _levelPerMapTotal.GetLength(1); k++)
+                    {
+                        Log($"{_levelPerMapTotal[i, k]}, ", false);
+                    }
+                    Log("]; ");
+                }
+                Log();
+                Log();
             }
-            Log();
-            Log();
         }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void Reset()
         {
-            Won = 0;
-            Lost = 0;
-            TypeW = new[] {0, 0};
-            TypeL = new[] {0, 0};
-            WPerMap = new int[10];
-            LPerMap = new int[10];
-            LevelPerMap = new int[10, 20];
+            lock (Lock)
+            {
+                Won = 0;
+                Lost = 0;
+                _typeW = new[] { 0, 0 };
+                _typeL = new[] { 0, 0 };
+                _wPerMap = new int[10];
+                _lPerMap = new int[10];
+                _levelPerMap = new int[10, 20];
+            }
         }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void ResetAll()
         {
             PrintLevelsOfEnding();
             Log(@"########################## RESETTING STATISTICS ##########################");
             Reset();
-            Level = new int[20];
-            WPerMapTotal = new int[10];
-            LPerMapTotal = new int[10];
-            LevelPerMapTotal = new int[10, 20];
-            Total = 0;
-            TotalWon = 0;
-            TotalLost = 0;
+            lock (Lock)
+            {
+                _level = new int[20];
+                _wPerMapTotal = new int[10];
+                _lPerMapTotal = new int[10];
+                _levelPerMapTotal = new int[10, 20];
+                Total = 0;
+                TotalWon = 0;
+                TotalLost = 0;
+            }
         }
 
-        public static string ToCVSString()
+        public static string ToCsvString()
         {
-            string ret = $"{TotalWon}, {TotalLost}, {((TotalWon*1.0/(TotalWon + TotalLost))*100).ToString("F")}%, ";
+            string ret;
 
-            for (int i = 0; i < mapCount; i++)
+            lock (Lock)
             {
-                
-                int total = WPerMapTotal[i] + LPerMapTotal[i];
-                if (total == 0) total = 1;
-                ret += $"{WPerMapTotal[i]}, {LPerMapTotal[i]}, {((WPerMapTotal[i]*1.0/(total))*100).ToString("F")}%, ";
+                ret = $"{TotalWon}, {TotalLost}, {((TotalWon * 1.0 / (TotalWon + TotalLost)) * 100).ToString("F")}%, ";
+
+                for (int i = 0; i < MAP_COUNT; i++)
+                {
+                    int total = _wPerMapTotal[i] + _lPerMapTotal[i];
+                    if (total == 0) total = 1;
+                    ret +=
+                        $"{_wPerMapTotal[i]}, {_lPerMapTotal[i]}, {((_wPerMapTotal[i] * 1.0 / (total)) * 100).ToString("F")}%, ";
+                }
             }
+
             return ret;
         }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        internal static void IncWl(int v, int level, int type, int mapNumber = 0)
-        {
-            lock (_lock2)
-            {
-                /*if (v == 0)
-            {
-                TypeL[type]++;
-            }
-            else
-            {
-                TypeW[type]++;
-            }*/
-                IncWl(v, level, mapNumber);
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void PrintTotalScore()
         {
-            Log(@"Total score: w " + TotalWon + " l " + TotalLost);
+            lock (Lock)
+            {
+                Log($@"Total score: w {TotalWon} l {TotalLost}");
+            }
         }
     }
 }
