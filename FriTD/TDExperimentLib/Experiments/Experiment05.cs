@@ -91,7 +91,7 @@ namespace TDExperimentLib.Experiments
             s.numberOfIterationsPerMap = iterationsPerThread;
             s.numberOfIterationsPerMapWithKohonen = s.numberOfIterationsPerMap;
             manager.ExperimentRun(s);
-            CustomLogger.LogToFile(s.ToCSVString() + ", " + MtStats.ToCVSString(), csvFilename);
+            CustomLogger.LogToFile(s.ToCSVString() + ", " + MtStats.ToCsvString(), csvFilename);
 
             s.kohonenLoadFile = s.kohonenSaveFile;
             s.qLearningLoadFile = s.qLearningSaveFile;
@@ -100,7 +100,7 @@ namespace TDExperimentLib.Experiments
             CustomLogger.Log("############### Run 2/5: " + prefix + map + "_" + postfix + " ###############");
             s.kohonenLearningRate = 0.25;
             manager.ExperimentRun(s);
-            CustomLogger.LogToFile(s.ToCSVString() + ", " + MtStats.ToCVSString(), csvFilename);
+            CustomLogger.LogToFile(s.ToCSVString() + ", " + MtStats.ToCsvString(), csvFilename);
 
             // third run
             CustomLogger.Log("############### Run 3/5: " + prefix + map + "_" + postfix + " ###############");
@@ -108,14 +108,14 @@ namespace TDExperimentLib.Experiments
             s.qLearningLearningRate = 0.3;
             s.qLearningRandomActionProbability = 0.2;
             manager.ExperimentRun(s);
-            CustomLogger.LogToFile(s.ToCSVString() + ", " + MtStats.ToCVSString(), csvFilename);
+            CustomLogger.LogToFile(s.ToCSVString() + ", " + MtStats.ToCsvString(), csvFilename);
 
             // fourth run
             CustomLogger.Log("############### Run 4/5: " + prefix + map + "_" + postfix + " ###############");
             s.qLearningLearningRate = 0.25;
             s.qLearningRandomActionProbability = 0.1;
             manager.ExperimentRun(s);
-            CustomLogger.LogToFile(s.ToCSVString() + ", " + MtStats.ToCVSString(), csvFilename);
+            CustomLogger.LogToFile(s.ToCSVString() + ", " + MtStats.ToCsvString(), csvFilename);
 
             // fifth run - final with fixed kohonen and qlearning - runs only half iterations
             CustomLogger.Log("############### Run 5/5: " + prefix + map + "_" + postfix + " ###############");
@@ -124,7 +124,7 @@ namespace TDExperimentLib.Experiments
             s.qLearningRandomActionProbability = 0.0001;
             s.qLearningLearningRate = 0.1;
             manager.ExperimentRun(s);
-            CustomLogger.LogToFile(s.ToCSVString() + ", " + MtStats.ToCVSString(), csvFilename);
+            CustomLogger.LogToFile(s.ToCSVString() + ", " + MtStats.ToCsvString(), csvFilename);
 
             CustomLogger.LogToFile("", csvFilename);
         }
