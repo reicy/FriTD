@@ -133,6 +133,9 @@ namespace Manager.MTCore.Core
             WPerMapTotal = new int[10];
             LPerMapTotal = new int[10];
             LevelPerMapTotal = new int[10, 20];
+            Total = 0;
+            TotalWon = 0;
+            TotalLost = 0;
         }
 
         public static string ToCVSString()

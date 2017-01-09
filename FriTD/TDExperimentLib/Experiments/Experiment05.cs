@@ -30,8 +30,16 @@ namespace TDExperimentLib.Experiments
             string postfix;
             bool withKohonen;
 
+            postfix = "withoutKohonen";
+            prefix = "run3_";
+            withKohonen = false;
+            //RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+            //RunMap("Map1", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+            //RunMap("Map2", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+            //RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+            /*RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+            RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
             postfix = "withKohonen";
-            prefix = "run1_";
             withKohonen = true;
             RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
             RunMap("Map1", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
@@ -39,17 +47,18 @@ namespace TDExperimentLib.Experiments
             RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
             RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
             RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+            */
+            
             postfix = "withoutKohonen";
+            prefix = "run4_";
             withKohonen = false;
-            RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            RunMap("Map1", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            RunMap("Map2", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+            //RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+            //RunMap("Map1", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+            //RunMap("Map2", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
             RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
             RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
             RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-
             postfix = "withKohonen";
-            prefix = "run2_";
             withKohonen = true;
             RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
             RunMap("Map1", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
@@ -57,18 +66,10 @@ namespace TDExperimentLib.Experiments
             RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
             RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
             RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            postfix = "withoutKohonen";
-            withKohonen = false;
-            RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            RunMap("Map1", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            RunMap("Map2", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-
+            
         }
 
-        private void RunMap(string map, int numOfThreads = 4, string prefix = "", string postfix = "", bool withKohonen = true, int iterationsPerThread = 5000)
+        private void RunMap(string map, int numOfThreads = 4, string prefix = "", string postfix = "", bool withKohonen = true, int iterationsPerThread = 3500)
         {
             // initial settings
             s.ResetToDefault();
@@ -122,7 +123,7 @@ namespace TDExperimentLib.Experiments
             s.numberOfIterationsPerMapWithKohonen = 0;
             s.numberOfIterationsPerMap = s.numberOfIterationsPerMap/2;
             s.qLearningRandomActionProbability = 0.0001;
-            s.qLearningLearningRate = 0.1;
+            s.qLearningLearningRate = 0.01;
             manager.ExperimentRun(s);
             CustomLogger.LogToFile(s.ToCSVString() + ", " + MtStats.ToCVSString(), csvFilename);
 

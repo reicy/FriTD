@@ -267,11 +267,19 @@ namespace Manager.MTCore.Core
 
         public void ExperimentRun(Settings s)
         {
-            ExperimentRun(s.maps, s.numberOfIterationsPerMap, s.numberOfIterationsPerMapWithKohonen, s.useCosDist,
-                s.qLearningRandomActionProbability, s.qLearningDiscountFactor, s.qLearningLearningRate,
-                s.kohonenRows, s.kohonenCols, s.kohonenRadius, s.kohonenLearningRate, s.kohonenDistFactor,
-                s.kohonenLoadFile,
-                s.qLearningLoadFile, s.kohonenSaveFile, s.qLearningSaveFile);
+            ExperimentRun(s.maps,
+                s.numberOfIterationsPerMap, 
+                s.numberOfIterationsPerMapWithKohonen,
+                s.useCosDist,
+                s.qLearningRandomActionProbability,
+                s.qLearningDiscountFactor,
+                s.qLearningLearningRate,
+                s.kohonenRows,
+                s.kohonenCols, 
+                s.kohonenRadius,
+                s.kohonenLearningRate, 
+                s.kohonenDistFactor,
+                s.kohonenLoadFile, s.qLearningLoadFile, s.kohonenSaveFile, s.qLearningSaveFile);
         }
 
         public void ExperimentRun(List<string> maps,
