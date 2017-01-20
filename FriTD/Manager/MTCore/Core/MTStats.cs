@@ -23,11 +23,16 @@ namespace Manager.MTCore.Core
         private static int[,] _levelPerMapTotal = new int[10, 20];
         private static int[,] _levelPerMap = new int[10, 20];
 
-        private static readonly object Lock = new object();
+        private static readonly object Lock1 = new object();
+        private static readonly object Lock2 = new object();
+        private static readonly object Lock3 = new object();
+        private static readonly object Lock4 = new object();
+        private static readonly object Lock5 = new object();
+        private static readonly object Lock6 = new object();
 
         public static void IncWl(int wl, int level, int type = -1, int mapNumber = 0)
         {
-            lock (Lock)
+            lock (Lock1)
             {
                 /*if (type >= 0)
                 {
@@ -94,7 +99,7 @@ namespace Manager.MTCore.Core
 
         public static void PrintLevelsOfEnding()
         {
-            lock (Lock)
+            lock (Lock2)
             {
                 /*
                 Console.WriteLine(@"levels");
@@ -120,7 +125,7 @@ namespace Manager.MTCore.Core
 
         public static void Reset()
         {
-            lock (Lock)
+            lock (Lock3)
             {
                 Won = 0;
                 Lost = 0;
@@ -137,7 +142,7 @@ namespace Manager.MTCore.Core
             PrintLevelsOfEnding();
             Log(@"########################## RESETTING STATISTICS ##########################");
             Reset();
-            lock (Lock)
+            lock (Lock4)
             {
                 _level = new int[20];
                 _wPerMapTotal = new int[10];
@@ -153,7 +158,7 @@ namespace Manager.MTCore.Core
         {
             string ret;
 
-            lock (Lock)
+            lock (Lock5)
             {
                 ret = $"{TotalWon}, {TotalLost}, {((TotalWon * 1.0 / (TotalWon + TotalLost)) * 100).ToString("F")}%, ";
 
@@ -171,7 +176,7 @@ namespace Manager.MTCore.Core
 
         public static void PrintTotalScore()
         {
-            lock (Lock)
+            lock (Lock6)
             {
                 Log($@"Total score: w {TotalWon} l {TotalLost}");
             }

@@ -30,46 +30,31 @@ namespace TDExperimentLib.Experiments
             string postfix;
             bool withKohonen;
 
-            postfix = "withoutKohonen";
-            prefix = "run3_";
-            withKohonen = false;
-            //RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            //RunMap("Map1", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            //RunMap("Map2", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            //RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            /*RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            postfix = "withKohonen";
-            withKohonen = true;
-            RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            RunMap("Map1", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            RunMap("Map2", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            */
-            
-            postfix = "withoutKohonen";
-            prefix = "run4_";
-            withKohonen = false;
-            //RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            //RunMap("Map1", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            //RunMap("Map2", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            postfix = "withKohonen";
-            withKohonen = true;
-            RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            RunMap("Map1", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            RunMap("Map2", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-            
+            for (int i = 11; i < 20; i++)
+            {
+                postfix = "withoutKohonen";
+                prefix = "run" + i + "_";
+                withKohonen = false;
+                RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+                RunMap("Map1", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+                RunMap("Map2", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+                RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+                RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+                RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+                postfix = "withKohonen";
+                withKohonen = true;
+                RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+                RunMap("Map1", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+                RunMap("Map2", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+                RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+                RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+                RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+            }
+
+
         }
 
-        private void RunMap(string map, int numOfThreads = 4, string prefix = "", string postfix = "", bool withKohonen = true, int iterationsPerThread = 3500)
+        private void RunMap(string map, int numOfThreads = 4, string prefix = "", string postfix = "", bool withKohonen = true, int iterationsPerThread = 5000)
         {
             // initial settings
             s.ResetToDefault();
