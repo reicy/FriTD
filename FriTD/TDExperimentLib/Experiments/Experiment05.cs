@@ -12,7 +12,7 @@ namespace TDExperimentLib.Experiments
     {
         private MtManager manager = new MtManager();
         private Settings s = new Settings();
-        private string csvFilename = "results.csv";
+        private string csvFilename = "results_cosDist.csv";
 
         public Experiment05() : base("Exp")
         {
@@ -28,36 +28,39 @@ namespace TDExperimentLib.Experiments
             CustomLogger.logToFile = true;
             string prefix;
             string postfix;
-            bool withKohonen;
+            bool withKohonen, useCostDist;
 
-            for (int i = 11; i < 20; i++)
+            for (int i = 9; i < 30; i++)
             {
                 postfix = "withoutKohonen";
-                prefix = "run" + i + "_";
+                prefix = "run" + i + "_cosDist_";
+                useCostDist = true;
                 withKohonen = false;
-                RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-                RunMap("Map1", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-                RunMap("Map2", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-                RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-                RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-                RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+                RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
+                RunMap("Map1", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
+                RunMap("Map2", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
+                RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
+                RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
+                RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
                 postfix = "withKohonen";
                 withKohonen = true;
-                RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-                RunMap("Map1", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-                RunMap("Map2", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-                RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-                RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
-                RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen);
+                RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
+                RunMap("Map1", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
+                RunMap("Map2", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
+                RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
+                RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
+                RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
             }
 
 
         }
 
-        private void RunMap(string map, int numOfThreads = 4, string prefix = "", string postfix = "", bool withKohonen = true, int iterationsPerThread = 5000)
+        private void RunMap(string map, int numOfThreads = 4, string prefix = "", string postfix = "",
+            bool withKohonen = true, int iterationsPerThread = 5000, bool useCostDist = false)
         {
             // initial settings
             s.ResetToDefault();
+            s.useCosDist = useCostDist;
             s.maps.Clear();
             for (int i = 0; i < numOfThreads; i++)
             {
