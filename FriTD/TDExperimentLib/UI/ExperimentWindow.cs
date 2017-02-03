@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 using TDExperimentLib.Experiments;
 
 namespace TDExperimentLib.UI
@@ -19,6 +20,7 @@ namespace TDExperimentLib.UI
         {
             InitializeComponent();
             _experiment = experiment;
+            _experiment.SetChart(chart);
             CreateThread();
             Init();
         }
@@ -132,8 +134,10 @@ namespace TDExperimentLib.UI
             var chooseFileDlg = new SaveFileDialog();
             var result = chooseFileDlg.ShowDialog();
             if (result == DialogResult.OK)
+            {
                 File.WriteAllText(chooseFileDlg.FileName, richTextBoxOutput.Text);
-            MessageBox.Show(this, $@"Successfully saved file '{chooseFileDlg.FileName}'", @"Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(this, $@"Successfully saved file '{chooseFileDlg.FileName}'", @"Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void buttonRunExperiment_Click(object sender, EventArgs e)

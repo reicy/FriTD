@@ -1,10 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Forms.DataVisualization.Charting;
 using Manager.Core;
+using TDExperimentLib.Helpers;
 
 namespace TDExperimentLib.Experiments
 {
     public class Experiment01 : ExperimentBase
     {
+        private ChartWrapper _chart;
+
         public int Iterations { get; private set; }
         public int GamesPerIteration { get; private set; }
         public bool ChangeLearningRate { get; private set; }
@@ -92,10 +96,19 @@ namespace TDExperimentLib.Experiments
         public override void Run()
         {
             var mng = ManagerBuilder.BuildAiLearningManager();
+            _chart.ClearAllPoints();
             mng.AiLearningRunTwoMaps(
                 Iterations, GamesPerIteration, FirstMap, SecondMap, ChangeLearningRate, DecreaseLearningRateAfter, DecreaseLearningRatePercentage,
-                InitialLearningRate, InitialRandomActionProbability, KohonenOutputFile1, KohonenOutputFile2, QLearningOutputFile1, QLearningOutputFile2
+                InitialLearningRate, InitialRandomActionProbability, KohonenOutputFile1, KohonenOutputFile2, QLearningOutputFile1, QLearningOutputFile2, _chart
             );
+        }
+
+        public override void SetChart(Chart chart)
+        {
+            _chart = new ChartWrapper(chart);
+            _chart.ClearSeries();
+            _chart.AddSeries(FirstMap, SeriesChartType.Line);
+            _chart.AddSeries(SecondMap, SeriesChartType.Line);
         }
     }
 }

@@ -351,8 +351,10 @@ namespace Manager.Core
             _kohonen.Save("kohonen.dat");
         }
 
-        public void AiLearningRunTwoMaps(int iters, int gamesPerIter, string firstMap, string secondMap, bool changeLearningRate, int decreaseLearningRateAfter,
-            double decreaseLearningRatePercent, double initialLearningRate, double initialRandomActionP, string kohonenOut1, string kohonenOut2, string qLearningOut1, string qLearningOut2)
+        public void AiLearningRunTwoMaps(int iters, int gamesPerIter, string firstMap, string secondMap,
+            bool changeLearningRate, int decreaseLearningRateAfter,
+            double decreaseLearningRatePercent, double initialLearningRate, double initialRandomActionP,
+            string kohonenOut1, string kohonenOut2, string qLearningOut1, string qLearningOut2, IChartWrapper chart = null)
         {
             var maps = new Dictionary<string, KeyValuePair<string, string>>
             {
@@ -377,17 +379,22 @@ namespace Manager.Core
             // BEGIN preparation
             var aiAdapter = (KohonenGameStateManagerSemiInteligentActions)_aiAdapter;
             aiAdapter.SetRewardMultiplier(1.0 / 10000);
+            var wlcol = new LinkedList<bool>();
             // END preparation
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             var mapLevelPairs = new List<string> { firstMap, secondMap };
+            var mapIndex = 0;
             foreach (var map in mapLevelPairs)
             {
                 Console.WriteLine(@"Running with map '{0}' (start time: {1})", map, DateTime.Now);
                 _qLearning.Alpha = initialLearningRate;
                 _qLearning.Epsilon = initialRandomActionP;
                 _kohonen.LearningRate = initialLearningRate;
+
+                wlcol.Clear();
+                var winCount = 0;
 
                 for (var i = 1; i <= iters; ++i)
                 {
@@ -404,10 +411,21 @@ namespace Manager.Core
                             if (_firstGameWonLevel == -1)
                                 _firstGameWonLevel = i * gamesPerIter + j;
                             ++gamesWon;
+                            ++winCount;
+                            wlcol.AddLast(true);
                         }
                         else
                         {
                             ++gamesLost;
+                            wlcol.AddLast(false);
+                        }
+
+                        if (wlcol.Count == 100)
+                        {
+                            chart?.AddY(/*1 + (i - 1) * gamesPerIter + j, */(double)winCount / 100, mapIndex);
+                            var first = wlcol.First.Value;
+                            wlcol.RemoveFirst();
+                            if (first) --winCount;
                         }
                     }
 
@@ -438,6 +456,7 @@ namespace Manager.Core
                 }
 
                 Console.WriteLine(@"Running with map '{0}' (finish time: {1})", map, DateTime.Now);
+                ++mapIndex;
             }
 
             stopwatch.Stop();

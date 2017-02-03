@@ -28,8 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.richTextBoxOutput = new System.Windows.Forms.RichTextBox();
             this.groupBoxConsoleOutput = new System.Windows.Forms.GroupBox();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.buttonClearOutput = new System.Windows.Forms.Button();
             this.buttonRunExperiment = new System.Windows.Forms.Button();
             this.buttonChangeFont = new System.Windows.Forms.Button();
@@ -40,6 +47,10 @@
             this.dataGridViewProperties = new System.Windows.Forms.DataGridView();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.groupBoxConsoleOutput.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.groupBoxSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
@@ -50,33 +61,83 @@
             // 
             // richTextBoxOutput
             // 
-            this.richTextBoxOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBoxOutput.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBoxOutput.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.richTextBoxOutput.Location = new System.Drawing.Point(6, 19);
+            this.richTextBoxOutput.Location = new System.Drawing.Point(3, 3);
             this.richTextBoxOutput.Name = "richTextBoxOutput";
             this.richTextBoxOutput.ReadOnly = true;
-            this.richTextBoxOutput.Size = new System.Drawing.Size(743, 509);
+            this.richTextBoxOutput.Size = new System.Drawing.Size(729, 478);
             this.richTextBoxOutput.TabIndex = 0;
             this.richTextBoxOutput.Text = "";
             // 
             // groupBoxConsoleOutput
             // 
-            this.groupBoxConsoleOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxConsoleOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConsoleOutput.Controls.Add(this.tabControl1);
             this.groupBoxConsoleOutput.Controls.Add(this.buttonClearOutput);
             this.groupBoxConsoleOutput.Controls.Add(this.buttonRunExperiment);
             this.groupBoxConsoleOutput.Controls.Add(this.buttonChangeFont);
             this.groupBoxConsoleOutput.Controls.Add(this.buttonSaveOutput);
-            this.groupBoxConsoleOutput.Controls.Add(this.richTextBoxOutput);
             this.groupBoxConsoleOutput.Location = new System.Drawing.Point(12, 12);
             this.groupBoxConsoleOutput.Name = "groupBoxConsoleOutput";
             this.groupBoxConsoleOutput.Size = new System.Drawing.Size(755, 563);
             this.groupBoxConsoleOutput.TabIndex = 1;
             this.groupBoxConsoleOutput.TabStop = false;
-            this.groupBoxConsoleOutput.Text = "Console output";
+            this.groupBoxConsoleOutput.Text = "Output";
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Location = new System.Drawing.Point(6, 19);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(743, 510);
+            this.tabControl1.TabIndex = 5;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.richTextBoxOutput);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(735, 484);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Console";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.chart);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(735, 484);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Chart";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // chart
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.chart.ChartAreas.Add(chartArea1);
+            this.chart.Dock = System.Windows.Forms.DockStyle.Fill;
+            legend1.Name = "Legend1";
+            this.chart.Legends.Add(legend1);
+            this.chart.Location = new System.Drawing.Point(3, 3);
+            this.chart.Name = "chart";
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chart.Series.Add(series1);
+            this.chart.Size = new System.Drawing.Size(729, 478);
+            this.chart.TabIndex = 0;
+            this.chart.Text = "chart1";
             // 
             // buttonClearOutput
             // 
@@ -124,8 +185,8 @@
             // 
             // groupBoxSettings
             // 
-            this.groupBoxSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxSettings.Controls.Add(this.buttonSaveProperties);
             this.groupBoxSettings.Controls.Add(this.buttonLoadProperties);
@@ -163,8 +224,8 @@
             // 
             this.dataGridViewProperties.AllowUserToAddRows = false;
             this.dataGridViewProperties.AllowUserToDeleteRows = false;
-            this.dataGridViewProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.dataGridViewProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridViewProperties.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridViewProperties.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -177,8 +238,8 @@
             // 
             // splitContainer
             // 
-            this.splitContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.splitContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.splitContainer.Location = new System.Drawing.Point(0, 0);
             this.splitContainer.Name = "splitContainer";
@@ -206,6 +267,10 @@
             this.Text = "ExperimentWindow";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ExperimentWindow_FormClosing);
             this.groupBoxConsoleOutput.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chart)).EndInit();
             this.groupBoxSettings.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewProperties)).EndInit();
             this.splitContainer.Panel1.ResumeLayout(false);
@@ -229,5 +294,9 @@
         private System.Windows.Forms.DataGridView dataGridViewProperties;
         private System.Windows.Forms.Button buttonRunExperiment;
         private System.Windows.Forms.Button buttonClearOutput;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart;
     }
 }
