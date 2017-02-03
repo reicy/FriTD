@@ -28,38 +28,64 @@ namespace TDExperimentLib.Experiments
             CustomLogger.logToFile = true;
             string prefix;
             string postfix;
-            bool withKohonen, useCostDist;
+            bool withKohonen;
+            bool useCostDist = false;
+            int kohonenSize = 15;
 
-            for (int i = 9; i < 30; i++)
+            for (int i = 1; i < 10; i++)
             {
-                postfix = "withoutKohonen";
+                postfix = "withoutKohonen_kohSize" + kohonenSize;
                 prefix = "run" + i + "_cosDist_";
-                useCostDist = true;
                 withKohonen = false;
-                RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
-                RunMap("Map1", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
-                RunMap("Map2", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
-                RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
-                RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
-                RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
+                RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize:kohonenSize);
+                RunMap("Map1", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                RunMap("Map2", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
                 postfix = "withKohonen";
                 withKohonen = true;
-                RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
-                RunMap("Map1", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
-                RunMap("Map2", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
-                RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
-                RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
-                RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist);
+                RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                RunMap("Map1", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                RunMap("Map2", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+            }
+
+            kohonenSize = 60;
+
+            for (int i = 1; i < 10; i++)
+            {
+                postfix = "withoutKohonen_kohSize" + kohonenSize;
+                prefix = "run" + i + "_cosDist_";
+                withKohonen = false;
+                RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                RunMap("Map1", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                RunMap("Map2", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                postfix = "withKohonen";
+                withKohonen = true;
+                RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                RunMap("Map1", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                RunMap("Map2", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
             }
 
 
         }
 
         private void RunMap(string map, int numOfThreads = 4, string prefix = "", string postfix = "",
-            bool withKohonen = true, int iterationsPerThread = 5000, bool useCostDist = false)
+            bool withKohonen = true, int iterationsPerThread = 5000, bool useCostDist = false, int kohonenSize = 30)
         {
             // initial settings
             s.ResetToDefault();
+            s.kohonenRows = kohonenSize;
+            s.kohonenCols = kohonenSize;
             s.useCosDist = useCostDist;
             s.maps.Clear();
             for (int i = 0; i < numOfThreads; i++)
