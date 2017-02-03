@@ -30,7 +30,13 @@ namespace TDExperimentLib.Experiments
             string prefix;
             string postfix = "";
 
-            for (int i = 1; i < 20; i++)
+            prefix = "run3_";
+            Run("Map2", prefix: prefix, postfix: postfix);
+            Run("Map3", prefix: prefix, postfix: postfix);
+            Run("Map4", prefix: prefix, postfix: postfix);
+            Run("Map5", prefix: prefix, postfix: postfix);
+
+            for (int i = 4; i < 20; i++)
             {
                 prefix = "run" + i + "_";
                 Run("Map", prefix: prefix, postfix: postfix);
@@ -51,14 +57,14 @@ namespace TDExperimentLib.Experiments
             var kohonenFile = InitLearnKohonenPhase(map, numOfThreads, prefix, postfix, iterationsPerThread);
             for (int i = 1; i <= numberOfQlearnings; i++)
             {
-                LearnQLearningPhase(map, kohonenFile, numOfThreads, prefix + "q" + i + "/" + numberOfQlearnings + "_", postfix, iterationsPerThread);
+                LearnQLearningPhase(map, i, kohonenFile, numOfThreads, prefix, postfix, iterationsPerThread);
             }
             CustomLogger.LogToFile("===== ENDING " + prefix + map + "_" + postfix + " =====", csvFilename);
             CustomLogger.LogToFile("", csvFilename);
             CustomLogger.LogToFile("", csvFilenameFinal);
         }
 
-        private void LearnQLearningPhase(string map, string kohonenFileName, int numOfThreads = 4, string prefix = "", string postfix = "",  int iterationsPerThread = 5000)
+        private void LearnQLearningPhase(string map, int number, string kohonenFileName, int numOfThreads = 4, string prefix = "", string postfix = "",  int iterationsPerThread = 5000)
         {
             // initial settings
             s.ResetToDefault();
@@ -68,41 +74,41 @@ namespace TDExperimentLib.Experiments
                 s.maps.Add(map);
             }
             
-            s.kohonenSaveFile = prefix + map + "_koh_" + postfix + ".txt";
-            s.qLearningSaveFile = prefix + map + "_q_" + postfix + ".txt";
+            s.kohonenSaveFile = null;
+            s.qLearningSaveFile = prefix + map + "_q_" + number + postfix + ".txt";
             s.kohonenLoadFile = kohonenFileName;
             s.qLearningLoadFile = null;
 
             CustomLogger.filename = prefix + map + "_stats_" + postfix + ".txt";
-            CustomLogger.ClearActualLogFile();
+            //CustomLogger.ClearActualLogFile();
 
             s.numberOfIterationsPerMap = iterationsPerThread;
             s.numberOfIterationsPerMapWithKohonen = 0;
 
             // first run
-            CustomLogger.Log("############### Run 1/4: " + prefix + map + "_" + postfix + " ###############");
+            CustomLogger.Log("############### Run 1/4: " + prefix + map + "_" + number + postfix + " ###############");
             manager.ExperimentRun(s);
             CustomLogger.LogToFile(s.ToCSVString() + ", " + MtStats.ToCsvString(), csvFilename);
 
-            s.kohonenLoadFile = s.kohonenSaveFile;
+            //s.kohonenLoadFile = s.kohonenSaveFile;
             s.qLearningLoadFile = s.qLearningSaveFile;
 
             // second run
-            CustomLogger.Log("############### Run 2/4: " + prefix + map + "_" + postfix + " ###############");
+            CustomLogger.Log("############### Run 2/4: " + prefix + map + "_" + number + postfix + " ###############");
             s.qLearningLearningRate = 0.3;
             s.qLearningRandomActionProbability = 0.2;
             manager.ExperimentRun(s);
             CustomLogger.LogToFile(s.ToCSVString() + ", " + MtStats.ToCsvString(), csvFilename);
 
             // third run
-            CustomLogger.Log("############### Run 3/4: " + prefix + map + "_" + postfix + " ###############");
+            CustomLogger.Log("############### Run 3/4: " + prefix + map + "_" + number + postfix + " ###############");
             s.qLearningLearningRate = 0.2;
             s.qLearningRandomActionProbability = 0.1;
             manager.ExperimentRun(s);
             CustomLogger.LogToFile(s.ToCSVString() + ", " + MtStats.ToCsvString(), csvFilename);
 
             // fourth run - final with fixed kohonen and qlearning - runs only half iterations
-            CustomLogger.Log("############### Run 4/4: " + prefix + map + "_" + postfix + " ###############");
+            CustomLogger.Log("############### Run 4/4: " + prefix + map + "_" + number + postfix + " ###############");
             s.numberOfIterationsPerMap = s.numberOfIterationsPerMap/2;
             s.qLearningRandomActionProbability = 0.0001;
             s.qLearningLearningRate = 0.01;
