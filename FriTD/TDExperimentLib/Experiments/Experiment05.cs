@@ -12,7 +12,8 @@ namespace TDExperimentLib.Experiments
     {
         private MtManager manager = new MtManager();
         private Settings s = new Settings();
-        private string csvFilename = "results_cosDist.csv";
+        private string csvFilename = "results_kohSize_euclid.csv";
+        private string csvFilenameFinal = "results_kohSize_euclid_final.csv";
 
         public Experiment05() : base("Exp")
         {
@@ -43,6 +44,7 @@ namespace TDExperimentLib.Experiments
                 RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
                 RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
                 RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                CustomLogger.LogToFile("", csvFilenameFinal);
                 postfix = "withKohonen";
                 withKohonen = true;
                 RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
@@ -51,6 +53,7 @@ namespace TDExperimentLib.Experiments
                 RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
                 RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
                 RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                CustomLogger.LogToFile("", csvFilenameFinal);
             }
 
             kohonenSize = 60;
@@ -66,6 +69,7 @@ namespace TDExperimentLib.Experiments
                 RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
                 RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
                 RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                CustomLogger.LogToFile("", csvFilenameFinal);
                 postfix = "withKohonen";
                 withKohonen = true;
                 RunMap("Map", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
@@ -74,6 +78,7 @@ namespace TDExperimentLib.Experiments
                 RunMap("Map3", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
                 RunMap("Map4", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
                 RunMap("Map5", prefix: prefix, postfix: postfix, withKohonen: withKohonen, useCostDist: useCostDist, kohonenSize: kohonenSize);
+                CustomLogger.LogToFile("", csvFilenameFinal);
             }
 
 
@@ -140,6 +145,7 @@ namespace TDExperimentLib.Experiments
             s.qLearningLearningRate = 0.01;
             manager.ExperimentRun(s);
             CustomLogger.LogToFile(s.ToCSVString() + ", " + MtStats.ToCsvString(), csvFilename);
+            CustomLogger.LogToFile(s.ToCSVString() + ", " + MtStats.ToCsvString(), csvFilenameFinal);
 
             CustomLogger.LogToFile("", csvFilename);
         }
