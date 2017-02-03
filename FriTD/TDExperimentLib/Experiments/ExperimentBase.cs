@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace TDExperimentLib.Experiments
 {
@@ -14,6 +15,11 @@ namespace TDExperimentLib.Experiments
         public string GetName()
         {
             return _name;
+        }
+
+        public virtual void SetChart(Chart chart)
+        {
+
         }
 
         public abstract KeyValuePair<bool, string> SetData(Dictionary<string, object> propVals);
