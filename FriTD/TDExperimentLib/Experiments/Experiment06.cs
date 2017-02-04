@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Manager.MTCore.Core;
+﻿using Manager.MTCore.Core;
+using Manager.Settings;
 using Manager.Utils;
 
 namespace TDExperimentLib.Experiments
@@ -19,9 +15,9 @@ namespace TDExperimentLib.Experiments
         {
         }
 
-        public override KeyValuePair<bool, string> SetData(Dictionary<string, object> propVals)
+        public override IDataStructure GetDataStructure()
         {
-            return new KeyValuePair<bool, string>(true, "");
+            return s;
         }
 
         public override void Run()
@@ -46,8 +42,6 @@ namespace TDExperimentLib.Experiments
                 Run("Map4", prefix: prefix, postfix: postfix);
                 Run("Map5", prefix: prefix, postfix: postfix);
             }
-
-
         }
 
         private void Run(string map, int numOfThreads = 4, string prefix = "", string postfix = "",
@@ -64,7 +58,7 @@ namespace TDExperimentLib.Experiments
             CustomLogger.LogToFile("", csvFilenameFinal);
         }
 
-        private void LearnQLearningPhase(string map, int number, string kohonenFileName, int numOfThreads = 4, string prefix = "", string postfix = "",  int iterationsPerThread = 5000)
+        private void LearnQLearningPhase(string map, int number, string kohonenFileName, int numOfThreads = 4, string prefix = "", string postfix = "", int iterationsPerThread = 5000)
         {
             // initial settings
             s.ResetToDefault();
@@ -73,7 +67,7 @@ namespace TDExperimentLib.Experiments
             {
                 s.maps.Add(map);
             }
-            
+
             s.kohonenSaveFile = null;
             s.qLearningSaveFile = prefix + map + "_q_" + number + postfix + ".txt";
             s.kohonenLoadFile = kohonenFileName;
@@ -109,7 +103,7 @@ namespace TDExperimentLib.Experiments
 
             // fourth run - final with fixed kohonen and qlearning - runs only half iterations
             CustomLogger.Log("############### Run 4/4: " + prefix + map + "_" + number + postfix + " ###############");
-            s.numberOfIterationsPerMap = s.numberOfIterationsPerMap/2;
+            s.numberOfIterationsPerMap = s.numberOfIterationsPerMap / 2;
             s.qLearningRandomActionProbability = 0.0001;
             s.qLearningLearningRate = 0.01;
             manager.ExperimentRun(s);
@@ -128,7 +122,7 @@ namespace TDExperimentLib.Experiments
             {
                 s.maps.Add(map);
             }
-            
+
             s.kohonenSaveFile = prefix + map + "_koh_" + postfix + "_init.txt";
             s.qLearningSaveFile = prefix + map + "_q_" + postfix + "_init.txt";
 

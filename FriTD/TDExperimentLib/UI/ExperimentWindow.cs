@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
+using Manager.Settings;
 using TDExperimentLib.Experiments;
 
 namespace TDExperimentLib.UI
@@ -14,12 +16,14 @@ namespace TDExperimentLib.UI
     public partial class ExperimentWindow : Form
     {
         private readonly ExperimentBase _experiment;
+        private readonly IDataStructure _experimentData;
         private Thread _thread;
 
         public ExperimentWindow(ExperimentBase experiment)
         {
             InitializeComponent();
             _experiment = experiment;
+            _experimentData = experiment.GetDataStructure();
             _experiment.SetChart(chart);
             CreateThread();
             Init();
@@ -76,22 +80,74 @@ namespace TDExperimentLib.UI
 
         private void ReloadProperties()
         {
-            var props = TypeDescriptor.GetProperties(_experiment);
+            if (_experimentData == null) return;
+
+            var props = TypeDescriptor.GetProperties(_experimentData);
             if (props.Count == 0) return;
 
             if (dataGridViewProperties.Rows.Count == 0)
             {
-                foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(_experiment))
+                foreach (PropertyDescriptor property in props)
                 {
-                    dataGridViewProperties.Rows.Add(property.DisplayName, property.GetValue(_experiment));
+                    object val = property.GetValue(_experimentData);
+                    var value = val as ICollection;
+                    if (value != null)
+                    {
+                        var sb = new StringBuilder("{ ");
+                        var count = 0;
+                        foreach (var item in value)
+                        {
+                            sb.Append($"{item}, ");
+                            ++count;
+                        }
+                        if (count > 0)
+                        {
+                            sb[sb.Length - 2] = ' ';
+                            sb[sb.Length - 1] = '}';
+                        }
+                        else
+                        {
+                            sb.Append("}");
+                        }
+                        dataGridViewProperties.Rows.Add(property.DisplayName, sb.ToString());
+                    }
+                    else
+                    {
+                        dataGridViewProperties.Rows.Add(property.DisplayName, val);
+                    }
                 }
             }
             else
             {
-                foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(_experiment))
+                foreach (PropertyDescriptor property in props)
                 {
                     var row = dataGridViewProperties.Rows.Cast<DataGridViewRow>().First(x => x.Cells["name"].Value.ToString().Equals(property.DisplayName));
-                    row.Cells["value"].Value = property.GetValue(_experiment);
+                    object val = property.GetValue(_experimentData);
+                    var value = val as ICollection;
+                    if (value != null)
+                    {
+                        var sb = new StringBuilder("{ ");
+                        var count = 0;
+                        foreach (var item in value)
+                        {
+                            sb.Append($"{item}, ");
+                            ++count;
+                        }
+                        if (count > 0)
+                        {
+                            sb[sb.Length - 2] = ' ';
+                            sb[sb.Length - 1] = '}';
+                        }
+                        else
+                        {
+                            sb.Append("}");
+                        }
+                        row.Cells["value"].Value = sb.ToString();
+                    }
+                    else
+                    {
+                        row.Cells["value"].Value = val;
+                    }
                 }
             }
 
@@ -100,13 +156,15 @@ namespace TDExperimentLib.UI
 
         private bool UpdateProperties()
         {
+            if (_experimentData == null) return true;
+
             var dict = new Dictionary<string, object>();
             foreach (DataGridViewRow row in dataGridViewProperties.Rows)
             {
                 dict.Add(row.Cells["name"].Value.ToString(), row.Cells["value"].Value);
             }
 
-            var result = _experiment.SetData(dict);
+            var result = _experimentData.SetData(dict);
             if (!result.Key)
             {
                 MessageBox.Show(this, $@"Error - {result.Value}", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -165,6 +223,12 @@ namespace TDExperimentLib.UI
 
         private void buttonLoadProperties_Click(object sender, EventArgs e)
         {
+            if (_experimentData == null)
+            {
+                MessageBox.Show(this, @"Loading and saving properties is not supported for this experiment.", @"Information", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
             var chooseFileDlg = new OpenFileDialog
             {
                 CheckFileExists = true,
@@ -178,7 +242,7 @@ namespace TDExperimentLib.UI
 
             var json = File.ReadAllText(fileName);
             var dict = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(json);
-            _experiment.SetData(dict);
+            _experimentData.SetData(dict);
             ReloadProperties();
 
             MessageBox.Show(this, $@"Successfully loaded from '{fileName}'", @"Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -186,6 +250,12 @@ namespace TDExperimentLib.UI
 
         private void buttonSaveProperties_Click(object sender, EventArgs e)
         {
+            if (_experimentData == null)
+            {
+                MessageBox.Show(this, @"Loading and saving properties is not supported for this experiment.", @"Information", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
             if (!UpdateProperties()) return;
 
             var chooseFileDlg = new SaveFileDialog { Filter = @"JSON files(*.json)|*.json" };
@@ -194,7 +264,7 @@ namespace TDExperimentLib.UI
                 return;
             var fileName = chooseFileDlg.FileName;
 
-            var json = new JavaScriptSerializer().Serialize(_experiment);
+            var json = new JavaScriptSerializer().Serialize(_experimentData);
             File.WriteAllText(fileName, json);
 
             MessageBox.Show(this, $@"Successfully saved to '{fileName}'", @"Success", MessageBoxButtons.OK, MessageBoxIcon.Information);

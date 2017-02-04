@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Forms.DataVisualization.Charting;
 using Manager.Core;
+using Manager.Settings;
 using TDExperimentLib.Helpers;
 
 namespace TDExperimentLib.Experiments
 {
-    public class Experiment01 : ExperimentBase
+    public class Experiment01 : ExperimentBase, IDataStructure
     {
         private ChartWrapper _chart;
 
@@ -40,7 +41,12 @@ namespace TDExperimentLib.Experiments
             QLearningOutputFile2 = "";
         }
 
-        public override KeyValuePair<bool, string> SetData(Dictionary<string, object> propVals)
+        public override IDataStructure GetDataStructure()
+        {
+            return this;
+        }
+
+        public KeyValuePair<bool, string> SetData(Dictionary<string, object> propVals)
         {
             int tmpIterations;
             int tmpGamesPerIteration;
