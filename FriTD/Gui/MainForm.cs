@@ -142,7 +142,7 @@ namespace Gui
 
         private void button5_Click(object sender, EventArgs e)
         {
-            var expWin = new ExperimentWindow(new Experiment06());
+            var expWin = new ExperimentWindow(new Experiment05());
             expWin.Show();
         }
     }
