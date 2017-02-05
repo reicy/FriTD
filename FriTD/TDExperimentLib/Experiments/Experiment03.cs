@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Manager.MTCore.Core;
 
 namespace TDExperimentLib.Experiments
@@ -36,11 +35,6 @@ namespace TDExperimentLib.Experiments
 
         public Experiment03() : base("All maps at once")
         {
-        }
-
-        public override KeyValuePair<bool, string> SetData(Dictionary<string, object> propVals)
-        {
-            return new KeyValuePair<bool, string>(true, "");
         }
 
         public override void Run()

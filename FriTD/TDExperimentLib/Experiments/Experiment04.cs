@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Manager.MTCore.Core;
 using Manager.Utils;
 
@@ -29,11 +28,6 @@ namespace TDExperimentLib.Experiments
 
         public Experiment04() : base("Table")
         {
-        }
-
-        public override KeyValuePair<bool, string> SetData(Dictionary<string, object> propVals)
-        {
-            return new KeyValuePair<bool, string>(true, "");
         }
 
         public override void Run()

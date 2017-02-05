@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Windows.Forms.DataVisualization.Charting;
+﻿using System.Windows.Forms.DataVisualization.Charting;
+using Manager.Settings;
 
 namespace TDExperimentLib.Experiments
 {
@@ -17,12 +17,15 @@ namespace TDExperimentLib.Experiments
             return _name;
         }
 
+        public virtual IDataStructure GetDataStructure()
+        {
+            return null;
+        }
+
         public virtual void SetChart(Chart chart)
         {
 
         }
-
-        public abstract KeyValuePair<bool, string> SetData(Dictionary<string, object> propVals);
 
         public void Start()
         {

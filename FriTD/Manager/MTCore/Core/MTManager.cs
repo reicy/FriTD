@@ -265,19 +265,19 @@ namespace Manager.MTCore.Core
                 thread.Abort();
         }
 
-        public void ExperimentRun(Settings s)
+        public void ExperimentRun(Settings.Settings s)
         {
             ExperimentRun(s.maps,
-                s.numberOfIterationsPerMap, 
+                s.numberOfIterationsPerMap,
                 s.numberOfIterationsPerMapWithKohonen,
                 s.useCosDist,
                 s.qLearningRandomActionProbability,
                 s.qLearningDiscountFactor,
                 s.qLearningLearningRate,
                 s.kohonenRows,
-                s.kohonenCols, 
+                s.kohonenCols,
                 s.kohonenRadius,
-                s.kohonenLearningRate, 
+                s.kohonenLearningRate,
                 s.kohonenDistFactor,
                 s.kohonenLoadFile, s.qLearningLoadFile, s.kohonenSaveFile, s.qLearningSaveFile);
         }
@@ -287,11 +287,11 @@ namespace Manager.MTCore.Core
             int numberOfIterationsPerMapWithKohonen,
             bool useCosDist = false,
             double qLearningRandomActionProbability = 0.3,
-            double qLearningDiscountFactor = 1, 
-            double qLearningLearningRate = 0.5, 
+            double qLearningDiscountFactor = 1,
+            double qLearningLearningRate = 0.5,
             int kohonenRows = 30,
             int kohonenCols = 30,
-            double kohonenRadius = 2, 
+            double kohonenRadius = 2,
             double kohonenLearningRate = 0.5,
             double kohonenDistFactor = 1,
             string kohonenLoadFile = null,
@@ -305,7 +305,7 @@ namespace Manager.MTCore.Core
                 qLearningDiscountFactor, qLearningLearningRate);
             var kohonen = new KohonenCore<StateVector>(kohonenRows, kohonenCols, kohonenRadius, kohonenLearningRate,
                 kohonenDistFactor, 1, 0.5, _nonEmptyModeCohonenActive);
-            var weight = new double[] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+            var weight = new double[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
             kohonen.SetWeight(weight);
             var threads = new List<Thread>();
             var daemons = new List<MtSingleDaemon>();
@@ -335,8 +335,8 @@ namespace Manager.MTCore.Core
             Log("Maps: " + mapsString);
             Log("Number of iterations per map: " + numberOfIterationsPerMap + "; with kohonen: " +
                 numberOfIterationsPerMapWithKohonen);
-            Log("Total number of iterations per map: " + numberOfIterationsPerMap*maps.Count + "; with kohonen: " +
-                numberOfIterationsPerMapWithKohonen*maps.Count);
+            Log("Total number of iterations per map: " + numberOfIterationsPerMap * maps.Count + "; with kohonen: " +
+                numberOfIterationsPerMapWithKohonen * maps.Count);
             Log("Cos distance: " + useCosDist);
             Log();
             Log("KOHONEN");

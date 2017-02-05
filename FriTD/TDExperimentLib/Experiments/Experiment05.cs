@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Manager.MTCore.Core;
+﻿using Manager.MTCore.Core;
+using Manager.Settings;
 using Manager.Utils;
 
 namespace TDExperimentLib.Experiments
@@ -19,9 +15,9 @@ namespace TDExperimentLib.Experiments
         {
         }
 
-        public override KeyValuePair<bool, string> SetData(Dictionary<string, object> propVals)
+        public override IDataStructure GetDataStructure()
         {
-            return new KeyValuePair<bool, string>(true, "");
+            return s;
         }
 
         public override void Run()
@@ -140,7 +136,7 @@ namespace TDExperimentLib.Experiments
             // fifth run - final with fixed kohonen and qlearning - runs only half iterations
             CustomLogger.Log("############### Run 5/5: " + prefix + map + "_" + postfix + " ###############");
             s.numberOfIterationsPerMapWithKohonen = 0;
-            s.numberOfIterationsPerMap = s.numberOfIterationsPerMap/2;
+            s.numberOfIterationsPerMap = s.numberOfIterationsPerMap / 2;
             s.qLearningRandomActionProbability = 0.0001;
             s.qLearningLearningRate = 0.01;
             manager.ExperimentRun(s);
