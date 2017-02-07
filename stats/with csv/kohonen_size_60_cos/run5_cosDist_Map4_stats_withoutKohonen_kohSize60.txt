@@ -1,0 +1,440 @@
+############### Run 1/5: run5_cosDist_Map4_withoutKohonen_kohSize60 ###############
+Lost in levels: 
+0:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+1:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+2:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+3:[0, 336, 212, 28, 9143, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+4:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+5:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+
+
+########################## RESETTING STATISTICS ##########################
+############ STARTING #############
+Maps: Map4  Map4  Map4  Map4  
+Number of iterations per map: 5000; with kohonen: 5000
+Total number of iterations per map: 20000; with kohonen: 20000
+Cos distance: True
+
+KOHONEN
+rows: 60; cols: 60; radius: 2
+learning rate: 0.5; disFactor: 1
+
+QLEARNING
+random action prob: 0.3; disFactor: 1; learning rate: 0.5
+####################################
+Iteration: 1000 Won: 58 Lost: 942
+	W/L per map type: 4:(58:942); 
+	W/L per map type (total): 4:(58:942); 
+Iteration: 2000 Won: 78 Lost: 922
+	W/L per map type: 4:(78:922); 
+	W/L per map type (total): 4:(136:1864); 
+Iteration: 3000 Won: 76 Lost: 924
+	W/L per map type: 4:(76:924); 
+	W/L per map type (total): 4:(212:2788); 
+Iteration: 4000 Won: 118 Lost: 882
+	W/L per map type: 4:(118:882); 
+	W/L per map type (total): 4:(330:3670); 
+Iteration: 5000 Won: 103 Lost: 897
+	W/L per map type: 4:(103:897); 
+	W/L per map type (total): 4:(433:4567); 
+Iteration: 6000 Won: 92 Lost: 908
+	W/L per map type: 4:(92:908); 
+	W/L per map type (total): 4:(525:5475); 
+Iteration: 7000 Won: 126 Lost: 874
+	W/L per map type: 4:(126:874); 
+	W/L per map type (total): 4:(651:6349); 
+Iteration: 8000 Won: 117 Lost: 883
+	W/L per map type: 4:(117:883); 
+	W/L per map type (total): 4:(768:7232); 
+Iteration: 9000 Won: 99 Lost: 901
+	W/L per map type: 4:(99:901); 
+	W/L per map type (total): 4:(867:8133); 
+Iteration: 10000 Won: 127 Lost: 873
+	W/L per map type: 4:(127:873); 
+	W/L per map type (total): 4:(994:9006); 
+Iteration: 11000 Won: 119 Lost: 881
+	W/L per map type: 4:(119:881); 
+	W/L per map type (total): 4:(1113:9887); 
+Iteration: 12000 Won: 96 Lost: 904
+	W/L per map type: 4:(96:904); 
+	W/L per map type (total): 4:(1209:10791); 
+Iteration: 13000 Won: 106 Lost: 894
+	W/L per map type: 4:(106:894); 
+	W/L per map type (total): 4:(1315:11685); 
+Iteration: 14000 Won: 101 Lost: 899
+	W/L per map type: 4:(101:899); 
+	W/L per map type (total): 4:(1416:12584); 
+Iteration: 15000 Won: 85 Lost: 915
+	W/L per map type: 4:(85:915); 
+	W/L per map type (total): 4:(1501:13499); 
+Iteration: 16000 Won: 98 Lost: 902
+	W/L per map type: 4:(98:902); 
+	W/L per map type (total): 4:(1599:14401); 
+Iteration: 17000 Won: 105 Lost: 895
+	W/L per map type: 4:(105:895); 
+	W/L per map type (total): 4:(1704:15296); 
+Iteration: 18000 Won: 110 Lost: 890
+	W/L per map type: 4:(110:890); 
+	W/L per map type (total): 4:(1814:16186); 
+Iteration: 19000 Won: 104 Lost: 896
+	W/L per map type: 4:(104:896); 
+	W/L per map type (total): 4:(1918:17082); 
+Iteration: 20000 Won: 105 Lost: 895
+	W/L per map type: 4:(105:895); 
+	W/L per map type (total): 4:(2023:17977); 
+Lost in levels: 
+0:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+1:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+2:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+3:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+4:[0, 3156, 7063, 4011, 2246, 1034, 61, 414, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+5:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+
+
+Total score: w 2023 l 17985
+############### Run 2/5: run5_cosDist_Map4_withoutKohonen_kohSize60 ###############
+Lost in levels: 
+0:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+1:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+2:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+3:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+4:[0, 3156, 7063, 4011, 2246, 1034, 61, 414, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+5:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+
+
+########################## RESETTING STATISTICS ##########################
+############ STARTING #############
+Maps: Map4  Map4  Map4  Map4  
+Number of iterations per map: 5000; with kohonen: 5000
+Total number of iterations per map: 20000; with kohonen: 20000
+Cos distance: True
+
+KOHONEN
+rows: 60; cols: 60; radius: 2
+learning rate: 0.25; disFactor: 1
+
+QLEARNING
+random action prob: 0.3; disFactor: 1; learning rate: 0.5
+####################################
+Iteration: 1000 Won: 113 Lost: 887
+	W/L per map type: 4:(113:887); 
+	W/L per map type (total): 4:(113:887); 
+Iteration: 2000 Won: 122 Lost: 878
+	W/L per map type: 4:(122:878); 
+	W/L per map type (total): 4:(235:1765); 
+Iteration: 3000 Won: 122 Lost: 878
+	W/L per map type: 4:(122:878); 
+	W/L per map type (total): 4:(357:2643); 
+Iteration: 4000 Won: 123 Lost: 877
+	W/L per map type: 4:(123:877); 
+	W/L per map type (total): 4:(480:3520); 
+Iteration: 5000 Won: 119 Lost: 881
+	W/L per map type: 4:(119:881); 
+	W/L per map type (total): 4:(599:4401); 
+Iteration: 6000 Won: 119 Lost: 881
+	W/L per map type: 4:(119:881); 
+	W/L per map type (total): 4:(718:5282); 
+Iteration: 7000 Won: 104 Lost: 896
+	W/L per map type: 4:(104:896); 
+	W/L per map type (total): 4:(822:6178); 
+Iteration: 8000 Won: 119 Lost: 881
+	W/L per map type: 4:(119:881); 
+	W/L per map type (total): 4:(941:7059); 
+Iteration: 9000 Won: 125 Lost: 875
+	W/L per map type: 4:(125:875); 
+	W/L per map type (total): 4:(1066:7934); 
+Iteration: 10000 Won: 81 Lost: 919
+	W/L per map type: 4:(81:919); 
+	W/L per map type (total): 4:(1147:8853); 
+Iteration: 11000 Won: 124 Lost: 876
+	W/L per map type: 4:(124:876); 
+	W/L per map type (total): 4:(1271:9729); 
+Iteration: 12000 Won: 110 Lost: 890
+	W/L per map type: 4:(110:890); 
+	W/L per map type (total): 4:(1381:10619); 
+Iteration: 13000 Won: 119 Lost: 881
+	W/L per map type: 4:(119:881); 
+	W/L per map type (total): 4:(1500:11500); 
+Iteration: 14000 Won: 123 Lost: 877
+	W/L per map type: 4:(123:877); 
+	W/L per map type (total): 4:(1623:12377); 
+Iteration: 15000 Won: 128 Lost: 872
+	W/L per map type: 4:(128:872); 
+	W/L per map type (total): 4:(1751:13249); 
+Iteration: 16000 Won: 120 Lost: 880
+	W/L per map type: 4:(120:880); 
+	W/L per map type (total): 4:(1871:14129); 
+Iteration: 17000 Won: 86 Lost: 914
+	W/L per map type: 4:(86:914); 
+	W/L per map type (total): 4:(1957:15043); 
+Iteration: 18000 Won: 112 Lost: 888
+	W/L per map type: 4:(112:888); 
+	W/L per map type (total): 4:(2069:15931); 
+Iteration: 19000 Won: 96 Lost: 904
+	W/L per map type: 4:(96:904); 
+	W/L per map type (total): 4:(2165:16835); 
+Iteration: 20000 Won: 133 Lost: 867
+	W/L per map type: 4:(133:867); 
+	W/L per map type (total): 4:(2298:17702); 
+Lost in levels: 
+0:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+1:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+2:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+3:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+4:[0, 3135, 6534, 3850, 2437, 1257, 67, 429, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+5:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+
+
+Total score: w 2298 l 17709
+############### Run 3/5: run5_cosDist_Map4_withoutKohonen_kohSize60 ###############
+Lost in levels: 
+0:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+1:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+2:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+3:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+4:[0, 3135, 6534, 3850, 2437, 1257, 67, 429, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+5:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+
+
+########################## RESETTING STATISTICS ##########################
+############ STARTING #############
+Maps: Map4  Map4  Map4  Map4  
+Number of iterations per map: 5000; with kohonen: 0
+Total number of iterations per map: 20000; with kohonen: 0
+Cos distance: True
+
+KOHONEN
+rows: 60; cols: 60; radius: 2
+learning rate: 0.25; disFactor: 1
+
+QLEARNING
+random action prob: 0.2; disFactor: 1; learning rate: 0.3
+####################################
+Iteration: 1000 Won: 156 Lost: 844
+	W/L per map type: 4:(156:844); 
+	W/L per map type (total): 4:(156:844); 
+Iteration: 2000 Won: 195 Lost: 805
+	W/L per map type: 4:(195:805); 
+	W/L per map type (total): 4:(351:1649); 
+Iteration: 3000 Won: 175 Lost: 825
+	W/L per map type: 4:(175:825); 
+	W/L per map type (total): 4:(526:2474); 
+Iteration: 4000 Won: 178 Lost: 822
+	W/L per map type: 4:(178:822); 
+	W/L per map type (total): 4:(704:3296); 
+Iteration: 5000 Won: 161 Lost: 839
+	W/L per map type: 4:(161:839); 
+	W/L per map type (total): 4:(865:4135); 
+Iteration: 6000 Won: 185 Lost: 815
+	W/L per map type: 4:(185:815); 
+	W/L per map type (total): 4:(1050:4950); 
+Iteration: 7000 Won: 177 Lost: 823
+	W/L per map type: 4:(177:823); 
+	W/L per map type (total): 4:(1227:5773); 
+Iteration: 8000 Won: 226 Lost: 774
+	W/L per map type: 4:(226:774); 
+	W/L per map type (total): 4:(1453:6547); 
+Iteration: 9000 Won: 210 Lost: 790
+	W/L per map type: 4:(210:790); 
+	W/L per map type (total): 4:(1663:7337); 
+Iteration: 10000 Won: 163 Lost: 837
+	W/L per map type: 4:(163:837); 
+	W/L per map type (total): 4:(1826:8174); 
+Iteration: 11000 Won: 186 Lost: 814
+	W/L per map type: 4:(186:814); 
+	W/L per map type (total): 4:(2012:8988); 
+Iteration: 12000 Won: 186 Lost: 814
+	W/L per map type: 4:(186:814); 
+	W/L per map type (total): 4:(2198:9802); 
+Iteration: 13000 Won: 145 Lost: 855
+	W/L per map type: 4:(145:855); 
+	W/L per map type (total): 4:(2343:10657); 
+Iteration: 14000 Won: 200 Lost: 800
+	W/L per map type: 4:(200:800); 
+	W/L per map type (total): 4:(2543:11457); 
+Iteration: 15000 Won: 198 Lost: 802
+	W/L per map type: 4:(198:802); 
+	W/L per map type (total): 4:(2741:12259); 
+Iteration: 16000 Won: 131 Lost: 869
+	W/L per map type: 4:(131:869); 
+	W/L per map type (total): 4:(2872:13128); 
+Iteration: 17000 Won: 190 Lost: 810
+	W/L per map type: 4:(190:810); 
+	W/L per map type (total): 4:(3062:13938); 
+Iteration: 18000 Won: 191 Lost: 809
+	W/L per map type: 4:(191:809); 
+	W/L per map type (total): 4:(3253:14747); 
+Iteration: 19000 Won: 204 Lost: 796
+	W/L per map type: 4:(204:796); 
+	W/L per map type (total): 4:(3457:15543); 
+Iteration: 20000 Won: 192 Lost: 808
+	W/L per map type: 4:(192:808); 
+	W/L per map type (total): 4:(3649:16351); 
+Lost in levels: 
+0:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+1:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+2:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+3:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+4:[0, 3838, 4912, 2866, 3030, 1025, 76, 610, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+5:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+
+
+Total score: w 3651 l 16357
+############### Run 4/5: run5_cosDist_Map4_withoutKohonen_kohSize60 ###############
+Lost in levels: 
+0:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+1:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+2:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+3:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+4:[0, 3838, 4912, 2866, 3030, 1025, 76, 610, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+5:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+
+
+########################## RESETTING STATISTICS ##########################
+############ STARTING #############
+Maps: Map4  Map4  Map4  Map4  
+Number of iterations per map: 5000; with kohonen: 0
+Total number of iterations per map: 20000; with kohonen: 0
+Cos distance: True
+
+KOHONEN
+rows: 60; cols: 60; radius: 2
+learning rate: 0.25; disFactor: 1
+
+QLEARNING
+random action prob: 0.1; disFactor: 1; learning rate: 0.25
+####################################
+Iteration: 1000 Won: 217 Lost: 783
+	W/L per map type: 4:(217:783); 
+	W/L per map type (total): 4:(217:783); 
+Iteration: 2000 Won: 261 Lost: 739
+	W/L per map type: 4:(261:739); 
+	W/L per map type (total): 4:(478:1522); 
+Iteration: 3000 Won: 230 Lost: 770
+	W/L per map type: 4:(230:770); 
+	W/L per map type (total): 4:(708:2292); 
+Iteration: 4000 Won: 245 Lost: 755
+	W/L per map type: 4:(245:755); 
+	W/L per map type (total): 4:(953:3047); 
+Iteration: 5000 Won: 250 Lost: 750
+	W/L per map type: 4:(250:750); 
+	W/L per map type (total): 4:(1203:3797); 
+Iteration: 6000 Won: 261 Lost: 739
+	W/L per map type: 4:(261:739); 
+	W/L per map type (total): 4:(1464:4536); 
+Iteration: 7000 Won: 235 Lost: 765
+	W/L per map type: 4:(235:765); 
+	W/L per map type (total): 4:(1699:5301); 
+Iteration: 8000 Won: 238 Lost: 762
+	W/L per map type: 4:(238:762); 
+	W/L per map type (total): 4:(1937:6063); 
+Iteration: 9000 Won: 206 Lost: 794
+	W/L per map type: 4:(206:794); 
+	W/L per map type (total): 4:(2143:6857); 
+Iteration: 10000 Won: 234 Lost: 766
+	W/L per map type: 4:(234:766); 
+	W/L per map type (total): 4:(2377:7623); 
+Iteration: 11000 Won: 257 Lost: 743
+	W/L per map type: 4:(257:743); 
+	W/L per map type (total): 4:(2634:8366); 
+Iteration: 12000 Won: 261 Lost: 739
+	W/L per map type: 4:(261:739); 
+	W/L per map type (total): 4:(2895:9105); 
+Iteration: 13000 Won: 219 Lost: 781
+	W/L per map type: 4:(219:781); 
+	W/L per map type (total): 4:(3114:9886); 
+Iteration: 14000 Won: 226 Lost: 774
+	W/L per map type: 4:(226:774); 
+	W/L per map type (total): 4:(3340:10660); 
+Iteration: 15000 Won: 250 Lost: 750
+	W/L per map type: 4:(250:750); 
+	W/L per map type (total): 4:(3590:11410); 
+Iteration: 16000 Won: 249 Lost: 751
+	W/L per map type: 4:(249:751); 
+	W/L per map type (total): 4:(3839:12161); 
+Iteration: 17000 Won: 229 Lost: 771
+	W/L per map type: 4:(229:771); 
+	W/L per map type (total): 4:(4068:12932); 
+Iteration: 18000 Won: 224 Lost: 776
+	W/L per map type: 4:(224:776); 
+	W/L per map type (total): 4:(4292:13708); 
+Iteration: 19000 Won: 281 Lost: 719
+	W/L per map type: 4:(281:719); 
+	W/L per map type (total): 4:(4573:14427); 
+Iteration: 20000 Won: 222 Lost: 778
+	W/L per map type: 4:(222:778); 
+	W/L per map type (total): 4:(4795:15205); 
+Lost in levels: 
+0:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+1:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+2:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+3:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+4:[0, 4299, 3627, 2400, 3490, 675, 70, 650, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+5:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+
+
+Total score: w 4796 l 15211
+############### Run 5/5: run5_cosDist_Map4_withoutKohonen_kohSize60 ###############
+Lost in levels: 
+0:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+1:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+2:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+3:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+4:[0, 4299, 3627, 2400, 3490, 675, 70, 650, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+5:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+
+
+########################## RESETTING STATISTICS ##########################
+############ STARTING #############
+Maps: Map4  Map4  Map4  Map4  
+Number of iterations per map: 2500; with kohonen: 0
+Total number of iterations per map: 10000; with kohonen: 0
+Cos distance: True
+
+KOHONEN
+rows: 60; cols: 60; radius: 2
+learning rate: 0.25; disFactor: 1
+
+QLEARNING
+random action prob: 0.0001; disFactor: 1; learning rate: 0.01
+####################################
+Iteration: 1000 Won: 219 Lost: 781
+	W/L per map type: 4:(219:781); 
+	W/L per map type (total): 4:(219:781); 
+Iteration: 2000 Won: 328 Lost: 672
+	W/L per map type: 4:(328:672); 
+	W/L per map type (total): 4:(547:1453); 
+Iteration: 3000 Won: 377 Lost: 623
+	W/L per map type: 4:(377:623); 
+	W/L per map type (total): 4:(924:2076); 
+Iteration: 4000 Won: 365 Lost: 635
+	W/L per map type: 4:(365:635); 
+	W/L per map type (total): 4:(1289:2711); 
+Iteration: 5000 Won: 358 Lost: 642
+	W/L per map type: 4:(358:642); 
+	W/L per map type (total): 4:(1647:3353); 
+Iteration: 6000 Won: 394 Lost: 606
+	W/L per map type: 4:(394:606); 
+	W/L per map type (total): 4:(2041:3959); 
+Iteration: 7000 Won: 369 Lost: 631
+	W/L per map type: 4:(369:631); 
+	W/L per map type (total): 4:(2410:4590); 
+Iteration: 8000 Won: 357 Lost: 643
+	W/L per map type: 4:(357:643); 
+	W/L per map type (total): 4:(2767:5233); 
+Iteration: 9000 Won: 368 Lost: 632
+	W/L per map type: 4:(368:632); 
+	W/L per map type (total): 4:(3135:5865); 
+Iteration: 10000 Won: 367 Lost: 633
+	W/L per map type: 4:(367:633); 
+	W/L per map type (total): 4:(3502:6498); 
+Lost in levels: 
+0:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+1:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+2:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+3:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+4:[0, 2376, 216, 3, 3557, 103, 0, 249, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+5:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]; 
+
+
+Total score: w 3504 l 6504
